@@ -6,8 +6,7 @@ import sdl2.sdlttf
 from controller import Controller
 from screen import Screen
 from listview import ListView
-
-ROM_DIR = "/mnt/sdcard/Roms/"
+from pathlib import Path
 
 sdl2.ext.init(controller=True)
 
@@ -16,10 +15,8 @@ controller = Controller()
 screen = Screen();
 
 def run_option_toggle_ui():
-    options = ["01234", "56789", "ABCDE" , "FGHIJ", "abcde", "fghij"]    
-    options_list = ListView(screen,controller,options);
-    selected = options_list.get_selection()
-    print(f"{selected} was selected")
+    roms_folders = [f.name for f in Path("/mnt/sdcard/Roms/").iterdir() if f.is_dir()]
+    options_list = ListView(screen,controller,roms_folders);
     selected = options_list.get_selection()
     print(f"{selected} was selected")
 

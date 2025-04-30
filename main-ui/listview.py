@@ -1,7 +1,10 @@
 import sdl2
 import time
 
+
 class ListView:
+    MAX_OPTIONS_TO_DISPLAY = 13
+
     def __init__(self, screen, controller, options):
         self.screen = screen
         self.controller = controller
@@ -9,24 +12,39 @@ class ListView:
         self.selected = 0
         self.toggles = [False] * len(options)
         self.line_height = screen.get_line_height() + 10  # add 5px padding between lines
-
+        self.options_to_display = self.MAX_OPTIONS_TO_DISPLAY
+        self.current_top = 0
+        self.current_bottom = min(self.options_to_display,len(options))
      
     def _render(self):
         self.screen.clear()
         self.selected = max(0, self.selected)
         self.selected = min(len(self.options)-1, self.selected)
+        
+        if(self.selected < self.current_top):
+            self.current_top -= 1
+            self.current_bottom -=1;
 
-        for i, (label, state) in enumerate(zip(self.options, self.toggles)):
-            text = f"{label.ljust(5)} [{'y' if state else 'n'}]"
-            if(i == self.selected) :
-                self.screen.render_text(text, 50, 50 + i * self.line_height, color=(255, 255, 0))
-            else :
-                self.screen.render_text(text, 50, 50 + i * self.line_height, color=(255, 255, 255))
+        if(self.selected >= self.current_bottom):
+            self.current_top += 1
+            self.current_bottom +=1;
+
+        print(f"self.current_top is {self.current_top}")
+        print(f"self.current_bottom is {self.current_bottom}")
+
+        visible_options = list(zip(self.options, self.toggles))[self.current_top:self.current_bottom]
+
+        for visible_index, (label, state) in enumerate(visible_options):
+            actual_index = self.current_top + visible_index
+            color = (255, 255, 0) if actual_index == self.selected else (255, 255, 255)
+            self.screen.render_text(label, 50, 50 + visible_index * self.line_height, color=color)
+            
         self.screen.present()
 
     def get_selection(self):
         self._render()
         running = True
+        
         while running:
             if(self.controller.get_input()):
                 if self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_DPAD_UP:
@@ -42,4 +60,4 @@ class ListView:
                 elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_START:
                     print("➡️ Start")
 
-            self._render()
+                self._render()

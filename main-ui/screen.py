@@ -10,6 +10,8 @@ class Screen:
     def __init__(self):
         self._init_display();
         self._load_font()
+        self.clear()
+        self.present()
 
     def _init_display(self):
         display_mode = sdl2.SDL_DisplayMode()
