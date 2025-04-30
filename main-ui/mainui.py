@@ -17,7 +17,7 @@ screen = Screen(theme, device)
 game_utils = GameSystemUtils()
 
 def run_option_toggle_ui():
-    options_list = ListView(screen,controller,device, game_utils.get_active_systems())
+    options_list = ListView(screen,controller,device,theme, game_utils.get_active_systems())
     selected = options_list.get_selection()
     print(f"{selected} was selected")
 

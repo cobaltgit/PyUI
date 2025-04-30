@@ -48,7 +48,7 @@ class Screen:
     def clear(self):
         sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
     
-    def render_text(self,text, x, y, color=(255, 255, 255)):
+    def render_text(self,text, x, y, color):
         # Create an SDL_Color
         sdl_color = sdl2.SDL_Color(color[0], color[1], color[2])
         

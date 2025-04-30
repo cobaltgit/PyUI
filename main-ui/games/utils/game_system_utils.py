@@ -9,7 +9,6 @@ class GameSystemUtils:
 
 
     def is_system_active(self, folder):
-        print(f"Checking if {folder} is active")
         config_path = os.path.join(self.emu_path,folder, "config.json")
         if not os.path.isfile(config_path):
             return False

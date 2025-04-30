@@ -3,14 +3,17 @@ from screen.screen import Screen
 import sdl2
 from devices.device import Device
 from controller.controller import Controller
+from themes.theme import Theme
 
 class ListView:
 
-    def __init__(self, screen: Screen, controller: Controller, device: Device, options: List[str]):
+    def __init__(self, screen: Screen, controller: Controller, device: Device, theme: Theme, options: List[str]):
         self.screen = screen
         self.controller = controller
-        self.options = options
         self.device = device
+        self.theme = theme
+        self.options = options
+
         self.selected = 0
         self.toggles = [False] * len(options)
         self.line_height = screen.get_line_height() + 10  # add 5px padding between lines
@@ -24,20 +27,17 @@ class ListView:
         
         if(self.selected < self.current_top):
             self.current_top -= 1
-            self.current_bottom -=1;
+            self.current_bottom -=1
 
         if(self.selected >= self.current_bottom):
             self.current_top += 1
-            self.current_bottom +=1;
-
-        print(f"self.current_top is {self.current_top}")
-        print(f"self.current_bottom is {self.current_bottom}")
+            self.current_bottom +=1
 
         visible_options = list(zip(self.options, self.toggles))[self.current_top:self.current_bottom]
 
         for visible_index, (label, state) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
-            color = (255, 255, 0) if actual_index == self.selected else (255, 255, 255)
+            color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
             self.screen.render_text(label, 50, 50 + visible_index * self.line_height, color=color)
             
         self.screen.present()

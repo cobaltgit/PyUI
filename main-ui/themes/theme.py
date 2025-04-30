@@ -26,6 +26,7 @@ class Theme():
     @property
     def app(self):
         return self.path + "skin/ic-app-n.png"    
+    
     @property
     def app_selected(self):
         return self.path + "skin/ic-app-f.png"    
@@ -37,4 +38,14 @@ class Theme():
     @property
     def settings_selected(self):
         return self.path + "skin/ic-settingHow -f.png"    
+    
+    @property
+    def text_color(self):
+        # Get from json file
+        return  (255, 255, 255) 
+      
+    @property
+    def text_color_selected(self):
+        # Get from json file
+        return  (255, 255, 0)    
     
