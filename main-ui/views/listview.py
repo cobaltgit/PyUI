@@ -1,20 +1,21 @@
+from typing import List
+from screen.screen import Screen
 import sdl2
-import time
-
+from devices.device import Device
+from controller.controller import Controller
 
 class ListView:
-    MAX_OPTIONS_TO_DISPLAY = 8
 
-    def __init__(self, screen, controller, options):
+    def __init__(self, screen: Screen, controller: Controller, device: Device, options: List[str]):
         self.screen = screen
         self.controller = controller
         self.options = options
+        self.device = device
         self.selected = 0
         self.toggles = [False] * len(options)
         self.line_height = screen.get_line_height() + 10  # add 5px padding between lines
-        self.options_to_display = self.MAX_OPTIONS_TO_DISPLAY
         self.current_top = 0
-        self.current_bottom = min(self.options_to_display,len(options))
+        self.current_bottom = min(device.max_rows_for_list,len(options))
      
     def _render(self):
         self.screen.clear()

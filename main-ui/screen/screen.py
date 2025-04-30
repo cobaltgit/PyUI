@@ -1,15 +1,13 @@
 import sdl2
 import sdl2.ext
 import sdl2.sdlttf
-import os
 from themes.theme import Theme
-
-os.environ["SDL_VIDEODRIVER"] = "KMSDRM"
-os.environ["SDL_RENDER_DRIVER"] = "kmsdrm"
+from devices.device import Device
 
 class Screen:
-    def __init__(self, theme):
+    def __init__(self, theme: Theme, device: Device):
         self.theme = theme
+        self.device = device
         self._init_display()
         self._load_font()
         surf = sdl2.ext.load_image(self.theme.background)
@@ -22,7 +20,7 @@ class Screen:
         display_mode = sdl2.SDL_DisplayMode()
         if sdl2.SDL_GetCurrentDisplayMode(0, display_mode) != 0:
             print("Failed to get display mode, using fallback 640x480")
-            width, height = 640, 480
+            width, height = self.device.screen_width(), self.device.screen_height()
         else:
             width, height = display_mode.w, display_mode.h
             print(f"Display size: {width}x{height}")
@@ -41,7 +39,7 @@ class Screen:
 
         # Load the TTF font
         font_path = "/mnt/sdcard/spruce/Font Files/Noto.ttf"
-        font_size = 28
+        font_size = self.device.font_size
         self.font = sdl2.sdlttf.TTF_OpenFont(font_path.encode('utf-8'), font_size)
         if not self.font:
             raise RuntimeError("Could not load font")

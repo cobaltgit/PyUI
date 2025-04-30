@@ -1,47 +1,40 @@
-from abc import ABC, abstractmethod
-
-class Theme(ABC):
+class Theme():
+    
+    def __init__(self, path):
+        self.path = path
+    
     @property
-    @abstractmethod
     def background(self):
-        pass
+        return self.path + "skin/background.png"
 
     @property
-    @abstractmethod
     def favorite(self):
-        pass
+        return self.path + "skin/ic-favorite-n.png"
 
     @property
-    @abstractmethod
     def favorite_selected(self):
-        pass
+        return self.path + "skin/ic-favorite-f.png"    
 
     @property
-    @abstractmethod
     def game(self):
-        pass
+        return self.path + "skin/ic-game-n.png"    
 
     @property
-    @abstractmethod
     def game_selected(self):
-        pass
+        return self.path + "skin/ic-game-f.png"    
 
     @property
-    @abstractmethod
     def app(self):
-        pass
-
+        return self.path + "skin/ic-app-n.png"    
     @property
-    @abstractmethod
     def app_selected(self):
-        pass
+        return self.path + "skin/ic-app-f.png"    
 
     @property
-    @abstractmethod
     def settings(self):
-        pass
+        return self.path + "skin/ic-setting-n.png"    
 
     @property
-    @abstractmethod
     def settings_selected(self):
-        pass
+        return self.path + "skin/ic-settingHow -f.png"    
+    
