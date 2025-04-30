@@ -6,7 +6,7 @@ import os
 os.environ["SDL_VIDEODRIVER"] = "KMSDRM"
 os.environ["SDL_RENDER_DRIVER"] = "kmsdrm"
 
-class ScreenManager:
+class Screen:
     def __init__(self):
         self._init_display();
         self._load_font()
