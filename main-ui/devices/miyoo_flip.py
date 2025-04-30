@@ -31,7 +31,7 @@ class MiyooFlip(Device):
 
     @property
     def max_rows_for_list(self):
-        return 8
+        return 12
     
     #Can we dynamically calculate these?
     @property

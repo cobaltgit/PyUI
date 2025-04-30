@@ -47,7 +47,7 @@ class LargeGridView:
             color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
 
 
-            self.screen.render_text(imageTextPair.get_text().center(11), 
+            self.screen.render_text(imageTextPair.get_text().center(14), 
                                     imageXOffset,
                                     275, color)
             

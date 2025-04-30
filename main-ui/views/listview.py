@@ -38,7 +38,7 @@ class ListView:
         for visible_index, (label) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
             color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
-            self.screen.render_text(label, 50, 50 + visible_index * self.line_height, color=color)
+            self.screen.render_text(label, 50, 35 + visible_index * self.line_height, color=color)
             
         self.screen.present()
 
