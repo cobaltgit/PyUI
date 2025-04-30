@@ -1,5 +1,5 @@
 from typing import List
-from screen.screen import Screen
+from display.display import Display
 import sdl2
 from devices.device import Device
 from controller.controller import Controller
@@ -7,8 +7,8 @@ from themes.theme import Theme
 
 class ListView:
 
-    def __init__(self, screen: Screen, controller: Controller, device: Device, theme: Theme, options: List[str]):
-        self.screen = screen
+    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, options: List[str]):
+        self.display = display
         self.controller = controller
         self.device = device
         self.theme = theme
@@ -16,12 +16,12 @@ class ListView:
 
         self.selected = 0
         self.toggles = [False] * len(options)
-        self.line_height = screen.get_line_height() + 10  # add 5px padding between lines
+        self.line_height = display.get_line_height() + 10  # add 5px padding between lines
         self.current_top = 0
         self.current_bottom = min(device.max_rows_for_list,len(options))
      
     def _render(self):
-        self.screen.clear()
+        self.display.clear()
         self.selected = max(0, self.selected)
         self.selected = min(len(self.options)-1, self.selected)
         
@@ -38,9 +38,9 @@ class ListView:
         for visible_index, (label) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
             color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
-            self.screen.render_text(label, 50, 35 + visible_index * self.line_height, color=color)
+            self.display.render_text(label, 50, 35 + visible_index * self.line_height, color=color)
             
-        self.screen.present()
+        self.display.present()
 
     def get_selection(self):
         self._render()

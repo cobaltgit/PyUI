@@ -1,6 +1,6 @@
 from typing import List
-from screen.font_size import FontSize
-from screen.screen import Screen
+from display.font_size import FontSize
+from display.display import Display
 import sdl2
 from devices.device import Device
 from controller.controller import Controller
@@ -9,8 +9,8 @@ from views.image_text_pair import ImageTextPair
 
 class LargeGridView:
 
-    def __init__(self, screen: Screen, controller: Controller, device: Device, theme: Theme, options: List[ImageTextPair]):
-        self.screen : Screen = screen
+    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, options: List[ImageTextPair]):
+        self.display : Display = display
         self.controller : Controller = controller
         self.device : Device = device
         self.theme : Theme = theme
@@ -23,7 +23,7 @@ class LargeGridView:
         self.current_right = min(device.max_icons_for_large_grid_view,len(options))
      
     def _render(self):
-        self.screen.clear()
+        self.display.clear()
         self.selected = max(0, self.selected)
         self.selected = min(len(self.options)-1, self.selected)
         
@@ -41,17 +41,17 @@ class LargeGridView:
             actual_index = self.current_left + visible_index
             imagePath = imageTextPair.get_image_path_selected() if actual_index == self.selected else imageTextPair.get_image_path()
             imageXOffset = self.device.large_grid_x_offset + visible_index * self.device.large_grid_spacing_multiplier
-            self.screen.render_image(imagePath, 
+            self.display.render_image(imagePath, 
                                      imageXOffset, 
                                      self.device.large_grid_y_offset)
             color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
 
 
-            self.screen.render_text(imageTextPair.get_text().center(14), 
+            self.display.render_text(imageTextPair.get_text().center(14), 
                                     imageXOffset,
                                     275, color)
             
-        self.screen.present()
+        self.display.present()
 
     def get_selection(self):
         self._render()

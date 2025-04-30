@@ -2,7 +2,7 @@ from games.utils.rom_utils import RomUtils
 import sdl2
 import sdl2.ext
 from controller.controller import Controller
-from screen.screen import Screen
+from display.display import Display
 from games.utils.game_system_utils import GameSystemUtils
 from views.image_text_pair import ImageTextPair
 from views.large_grid_view import LargeGridView
@@ -19,14 +19,14 @@ device = MiyooFlip()
 
 theme = Theme("/mnt/sdcard/Themes/SPRUCE/") 
 controller = Controller()
-screen = Screen(theme, device)
+display = Display(theme, device)
 game_utils = GameSystemUtils()
 rom_utils = RomUtils()
 
 
 def run_rom_selection(system) :
     selected = "new"
-    options_list = ListView(screen,controller,device,theme, rom_utils.get_roms(system))
+    options_list = ListView(display,controller,device,theme, rom_utils.get_roms(system))
     while((selected := options_list.get_selection()) is not None):
         print(f"{selected} was selected")
         subprocess.run(["/mnt/sdcard/Emu/.emu_setup/standard_launch.sh", 
@@ -35,7 +35,7 @@ def run_rom_selection(system) :
 
 def run_system_selection() :
     selected = "new"
-    options_list = ListView(screen,controller,device,theme, game_utils.get_active_systems())
+    options_list = ListView(display,controller,device,theme, game_utils.get_active_systems())
     while((selected := options_list.get_selection()) is not None):
         print(f"{selected} was selected")
         run_rom_selection(selected)
@@ -48,7 +48,7 @@ def run_main_menu_selection():
         ImageTextPair(theme.settings,theme.settings_selected, "Setting")
     ]
 
-    options_list = LargeGridView(screen,controller,device,theme, image_text_list)
+    options_list = LargeGridView(display,controller,device,theme, image_text_list)
     selected = "new"
     while((selected := options_list.get_selection()) is not None):        
         print(f"{selected.get_text()} was selected")

@@ -1,12 +1,12 @@
-from screen.loaded_font import LoadedFont
-from screen.font_size import FontSize
+from display.loaded_font import LoadedFont
+from display.font_size import FontSize
 import sdl2
 import sdl2.ext
 import sdl2.sdlttf
 from themes.theme import Theme
 from devices.device import Device
 
-class Screen:
+class Display:
     def __init__(self, theme: Theme, device: Device):
         self.theme = theme
         self.device = device
