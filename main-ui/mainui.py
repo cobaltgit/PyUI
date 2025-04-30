@@ -1,6 +1,6 @@
 import sdl2
 import sdl2.ext
-from controller import Controller
+from controller.controller import Controller
 from screen import Screen
 from views.listview import ListView
 from pathlib import Path
