@@ -41,7 +41,7 @@ class Screen:
 
         # Load the TTF font
         font_path = "/mnt/sdcard/spruce/Font Files/Noto.ttf"
-        font_size = 16
+        font_size = 28
         self.font = sdl2.sdlttf.TTF_OpenFont(font_path.encode('utf-8'), font_size)
         if not self.font:
             raise RuntimeError("Could not load font")

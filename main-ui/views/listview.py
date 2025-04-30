@@ -3,7 +3,7 @@ import time
 
 
 class ListView:
-    MAX_OPTIONS_TO_DISPLAY = 13
+    MAX_OPTIONS_TO_DISPLAY = 8
 
     def __init__(self, screen, controller, options):
         self.screen = screen
