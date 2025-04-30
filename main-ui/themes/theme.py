@@ -37,7 +37,7 @@ class Theme():
 
     @property
     def settings_selected(self):
-        return self.path + "skin/ic-settingHow -f.png"    
+        return self.path + "skin/ic-setting-f.png"    
     
     @property
     def text_color(self):

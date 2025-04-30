@@ -33,9 +33,9 @@ class ListView:
             self.current_top += 1
             self.current_bottom +=1
 
-        visible_options = list(zip(self.options, self.toggles))[self.current_top:self.current_bottom]
+        visible_options = self.options[self.current_top:self.current_bottom]
 
-        for visible_index, (label, state) in enumerate(visible_options):
+        for visible_index, (label) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
             color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
             self.screen.render_text(label, 50, 50 + visible_index * self.line_height, color=color)
@@ -52,13 +52,9 @@ class ListView:
                     self.selected-=1
                 elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_DPAD_DOWN:
                     self.selected+=1
-                elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-                    print("⬅️ Left")
-                elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-                    print("➡️ Right")
                 elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_A:
                     return self.options[self.selected]
-                elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_START:
-                    print("➡️ Start")
+                elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_B:
+                    return ""
 
                 self._render()
