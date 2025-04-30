@@ -2,14 +2,19 @@ import sdl2
 import sdl2.ext
 import sdl2.sdlttf
 import os
+from themes.theme import Theme
 
 os.environ["SDL_VIDEODRIVER"] = "KMSDRM"
 os.environ["SDL_RENDER_DRIVER"] = "kmsdrm"
 
 class Screen:
-    def __init__(self):
-        self._init_display();
+    def __init__(self, theme):
+        self.theme = theme
+        self._init_display()
         self._load_font()
+        surf = sdl2.ext.load_image(self.theme.background)
+        self.background_texture = sdl2.SDL_CreateTextureFromSurface(self.renderer.sdlrenderer, surf)
+        sdl2.SDL_FreeSurface(surf)
         self.clear()
         self.present()
 
@@ -42,9 +47,9 @@ class Screen:
             raise RuntimeError("Could not load font")
         self.line_height = sdl2.sdlttf.TTF_FontHeight(self.font)
         
-    def clear(self, r=20, g=20, b=20):
-        self.renderer.clear(sdl2.ext.Color(r,g,b))
-
+    def clear(self):
+        sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
+    
     def render_text(self,text, x, y, color=(255, 255, 255)):
         # Create an SDL_Color
         sdl_color = sdl2.SDL_Color(color[0], color[1], color[2])
