@@ -49,7 +49,7 @@ class LargeGridView:
 
             self.screen.render_text(imageTextPair.get_text().center(11), 
                                     imageXOffset,
-                                    275, color, FontSize.SMALL)
+                                    275, color)
             
         self.screen.present()
 
@@ -66,6 +66,6 @@ class LargeGridView:
                 elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_A:
                     return self.options[self.selected]
                 elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_B:
-                    return ""
+                    return None
 
                 self._render()

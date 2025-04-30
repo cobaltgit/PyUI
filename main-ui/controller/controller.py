@@ -1,7 +1,8 @@
+import time
 import sdl2
 import ctypes
 from ctypes import byref
-
+import time
 
 class Controller:
     def __init__(self):
@@ -39,9 +40,23 @@ class Controller:
             self.controller = None
             
     def get_input(self):
-        sdl2.SDL_PollEvent(byref(self.event))
-        return self.last_event_was_controller()
-    
+        self._last_event().type = 0
+        while(self._last_event().type != sdl2.SDL_CONTROLLERBUTTONDOWN):
+            sdl2.SDL_WaitEvent(byref(self.event))
+        return self.last_event_was_controller()        
+
+    def clear_input_queue(self):
+        # SDL is super weird on the flip, disabling and clearing do not work
+        # There is also strings of 0s between inputs once resuming
+        # To get around this wait for 50s in a row
+        count = 0
+        while count < 50:
+            sdl2.SDL_PollEvent(byref(self.event))
+            if(self.event.cbutton.button == 0):
+                count+=1
+            else:
+                count=0
+
     def last_event_was_controller(self):
         return self._last_event().type == sdl2.SDL_CONTROLLERBUTTONDOWN
 

@@ -55,6 +55,6 @@ class ListView:
                 elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_A:
                     return self.options[self.selected]
                 elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_B:
-                    return ""
+                    return None
 
                 self._render()

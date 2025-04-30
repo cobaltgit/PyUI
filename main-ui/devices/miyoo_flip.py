@@ -19,15 +19,15 @@ class MiyooFlip(Device):
 
     @property
     def font_size_small(self):
-        return 18
+        return 12
     
     @property
     def font_size_medium(self):
-        return 28
+        return 18
     
     @property
     def font_size_large(self):
-        return 38
+        return 26
 
     @property
     def max_rows_for_list(self):
