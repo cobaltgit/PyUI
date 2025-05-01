@@ -1,6 +1,8 @@
 import subprocess
+from controller.controller_inputs import ControllerInput
 from devices.device import Device
 import os
+import sdl2
 
 os.environ["SDL_VIDEODRIVER"] = "KMSDRM"
 os.environ["SDL_RENDER_DRIVER"] = "kmsdrm"
@@ -9,6 +11,22 @@ class MiyooFlip(Device):
     
     def __init__(self):
         self.path = self
+        self.sdl_button_to_input = {
+            sdl2.SDL_CONTROLLER_BUTTON_A: ControllerInput.B,
+            sdl2.SDL_CONTROLLER_BUTTON_B: ControllerInput.A,
+            sdl2.SDL_CONTROLLER_BUTTON_X: ControllerInput.Y,
+            sdl2.SDL_CONTROLLER_BUTTON_Y: ControllerInput.X,
+            sdl2.SDL_CONTROLLER_BUTTON_DPAD_UP: ControllerInput.DPAD_UP,
+            sdl2.SDL_CONTROLLER_BUTTON_DPAD_DOWN: ControllerInput.DPAD_DOWN,
+            sdl2.SDL_CONTROLLER_BUTTON_DPAD_LEFT: ControllerInput.DPAD_LEFT,
+            sdl2.SDL_CONTROLLER_BUTTON_DPAD_RIGHT: ControllerInput.DPAD_RIGHT,
+            sdl2.SDL_CONTROLLER_BUTTON_LEFTSHOULDER: ControllerInput.L1,
+            sdl2.SDL_CONTROLLER_BUTTON_RIGHTSHOULDER: ControllerInput.R1,
+            sdl2.SDL_CONTROLLER_BUTTON_START: ControllerInput.START,
+            sdl2.SDL_CONTROLLER_BUTTON_BACK: ControllerInput.SELECT,
+        }
+
+
     
     @property
     def screen_width(self):
@@ -55,3 +73,30 @@ class MiyooFlip(Device):
     def run_game(self, file_path):
         print(f"About to launch /mnt/sdcard/Emu/.emu_setup/standard_launch.sh {file_path}")
         subprocess.run(["/mnt/sdcard/Emu/.emu_setup/standard_launch.sh",file_path])
+
+    #TODO untested
+    def map_analog_axis(self,sdl_input, value, threshold=16000):
+        if sdl_input == sdl2.SDL_CONTROLLER_AXIS_LEFTX:
+            if value < -threshold:
+                return ControllerInput.LEFT_STICK_LEFT
+            elif value > threshold:
+                return ControllerInput.LEFT_STICK_RIGHT
+        elif sdl_input == sdl2.SDL_CONTROLLER_AXIS_LEFTY:
+            if value < -threshold:
+                return ControllerInput.LEFT_STICK_UP
+            elif value > threshold:
+                return ControllerInput.LEFT_STICK_DOWN
+        elif sdl_input == sdl2.SDL_CONTROLLER_AXIS_RIGHTX:
+            if value < -threshold:
+                return ControllerInput.RIGHT_STICK_LEFT
+            elif value > threshold:
+                return ControllerInput.RIGHT_STICK_RIGHT
+        elif sdl_input == sdl2.SDL_CONTROLLER_AXIS_RIGHTY:
+            if value < -threshold:
+                return ControllerInput.RIGHT_STICK_UP
+            elif value > threshold:
+                return ControllerInput.RIGHT_STICK_DOWN
+        return None
+    
+    def map_input(self, sdl_input):
+        return self.sdl_button_to_input[sdl_input]

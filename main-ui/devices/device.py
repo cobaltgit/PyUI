@@ -55,3 +55,7 @@ class Device(ABC):
     @abstractmethod
     def run_game(self, path):
         pass
+
+    @abstractmethod
+    def map_input(self, sdl_input):
+        pass

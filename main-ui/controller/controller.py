@@ -1,17 +1,19 @@
 import time
+from devices.device import Device
 import sdl2
 import ctypes
 from ctypes import byref
 import time
 
 class Controller:
-    def __init__(self):
+    def __init__(self, device: Device):
         self.controller = None
         self.index = None
         self.name = None
         self.mapping = None
         self._init_controller()
         self.event = sdl2.SDL_Event()
+        self.device = device
 
 
     def _init_controller(self):
@@ -64,4 +66,4 @@ class Controller:
         return self.event
         
     def last_input(self):
-        return self.event.cbutton.button
+        return self.device.map_input(self.event.cbutton.button)

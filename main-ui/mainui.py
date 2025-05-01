@@ -14,7 +14,7 @@ sdl2.SDL_InitSubSystem(sdl2.SDL_INIT_GAMECONTROLLER)
 device = MiyooFlip()
 
 theme = Theme("/mnt/sdcard/Themes/SPRUCE/") 
-controller = Controller()
+controller = Controller(device)
 display = Display(theme, device)
 main_menu = MainMenu(display, controller, device, theme)
 

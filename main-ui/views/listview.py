@@ -1,4 +1,5 @@
 from typing import List
+from controller.controller_inputs import ControllerInput
 from display.display import Display
 import sdl2
 from devices.device import Device
@@ -48,13 +49,13 @@ class ListView:
         
         while running:
             if(self.controller.get_input()):
-                if self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_DPAD_UP:
+                if self.controller.last_input() == ControllerInput.DPAD_UP:
                     self.selected-=1
-                elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+                elif self.controller.last_input() == ControllerInput.DPAD_DOWN:
                     self.selected+=1
-                elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_A:
+                elif self.controller.last_input() == ControllerInput.A:
                     return self.options[self.selected]
-                elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_B:
+                elif self.controller.last_input() == ControllerInput.B:
                     return None
 
                 self._render()
