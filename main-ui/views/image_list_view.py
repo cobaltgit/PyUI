@@ -1,0 +1,79 @@
+from typing import List
+from display.display import Display
+import sdl2
+from devices.device import Device
+from controller.controller import Controller
+from themes.theme import Theme
+from views.image_text_pair import ImageTextPair
+
+class ImageListView:
+
+    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, 
+                 options: List[ImageTextPair], img_offset_x : int, img_offset_y : int):
+        self.display = display
+        self.controller = controller
+        self.device = device
+        self.theme = theme
+        self.options = options
+
+        self.selected = 0
+        self.toggles = [False] * len(options)
+        self.line_height = display.get_line_height() + 10  # add 5px padding between lines
+        self.current_top = 0
+        self.current_bottom = min(device.max_rows_for_list,len(options))
+        self.img_offset_x = img_offset_x
+        self.img_offset_y = img_offset_y
+     
+
+    def _render_text(self, visible_options):
+        for visible_index, (imageTextPair) in enumerate(visible_options):
+            actual_index = self.current_top + visible_index
+            color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
+            self.display.render_text(imageTextPair.get_text(), 50, 35 + visible_index * self.line_height, color=color)
+
+    def _render_image(self, visible_options):
+        for visible_index, (imageTextPair) in enumerate(visible_options):
+            actual_index = self.current_top + visible_index
+            imagePath = imageTextPair.get_image_path_selected() if actual_index == self.selected else imageTextPair.get_image_path()
+            if(actual_index == self.selected and imagePath is not None):
+                self.display.render_image_centered(imagePath, 
+                                     self.img_offset_x, 
+                                     self.img_offset_y)
+
+    def _render(self):
+        self.display.clear()
+        self.selected = max(0, self.selected)
+        self.selected = min(len(self.options)-1, self.selected)
+        
+        if(self.selected < self.current_top):
+            self.current_top -= 1
+            self.current_bottom -=1
+
+        if(self.selected >= self.current_bottom):
+            self.current_top += 1
+            self.current_bottom +=1
+
+        visible_options = self.options[self.current_top:self.current_bottom]
+
+        #ensure image is rendered last so it is on top of the text
+        self._render_text(visible_options)
+        self._render_image(visible_options)
+
+        self.display.present()
+
+    def get_selection(self):
+        self._render()
+        running = True
+        
+        while running:
+            if(self.controller.get_input()):
+                if self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_DPAD_UP:
+                    self.selected-=1
+                elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+                    self.selected+=1
+                elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_A:
+                    return self.options[self.selected]
+                elif self.controller.last_input() == sdl2.SDL_CONTROLLER_BUTTON_B:
+                    return None
+
+                self._render()

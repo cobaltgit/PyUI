@@ -27,9 +27,9 @@ class SystemSelectMenu:
             sysConfig = SysConfig(system)
             systems_list.append(
                 ImageTextPair(
+                    system,
                     sysConfig.get_icon(),
-                    sysConfig.get_icon_selected(),
-                    system
+                    sysConfig.get_icon_selected()
                 )
             )
 

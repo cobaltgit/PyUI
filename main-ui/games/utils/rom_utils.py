@@ -1,8 +1,8 @@
 import os
 
 class RomUtils:
-    def __init__(self):
-        self.roms_path = "/mnt/sdcard/Roms/"
+    def __init__(self, roms_path):
+        self.roms_path = roms_path
 
     def get_roms_path(self):
         return self.roms_path

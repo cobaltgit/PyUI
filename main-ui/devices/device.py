@@ -51,3 +51,7 @@ class Device(ABC):
     @abstractmethod
     def large_grid_spacing_multiplier(self):
         pass
+
+    @abstractmethod
+    def run_game(self, path):
+        pass

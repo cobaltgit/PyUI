@@ -18,10 +18,10 @@ class MainMenu:
 
     def run_main_menu_selection(self):
         image_text_list = [
-            ImageTextPair(self.theme.favorite, self.theme.favorite_selected, "Favorite"),
-            ImageTextPair(self.theme.game,self.theme.game_selected, "Game"),
-            ImageTextPair(self.theme.app,self.theme.app_selected, "App"),
-            ImageTextPair(self.theme.settings,self.theme.settings_selected, "Setting")
+            ImageTextPair( "Favorite", self.theme.favorite, self.theme.favorite_selected),
+            ImageTextPair("Game", self.theme.game,self.theme.game_selected),
+            ImageTextPair("App",self.theme.app,self.theme.app_selected),
+            ImageTextPair("Setting", self.theme.settings,self.theme.settings_selected)
         ]
 
         options_list = GridView(self.display,self.controller,self.device,self.theme, image_text_list, 4, 1)
