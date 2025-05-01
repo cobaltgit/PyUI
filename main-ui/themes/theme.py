@@ -53,5 +53,5 @@ class Theme():
     @property
     def text_color_selected(self):
         # Get from json file
-        return  (255, 255, 0)    
+        return  (215, 180, 95)    
     

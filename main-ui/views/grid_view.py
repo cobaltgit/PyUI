@@ -51,7 +51,7 @@ class GridView:
         total_gap_height =  (self.rows - 1) * 10 if self.rows > 1 else 0
         y_gap = total_gap_height / (self.rows - 1)  if self.rows > 1 else 0
 
-        text_pad = 12
+        text_pad = 20
         
         for visible_index, imageTextPair in enumerate(visible_options):
 
