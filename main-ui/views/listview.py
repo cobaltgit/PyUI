@@ -1,6 +1,7 @@
 from typing import List
 from controller.controller_inputs import ControllerInput
 from display.display import Display
+from display.font_purpose import FontPurpose
 import sdl2
 from devices.device import Device
 from controller.controller import Controller
@@ -39,7 +40,7 @@ class ListView:
         for visible_index, (label) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
             color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
-            self.display.render_text(label, 50, 35 + visible_index * self.line_height, color=color)
+            self.display.render_text(label, 50, 35 + visible_index * self.line_height, color, FontPurpose.LIST)
             
         self.display.present()
 

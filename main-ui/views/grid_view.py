@@ -1,5 +1,6 @@
 from typing import List
 from controller.controller_inputs import ControllerInput
+from display.font_purpose import FontPurpose
 from display.font_size import FontSize
 from display.display import Display
 import sdl2
@@ -25,6 +26,10 @@ class GridView:
 
         self.rows = rows
         self.cols = cols
+        if(rows > 1):
+            self.font_purpose = FontPurpose.GRID_ONE_ROW
+        else:
+            self.font_purpose = FontPurpose.GRID_MULTI_ROW
      
     def _render(self):
         self.display.clear()
@@ -75,7 +80,8 @@ class GridView:
             color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
             self.display.render_text_centered(imageTextPair.get_text(), 
                                     x_offset,
-                                    int(y_offset+actual_height + text_pad), color)
+                                    int(y_offset+actual_height + text_pad), color,
+                                    self.font_purpose)
             
         self.display.present()
 

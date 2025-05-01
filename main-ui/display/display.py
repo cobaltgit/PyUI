@@ -1,3 +1,4 @@
+from display.font_purpose import FontPurpose
 from display.loaded_font import LoadedFont
 from display.font_size import FontSize
 import sdl2
@@ -12,9 +13,9 @@ class Display:
         self.device = device
         self._init_display()
         self.fonts = {
-            FontSize.SMALL : self._load_font(self.device.font_size_small),
-            FontSize.MEDIUM : self._load_font(self.device.font_size_medium),
-            FontSize.LARGE : self._load_font(self.device.font_size_large),
+            FontPurpose.GRID_ONE_ROW : self._load_font(FontPurpose.GRID_ONE_ROW),
+            FontPurpose.GRID_MULTI_ROW : self._load_font(FontPurpose.GRID_MULTI_ROW),
+            FontPurpose.LIST : self._load_font(FontPurpose.LIST),
         }
         surf = sdl2.ext.load_image(self.theme.background)
         self.background_texture = sdl2.SDL_CreateTextureFromSurface(self.renderer.sdlrenderer, surf)
@@ -39,12 +40,15 @@ class Display:
         self.renderer = sdl2.ext.Renderer(window, flags=sdl2.SDL_RENDERER_ACCELERATED)
 
 
-    def _load_font(self, font_size):
+    def _load_font(self, font_purpose):
         if sdl2.sdlttf.TTF_Init() == -1:
             raise RuntimeError("Failed to initialize SDL_ttf")
 
         # Load the TTF font
-        font_path = "/mnt/sdcard/spruce/Font Files/Noto.ttf"
+        # font_path = "/mnt/sdcard/spruce/Font Files/Noto.ttf"
+        font_path = self.theme.get_font(font_purpose)
+        font_size = self.theme.get_font_size(font_purpose)
+        
         font = sdl2.sdlttf.TTF_OpenFont(font_path.encode('utf-8'), font_size)
         if not font:
             raise RuntimeError("Could not load font")
@@ -54,12 +58,12 @@ class Display:
     def clear(self):
         sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
     
-    def render_text(self,text, x, y, color, size = FontSize.MEDIUM, absolute_x_y = True):
+    def render_text(self,text, x, y, color, purpose : FontPurpose, absolute_x_y = True):
         # Create an SDL_Color
         sdl_color = sdl2.SDL_Color(color[0], color[1], color[2])
         
         # Render the text to a surface
-        surface = sdl2.sdlttf.TTF_RenderText_Blended(self.fonts[size].font, text.encode('utf-8'), sdl_color)
+        surface = sdl2.sdlttf.TTF_RenderText_Blended(self.fonts[purpose].font, text.encode('utf-8'), sdl_color)
         if not surface:
             raise RuntimeError("Failed to render text surface")
 
@@ -82,8 +86,8 @@ class Display:
         sdl2.SDL_DestroyTexture(texture)
         sdl2.SDL_FreeSurface(surface)
 
-    def render_text_centered(self,text, x, y, color, size = FontSize.MEDIUM):
-        self.render_text(text, x, y, color, size, False)
+    def render_text_centered(self,text, x, y, color, purpose : FontPurpose):
+        self.render_text(text, x, y, color, purpose, False)
 
     def render_image(self, image_path: str, x: int, y: int, absolute_x_y = True):
         # Load the image into an SDL_Surface
@@ -114,8 +118,8 @@ class Display:
     def render_image_centered(self, image_path: str, x: int, y: int):
         return self.render_image(image_path,x,y,False)
 
-    def get_line_height(self, size = FontSize.MEDIUM):
-        return self.fonts[size].line_height;
+    def get_line_height(self, purpose : FontPurpose):
+        return self.fonts[purpose].line_height;
         
     def present(self):
         self.renderer.present();

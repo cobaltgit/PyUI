@@ -1,6 +1,7 @@
 from typing import List
 from controller.controller_inputs import ControllerInput
 from display.display import Display
+from display.font_purpose import FontPurpose
 import sdl2
 from devices.device import Device
 from controller.controller import Controller
@@ -19,7 +20,7 @@ class ImageListView:
 
         self.selected = 0
         self.toggles = [False] * len(options)
-        self.line_height = display.get_line_height() + 10  # add 5px padding between lines
+        self.line_height = display.get_line_height(FontPurpose.LIST) + 10  # add 10px padding between lines
         self.current_top = 0
         self.current_bottom = min(device.max_rows_for_list,len(options))
         self.img_offset_x = img_offset_x
@@ -30,7 +31,7 @@ class ImageListView:
         for visible_index, (imageTextPair) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
             color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
-            self.display.render_text(imageTextPair.get_text(), 50, 35 + visible_index * self.line_height, color=color)
+            self.display.render_text(imageTextPair.get_text(), 50, 35 + visible_index * self.line_height, color, FontPurpose.LIST)
 
     def _render_image(self, visible_options):
         for visible_index, (imageTextPair) in enumerate(visible_options):

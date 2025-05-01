@@ -1,8 +1,23 @@
+import json
+import os
+
+from display.font_purpose import FontPurpose
+
 class Theme():
     
     def __init__(self, path):
         self.path = path
+        self.load_from_file(os.path.join(path,"config.json"))
+
     
+    def load_from_file(self, file_path):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        # Store top-level keys as attributes
+        for key, value in data.items():
+            setattr(self, key, value)
+
     @property
     def background(self):
         return self.path + "skin/background.png"
@@ -45,6 +60,29 @@ class Theme():
     def system_selected(self, system):
         return self.path + "icons/sel/" + system.lower() +".png"
     
+    def get_font(self, font_purpose : FontPurpose):
+        match font_purpose:
+            case FontPurpose.GRID_ONE_ROW:
+                return os.path.join(self.path,self.grid["font"]) 
+            case FontPurpose.GRID_MULTI_ROW:
+                return os.path.join(self.path,self.grid["font"]) 
+            case FontPurpose.LIST:
+                return os.path.join(self.path,self.grid["font"]) 
+            case _:
+                return os.path.join(self.path,self.list["font"]) 
+    
+    def get_font_size(self, font_purpose : FontPurpose):
+        match font_purpose:
+            case FontPurpose.GRID_ONE_ROW:
+                return self.grid["grid1x4"]
+            case FontPurpose.GRID_MULTI_ROW:
+                return self.grid["grid3x4"]
+            case FontPurpose.LIST:
+                return self.list["size"]
+            case _:
+                return self.list["font"]
+
+
     @property
     def text_color(self):
         # Get from json file
