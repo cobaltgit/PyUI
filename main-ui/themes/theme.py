@@ -39,6 +39,12 @@ class Theme():
     def settings_selected(self):
         return self.path + "skin/ic-setting-f.png"    
     
+    def system(self, system):
+        return self.path + "icons/" + system.lower() +".png"
+    
+    def system_selected(self, system):
+        return self.path + "icons/sel/" + system.lower() +".png"
+    
     @property
     def text_color(self):
         # Get from json file

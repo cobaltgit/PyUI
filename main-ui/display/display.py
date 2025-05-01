@@ -54,7 +54,7 @@ class Display:
     def clear(self):
         sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
     
-    def render_text(self,text, x, y, color, size = FontSize.MEDIUM):
+    def render_text(self,text, x, y, color, size = FontSize.MEDIUM, absolute_x_y = True):
         # Create an SDL_Color
         sdl_color = sdl2.SDL_Color(color[0], color[1], color[2])
         
@@ -70,7 +70,10 @@ class Display:
             raise RuntimeError("Failed to create texture from surface")
 
         # Get the width and height of the surface
-        rect = sdl2.SDL_Rect(x, y, surface.contents.w, surface.contents.h)
+        if(absolute_x_y) :
+            rect = sdl2.SDL_Rect(x, y, surface.contents.w, surface.contents.h)
+        else:
+            rect = sdl2.SDL_Rect(x - int(surface.contents.w/2), y, surface.contents.w, surface.contents.h)
 
         # Copy the texture to the renderer
         sdl2.SDL_RenderCopy(self.renderer.renderer, texture, None, rect)
@@ -79,8 +82,10 @@ class Display:
         sdl2.SDL_DestroyTexture(texture)
         sdl2.SDL_FreeSurface(surface)
 
+    def render_text_centered(self,text, x, y, color, size = FontSize.MEDIUM):
+        self.render_text(text, x, y, color, size, False)
 
-    def render_image(self, image_path: str, x: int, y: int):
+    def render_image(self, image_path: str, x: int, y: int, absolute_x_y = True):
         # Load the image into an SDL_Surface
         surface = sdl2.sdlimage.IMG_Load(image_path.encode('utf-8'))
         if not surface:
@@ -93,7 +98,10 @@ class Display:
             raise RuntimeError("Failed to create texture from image surface")
 
         # Set up the destination rectangle
-        rect = sdl2.SDL_Rect(x, y, surface.contents.w, surface.contents.h)
+        if(absolute_x_y) :
+            rect = sdl2.SDL_Rect(x, y, surface.contents.w, surface.contents.h)
+        else :
+            rect = sdl2.SDL_Rect(x - int(surface.contents.w/2), y, surface.contents.w, surface.contents.h)
 
         # Copy the texture to the renderer
         sdl2.SDL_RenderCopy(self.renderer.renderer, texture, None, rect)
@@ -101,7 +109,11 @@ class Display:
         # Clean up
         sdl2.SDL_DestroyTexture(texture)
         sdl2.SDL_FreeSurface(surface)
+        return surface.contents.w, surface.contents.h
     
+    def render_image_centered(self, image_path: str, x: int, y: int):
+        return self.render_image(image_path,x,y,False)
+
     def get_line_height(self, size = FontSize.MEDIUM):
         return self.fonts[size].line_height;
         

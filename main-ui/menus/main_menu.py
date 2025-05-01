@@ -4,8 +4,8 @@ from devices.device import Device
 from display.display import Display
 from menus.games.system_select_menu import SystemSelectMenu
 from themes.theme import Theme
+from views.grid_view import GridView
 from views.image_text_pair import ImageTextPair
-from views.large_grid_view import LargeGridView
 
 
 class MainMenu:
@@ -24,7 +24,7 @@ class MainMenu:
             ImageTextPair(self.theme.settings,self.theme.settings_selected, "Setting")
         ]
 
-        options_list = LargeGridView(self.display,self.controller,self.device,self.theme, image_text_list)
+        options_list = GridView(self.display,self.controller,self.device,self.theme, image_text_list, 4, 1)
         selected = "new"
         while((selected := options_list.get_selection()) is not None):        
             print(f"{selected.get_text()} was selected")
