@@ -31,11 +31,11 @@ class GridView:
         self.selected = max(0, self.selected)
         self.selected = min(len(self.options)-1, self.selected)
         
-        if(self.selected < self.current_left):
+        while(self.selected < self.current_left):
             self.current_left -= (self.cols*2)
             self.current_right -= (self.cols*2)
 
-        if(self.selected >= self.current_right):
+        while(self.selected >= self.current_right):
             self.current_left += (self.cols*2)
             self.current_right += (self.cols*2)
 
@@ -88,6 +88,10 @@ class GridView:
                 if self.controller.last_input() == ControllerInput.DPAD_LEFT:
                     self.selected-=1
                 elif self.controller.last_input() == ControllerInput.DPAD_RIGHT:
+                    self.selected+=1
+                elif self.controller.last_input() == ControllerInput.L1:
+                    self.selected-=1
+                elif self.controller.last_input() == ControllerInput.R1:
                     self.selected+=1
                 if self.controller.last_input() == ControllerInput.DPAD_UP:
                     self.selected-=self.cols

@@ -46,11 +46,11 @@ class ImageListView:
         self.selected = max(0, self.selected)
         self.selected = min(len(self.options)-1, self.selected)
         
-        if(self.selected < self.current_top):
+        while(self.selected < self.current_top):
             self.current_top -= 1
             self.current_bottom -=1
 
-        if(self.selected >= self.current_bottom):
+        while(self.selected >= self.current_bottom):
             self.current_top += 1
             self.current_bottom +=1
 
@@ -62,6 +62,17 @@ class ImageListView:
 
         self.display.present()
 
+    def adjust_selected(self, amount):
+        if(amount < 0):
+            if(self.current_top + amount < 0):
+                amount = -1 * self.selected
+        elif(self.current_bottom - amount > len(self.options)):
+                amount = self.current_bottom - self.selected
+
+        self.selected += amount
+        self.current_top += amount
+        self.current_bottom += amount
+
     def get_selection(self):
         self._render()
         running = True
@@ -72,6 +83,10 @@ class ImageListView:
                     self.selected-=1
                 elif self.controller.last_input() == ControllerInput.DPAD_DOWN:
                     self.selected+=1
+                elif self.controller.last_input() == ControllerInput.L1:
+                    self.adjust_selected(-1*self.device.max_rows_for_list)
+                elif self.controller.last_input() == ControllerInput.R1:
+                    self.adjust_selected(self.device.max_rows_for_list)
                 elif self.controller.last_input() == ControllerInput.A:
                     return self.options[self.selected]
                 elif self.controller.last_input() == ControllerInput.B:
