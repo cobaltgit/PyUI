@@ -21,6 +21,7 @@ class ImageListView(ListView):
         self.options = options
 
         self.selected = 0
+        #TODO get line height padding from theme
         self.line_height = display.get_line_height(FontPurpose.LIST) + 10  # add 10px padding between lines
         self.current_top = 0
         self.max_rows = device.max_rows_for_list

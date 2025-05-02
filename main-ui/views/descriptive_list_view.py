@@ -24,6 +24,7 @@ class DescriptiveListView(ListView):
         self.current_top = 0
         self.max_rows = device.max_rows_for_descriptive_list
         self.current_bottom = min(self.max_rows,len(options))
+        #TODO get spacing from theme
         self.spacing = 10
      
 
@@ -31,6 +32,7 @@ class DescriptiveListView(ListView):
         visible_options: List[GridOrListEntry] = self.options[self.current_top:self.current_bottom]
 
         row_offset_x = self.theme.get_descriptive_list_icon_offset_x()
+        #TODO get padding from theme
         row_offset_y = self.display.get_top_bar_height() + 5
         
         for visible_index, ((gridOrListEntry)) in enumerate(visible_options):
