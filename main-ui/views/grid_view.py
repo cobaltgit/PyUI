@@ -11,11 +11,12 @@ from views.image_text_pair import ImageTextPair
 
 class GridView:
 
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, options: List[ImageTextPair], cols : int, rows: int):
+    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text, options: List[ImageTextPair], cols : int, rows: int,):
         self.display : Display = display
         self.controller : Controller = controller
         self.device : Device = device
         self.theme : Theme = theme
+        self.top_bar_text = top_bar_text
         self.options : List[ImageTextPair] = options 
 
         self.selected = 0
@@ -27,12 +28,16 @@ class GridView:
         self.rows = rows
         self.cols = cols
         if(rows > 1):
-            self.font_purpose = FontPurpose.GRID_ONE_ROW
-        else:
             self.font_purpose = FontPurpose.GRID_MULTI_ROW
+            self.font_bg_pad = 12
+            self.font_pad = 0
+        else:
+            self.font_purpose = FontPurpose.GRID_ONE_ROW
+            self.font_bg_pad = 0
+            self.font_pad = 15
      
     def _render(self):
-        self.display.clear()
+        self.display.clear(self.top_bar_text)
         self.selected = max(0, self.selected)
         self.selected = min(len(self.options)-1, self.selected)
         
@@ -44,14 +49,13 @@ class GridView:
             self.current_left += (self.cols*2)
             self.current_right += (self.cols*2)
 
-        print(f"current_left = {self.current_left}, current_right = {self.current_right} ")
         visible_options: List[ImageTextPair] = self.options[self.current_left:self.current_right]
 
         x_pad = 9 * self.cols
         usable_width = self.device.screen_width - (2 * x_pad)
         icon_width = usable_width / self.cols  # Initial icon width
 
-        y_pad = 48
+        y_pad = self.display.get_top_bar_height() + 5
         usable_height = self.device.screen_height - (2 * y_pad)
         icon_height = usable_height / self.rows  # Initial icon width
         total_gap_height =  (self.rows - 1) * 10 if self.rows > 1 else 0
@@ -73,14 +77,21 @@ class GridView:
                 y_index = int(visible_index / self.cols) 
                 y_offset = int(y_pad + y_index * (icon_height + y_gap))
 
-            
+            font_bg_pad = 0
+            if(imageTextPair.get_image_path_selected_bg() is not None):
+                font_bg_pad = self.font_bg_pad
+                if(actual_index == self.selected):
+                    self.display.render_image_centered(imageTextPair.get_image_path_selected_bg(), 
+                                            x_offset, 
+                                            y_offset)
+
             actual_height, actual_width = self.display.render_image_centered(imagePath, 
                                      x_offset, 
                                      y_offset)
-            color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
+            color = self.theme.text_color_selected(self.font_purpose) if actual_index == self.selected else self.theme.text_color(self.font_purpose)
             self.display.render_text_centered(imageTextPair.get_text(), 
                                     x_offset,
-                                    int(y_offset+actual_height + text_pad), color,
+                                    int(y_offset+actual_height - font_bg_pad + self.font_pad), color,
                                     self.font_purpose)
             
         self.display.present()

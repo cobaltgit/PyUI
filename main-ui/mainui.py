@@ -1,7 +1,6 @@
 import sdl2
 import sdl2.ext
 
-from games.utils.rom_utils import RomUtils
 from menus.main_menu import MainMenu
 from controller.controller import Controller
 from display.display import Display
@@ -14,10 +13,16 @@ sdl2.SDL_InitSubSystem(sdl2.SDL_INIT_GAMECONTROLLER)
 device = MiyooFlip()
 
 theme = Theme("/mnt/sdcard/Themes/SPRUCE/") 
+
 controller = Controller(device)
 display = Display(theme, device)
+
 main_menu = MainMenu(display, controller, device, theme)
 
 main_menu.run_main_menu_selection()
     
+theme.set_theme_path("/mnt/sdcard/Themes/HeyDW's Blue/") 
+
+main_menu.run_main_menu_selection()
+
 

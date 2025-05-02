@@ -10,12 +10,13 @@ from views.image_text_pair import ImageTextPair
 
 class ImageListView:
 
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, 
+    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text,
                  options: List[ImageTextPair], img_offset_x : int, img_offset_y : int):
         self.display = display
         self.controller = controller
         self.device = device
         self.theme = theme
+        self.top_bar_text = top_bar_text
         self.options = options
 
         self.selected = 0
@@ -30,8 +31,8 @@ class ImageListView:
     def _render_text(self, visible_options):
         for visible_index, (imageTextPair) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
-            color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
-            self.display.render_text(imageTextPair.get_text(), 50, 35 + visible_index * self.line_height, color, FontPurpose.LIST)
+            color = self.theme.text_color_selected(FontPurpose.LIST) if actual_index == self.selected else self.theme.text_color(FontPurpose.LIST)
+            self.display.render_text(imageTextPair.get_text(), 50, self.display.get_top_bar_height() + 5 + visible_index * self.line_height, color, FontPurpose.LIST)
 
     def _render_image(self, visible_options):
         for visible_index, (imageTextPair) in enumerate(visible_options):
@@ -43,7 +44,7 @@ class ImageListView:
                                      self.img_offset_y)
 
     def _render(self):
-        self.display.clear()
+        self.display.clear(self.top_bar_text)
         self.selected = max(0, self.selected)
         self.selected = min(len(self.options)-1, self.selected)
         

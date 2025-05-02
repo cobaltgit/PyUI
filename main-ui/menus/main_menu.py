@@ -24,9 +24,8 @@ class MainMenu:
             ImageTextPair("Setting", self.theme.settings,self.theme.settings_selected)
         ]
 
-        options_list = GridView(self.display,self.controller,self.device,self.theme, image_text_list, 4, 1)
+        options_list = GridView(self.display,self.controller,self.device,self.theme, "SPRUCE", image_text_list, 4, 1)
         selected = "new"
         while((selected := options_list.get_selection()) is not None):        
-            print(f"{selected.get_text()} was selected")
             if(selected.get_text() == "Game"):
                 self.system_select_menu.run_system_selection()

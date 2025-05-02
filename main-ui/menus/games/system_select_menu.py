@@ -19,21 +19,33 @@ class SystemSelectMenu:
         self.theme : Theme= theme
         self.game_utils : GameSystemUtils = GameSystemUtils()
         self.rom_select_menu : RomSelectMenu = RomSelectMenu(display,controller,device,theme)
+        self.use_emu_cfg = False
 
     def run_system_selection(self) :
         selected = "new"
         systems_list = []
         for system in self.game_utils.get_active_systems():
             sysConfig = SysConfig(system)
-            systems_list.append(
-                ImageTextPair(
-                    system,
-                    sysConfig.get_icon(),
-                    sysConfig.get_icon_selected()
+            if(self.use_emu_cfg):
+                systems_list.append(
+                    ImageTextPair(
+                        system,
+                        sysConfig.get_icon(),
+                        sysConfig.get_icon_selected(),
+                        self.theme.system_selected_bg()
+                    )
                 )
-            )
+            else:
+                systems_list.append(
+                    ImageTextPair(
+                        system,
+                        self.theme.get_system_icon(system),
+                        self.theme.get_system_icon_selected(system),
+                        self.theme.system_selected_bg()
+                    )
+                )
 
-        options_list = GridView(self.display,self.controller,self.device,self.theme, systems_list, 4, 2)
+
+        options_list = GridView(self.display,self.controller,self.device,self.theme, "Game", systems_list, 4, 2)
         while((selected := options_list.get_selection()) is not None):
-            print(f"{selected.get_text()} was selected")
             self.rom_select_menu.run_rom_selection(selected.get_text())

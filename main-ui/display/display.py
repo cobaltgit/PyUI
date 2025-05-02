@@ -1,6 +1,8 @@
 from display.font_purpose import FontPurpose
 from display.loaded_font import LoadedFont
 from display.font_size import FontSize
+from display.render_mode import RenderMode
+from menus.common.top_bar import TopBar
 import sdl2
 import sdl2.ext
 import sdl2.sdlttf
@@ -13,14 +15,13 @@ class Display:
         self.device = device
         self._init_display()
         self.fonts = {
-            FontPurpose.GRID_ONE_ROW : self._load_font(FontPurpose.GRID_ONE_ROW),
-            FontPurpose.GRID_MULTI_ROW : self._load_font(FontPurpose.GRID_MULTI_ROW),
-            FontPurpose.LIST : self._load_font(FontPurpose.LIST),
-        }
-        surf = sdl2.ext.load_image(self.theme.background)
-        self.background_texture = sdl2.SDL_CreateTextureFromSurface(self.renderer.sdlrenderer, surf)
-        sdl2.SDL_FreeSurface(surf)
-        self.clear()
+            purpose: self._load_font(purpose)
+            for purpose in FontPurpose
+        }        
+        self.bg_path = ""
+        self._check_for_bg_change()
+        self.top_bar = TopBar(self,device,theme)
+        self.clear("init")
         self.present()
 
     def _init_display(self):
@@ -39,6 +40,12 @@ class Display:
         # Use default renderer flags
         self.renderer = sdl2.ext.Renderer(window, flags=sdl2.SDL_RENDERER_ACCELERATED)
 
+    def _check_for_bg_change(self):
+        if(self.bg_path != self.theme.background):
+            surf = sdl2.ext.load_image(self.theme.background)
+            self.background_texture = sdl2.SDL_CreateTextureFromSurface(self.renderer.sdlrenderer, surf)
+            sdl2.SDL_FreeSurface(surf)
+
 
     def _load_font(self, font_purpose):
         if sdl2.sdlttf.TTF_Init() == -1:
@@ -55,10 +62,36 @@ class Display:
         line_height = sdl2.sdlttf.TTF_FontHeight(font)
         return LoadedFont(font,line_height)
         
-    def clear(self):
+    def clear(self, screen):
+        self._check_for_bg_change();
         sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
+        self.top_bar.render_top_bar(screen)
     
-    def render_text(self,text, x, y, color, purpose : FontPurpose, absolute_x_y = True):
+    def render(self, x, y, texture, surface, render_mode):
+        adj_x = x
+        adj_y = y
+
+        # Get the width and height of the surface
+        if(RenderMode.X_CENTERED == render_mode) :
+            adj_x = x - int(surface.contents.w/2)
+        elif(RenderMode.XY_CENTERED == render_mode):
+            adj_x = x - int(surface.contents.w/2)
+            adj_y = x - int(surface.contents.h/2)
+        elif(RenderMode.TOP_RIGHT_ADJUST == render_mode):
+            adj_x = x - int(surface.contents.w)
+
+        rect = sdl2.SDL_Rect(adj_x, adj_y, surface.contents.w, surface.contents.h)
+
+        # Copy the texture to the renderer
+        sdl2.SDL_RenderCopy(self.renderer.renderer, texture, None, rect)
+
+        # Clean up
+        sdl2.SDL_DestroyTexture(texture)
+        sdl2.SDL_FreeSurface(surface)
+
+        return surface.contents.w, surface.contents.h
+
+    def render_text(self,text, x, y, color, purpose : FontPurpose, render_mode = RenderMode.ABSOLUTE):
         # Create an SDL_Color
         sdl_color = sdl2.SDL_Color(color[0], color[1], color[2])
         
@@ -73,23 +106,12 @@ class Display:
             sdl2.SDL_FreeSurface(surface)
             raise RuntimeError("Failed to create texture from surface")
 
-        # Get the width and height of the surface
-        if(absolute_x_y) :
-            rect = sdl2.SDL_Rect(x, y, surface.contents.w, surface.contents.h)
-        else:
-            rect = sdl2.SDL_Rect(x - int(surface.contents.w/2), y, surface.contents.w, surface.contents.h)
-
-        # Copy the texture to the renderer
-        sdl2.SDL_RenderCopy(self.renderer.renderer, texture, None, rect)
-
-        # Clean up
-        sdl2.SDL_DestroyTexture(texture)
-        sdl2.SDL_FreeSurface(surface)
+        return self.render(x, y, texture, surface, render_mode)
 
     def render_text_centered(self,text, x, y, color, purpose : FontPurpose):
-        self.render_text(text, x, y, color, purpose, False)
+        self.render_text(text, x, y, color, purpose, RenderMode.X_CENTERED)
 
-    def render_image(self, image_path: str, x: int, y: int, absolute_x_y = True):
+    def render_image(self, image_path: str, x: int, y: int, render_mode = RenderMode.ABSOLUTE):
         # Load the image into an SDL_Surface
         surface = sdl2.sdlimage.IMG_Load(image_path.encode('utf-8'))
         if not surface:
@@ -99,27 +121,18 @@ class Display:
         texture = sdl2.SDL_CreateTextureFromSurface(self.renderer.renderer, surface)
         if not texture:
             sdl2.SDL_FreeSurface(surface)
-            raise RuntimeError("Failed to create texture from image surface")
+            raise RuntimeError("Failed to create texture from surface")
 
-        # Set up the destination rectangle
-        if(absolute_x_y) :
-            rect = sdl2.SDL_Rect(x, y, surface.contents.w, surface.contents.h)
-        else :
-            rect = sdl2.SDL_Rect(x - int(surface.contents.w/2), y, surface.contents.w, surface.contents.h)
-
-        # Copy the texture to the renderer
-        sdl2.SDL_RenderCopy(self.renderer.renderer, texture, None, rect)
-
-        # Clean up
-        sdl2.SDL_DestroyTexture(texture)
-        sdl2.SDL_FreeSurface(surface)
-        return surface.contents.w, surface.contents.h
+        return self.render(x, y, texture, surface, render_mode)
     
     def render_image_centered(self, image_path: str, x: int, y: int):
-        return self.render_image(image_path,x,y,False)
+        return self.render_image(image_path,x,y,RenderMode.X_CENTERED)
 
     def get_line_height(self, purpose : FontPurpose):
         return self.fonts[purpose].line_height;
         
     def present(self):
         self.renderer.present();
+
+    def get_top_bar_height(self):
+        return self.top_bar.get_top_bar_height()

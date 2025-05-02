@@ -53,9 +53,22 @@ class Device(ABC):
         pass
 
     @abstractmethod
+    def get_wifi_status(self):
+        pass
+
+    @abstractmethod
+    def get_charge_status(self):
+        pass
+
+    @abstractmethod
+    def get_battery_percent(self):
+        pass
+
+    @abstractmethod
     def run_game(self, path):
         pass
 
     @abstractmethod
     def map_input(self, sdl_input):
         pass
+

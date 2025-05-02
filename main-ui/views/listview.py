@@ -9,11 +9,12 @@ from themes.theme import Theme
 
 class ListView:
 
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, options: List[str]):
+    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text, options: List[str]):
         self.display = display
         self.controller = controller
         self.device = device
         self.theme = theme
+        self.top_bar_text = top_bar_text
         self.options = options
 
         self.selected = 0
@@ -23,7 +24,7 @@ class ListView:
         self.current_bottom = min(device.max_rows_for_list,len(options))
      
     def _render(self):
-        self.display.clear()
+        self.display.clear(self.top_bar_text)
         self.selected = max(0, self.selected)
         self.selected = min(len(self.options)-1, self.selected)
         
@@ -39,7 +40,7 @@ class ListView:
 
         for visible_index, (label) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
-            color = self.theme.text_color_selected if actual_index == self.selected else self.theme.text_color
+            color = self.theme.text_color_selected(FontPurpose.LIST) if actual_index == self.selected else self.theme.text_color(FontPurpose.LIST)
             self.display.render_text(label, 50, 35 + visible_index * self.line_height, color, FontPurpose.LIST)
             
         self.display.present()

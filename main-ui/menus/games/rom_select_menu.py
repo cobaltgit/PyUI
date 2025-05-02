@@ -27,7 +27,6 @@ class RomSelectMenu:
         if os.path.exists(img_file):
             return img_file
         else:
-            print(f"No image found for {file_name} in {imgs_dir}")
             return None
         
     def run_rom_selection(self,system) :
@@ -48,10 +47,9 @@ class RomSelectMenu:
 
         img_offset_x = int(3/4*self.device.screen_width)
         img_offset_y = int(self.device.screen_height/5)
-        options_list = ImageListView(self.display,self.controller,self.device,self.theme, 
+        options_list = ImageListView(self.display,self.controller,self.device,self.theme, system,
                                      rom_list, img_offset_x, img_offset_y)
         while((selected := options_list.get_selection()) is not None):
-            print(f"{selected.get_value()} was selected")
             self.device.run_game(os.path.join(self.roms_path,system,selected.get_value()))
             self.controller.clear_input_queue()
 

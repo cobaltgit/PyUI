@@ -9,7 +9,6 @@ class RomUtils:
     
     def get_roms(self, system):
         # Construct the full directory path
-        print(f"System is {system}")
         directory = os.path.join(self.roms_path, system)
         
         # List to store valid files

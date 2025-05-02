@@ -1,8 +1,12 @@
 import subprocess
 from controller.controller_inputs import ControllerInput
+from devices.charge.charge_status import ChargeStatus
 from devices.device import Device
 import os
+from devices.miyoo.system_config import SystemConfig
+from devices.wifi.wifi_status import WifiStatus
 import sdl2
+from utils import throttle
 
 os.environ["SDL_VIDEODRIVER"] = "KMSDRM"
 os.environ["SDL_RENDER_DRIVER"] = "kmsdrm"
@@ -26,8 +30,10 @@ class MiyooFlip(Device):
             sdl2.SDL_CONTROLLER_BUTTON_BACK: ControllerInput.SELECT,
         }
 
+        #Idea is if something were to change from he we can reload it
+        #so it always has the more accurate data
+        self.SystemConfig = SystemConfig("/userdata/system.json")
 
-    
     @property
     def screen_width(self):
         return 640
@@ -50,7 +56,7 @@ class MiyooFlip(Device):
 
     @property
     def max_rows_for_list(self):
-        return 12
+        return 10
     
     #Can we dynamically calculate these?
     @property
@@ -69,7 +75,7 @@ class MiyooFlip(Device):
     def large_grid_spacing_multiplier(self):
         icon_size = 140
         return icon_size+int(self.large_grid_x_offset/2)
-
+    
     def run_game(self, file_path):
         print(f"About to launch /mnt/sdcard/Emu/.emu_setup/standard_launch.sh {file_path}")
         subprocess.run(["/mnt/sdcard/Emu/.emu_setup/standard_launch.sh",file_path])
@@ -100,3 +106,53 @@ class MiyooFlip(Device):
     
     def map_input(self, sdl_input):
         return self.sdl_button_to_input[sdl_input]
+    
+    def get_wifi_link_quality_level(self):
+        try:
+            output = subprocess.check_output(
+                ["cat", "/proc/net/wireless"],
+                text=True
+            ).strip().splitlines()
+            
+            if len(output) >= 3:
+                # The 3rd line contains the actual wireless stats
+                data_line = output[2]
+                parts = data_line.split()
+                
+                # parts[2] is the link quality, parts[3] is the level
+                link_level = float(parts[3].strip('.'))  # Remove trailing dot
+                return int(link_level)
+        except Exception as e:
+            return 0
+    
+    @throttle.limit_refresh(15)
+    def get_wifi_status(self):
+        link_quality_level = self.get_wifi_link_quality_level()
+        if(link_quality_level >= 70):
+            return WifiStatus.GREAT
+        elif(link_quality_level >= 50):
+            return WifiStatus.GOOD
+        elif(link_quality_level >= 30):
+            return WifiStatus.OKAY
+        else:
+            return WifiStatus.BAD
+        
+    @throttle.limit_refresh(15)
+    def get_charge_status(self):
+        output = subprocess.check_output(
+            ["cat", "/sys/class/power_supply/usb/online"],
+            text=True
+        )
+
+        if(1 == int(output.strip())):
+           return ChargeStatus.CHARGING
+        else:
+            return ChargeStatus.DISCONNECTED
+    
+    @throttle.limit_refresh(15)
+    def get_battery_percent(self):
+        output = subprocess.check_output(
+            ["cat", "/sys/class/power_supply/battery/capacity"],
+            text=True
+        )
+        return int(output.strip()) 
