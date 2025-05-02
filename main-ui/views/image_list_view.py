@@ -6,13 +6,13 @@ import sdl2
 from devices.device import Device
 from controller.controller import Controller
 from themes.theme import Theme
-from views.image_text_pair import ImageTextPair
+from views.grid_or_list_entry import GridOrListEntry
 from views.list_view import ListView
 
 class ImageListView(ListView):
 
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text,
-                 options: List[ImageTextPair], img_offset_x : int, img_offset_y : int):
+                 options: List[GridOrListEntry], img_offset_x : int, img_offset_y : int):
         super().__init__(controller)
         self.display = display
         self.device = device

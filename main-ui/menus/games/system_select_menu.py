@@ -6,8 +6,8 @@ from games.utils.game_system_utils import GameSystemUtils
 from menus.games.rom_select_menu import RomSelectMenu
 from menus.games.sys_config import SysConfig
 from themes.theme import Theme
+from views.grid_or_list_entry import GridOrListEntry
 from views.grid_view import GridView
-from views.image_text_pair import ImageTextPair
 
 
 class SystemSelectMenu:
@@ -27,24 +27,23 @@ class SystemSelectMenu:
             sysConfig = SysConfig(system)
             if(self.use_emu_cfg):
                 systems_list.append(
-                    ImageTextPair(
+                    GridOrListEntry(
                         system,
                         sysConfig.get_icon(),
-                        sysConfig.get_icon_selected(),
-                        self.theme.system_selected_bg()
+                        sysConfig.get_icon_selected()
                     )
                 )
             else:
                 systems_list.append(
-                    ImageTextPair(
+                    GridOrListEntry(
                         system,
                         self.theme.get_system_icon(system),
-                        self.theme.get_system_icon_selected(system),
-                        self.theme.system_selected_bg()
+                        self.theme.get_system_icon_selected(system)
                     )
                 )
 
 
-        options_list = GridView(self.display,self.controller,self.device,self.theme, "Game", systems_list, 4, 2)
+        options_list = GridView(self.display,self.controller,self.device,self.theme, "Game", systems_list, 4, 2,
+                                self.theme.system_selected_bg())
         while((selected := options_list.get_selection()) is not None):
             self.rom_select_menu.run_rom_selection(selected.get_text())

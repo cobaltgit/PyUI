@@ -6,8 +6,8 @@ from devices.device import Device
 from display.display import Display
 from games.utils.rom_utils import RomUtils
 from themes.theme import Theme
+from views.grid_or_list_entry import GridOrListEntry
 from views.image_list_view import ImageListView
-from views.image_text_pair import ImageTextPair
 
 
 class RomSelectMenu:
@@ -38,7 +38,7 @@ class RomSelectMenu:
         for rom in self.rom_utils.get_roms(system):
             img_path = self.get_image_path(imgs_dir,rom)
             rom_list.append(
-                ImageTextPair(
+                GridOrListEntry(
                     self.remove_extension(rom),
                     img_path,
                     value=rom

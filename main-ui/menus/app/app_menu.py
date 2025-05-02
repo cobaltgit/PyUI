@@ -6,6 +6,7 @@ from display.display import Display
 from themes.theme import Theme
 from views.descriptive_list_view import DescriptiveListView
 from views.descriptive_list_view_entry import DescriptiveListViewEntry
+from views.grid_or_list_entry import GridOrListEntry
 
 
 class AppMenu:
@@ -24,11 +25,13 @@ class AppMenu:
         for app in self.appFinder.get_apps():
             if(app.get_label() is not None):
                 app_list.append(
-                    DescriptiveListViewEntry(
-                        app.get_label(),
-                        app.get_description(),
-                        app.get_icon(),
-                        app.get_launch()
+                    GridOrListEntry(
+                        text=app.get_label(),
+                        image_path=None,
+                        image_path_selected=None,
+                        description=app.get_description(),
+                        icon=app.get_icon(),
+                        value=app.get_launch()
                     )
                 )
 
