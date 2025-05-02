@@ -8,7 +8,6 @@ from menus.games.sys_config import SysConfig
 from themes.theme import Theme
 from views.grid_view import GridView
 from views.image_text_pair import ImageTextPair
-from views.listview import ListView
 
 
 class SystemSelectMenu:

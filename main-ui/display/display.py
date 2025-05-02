@@ -25,6 +25,8 @@ class Display:
         self.present()
 
     def _init_display(self):
+        sdl2.ext.init(controller=True)
+        sdl2.SDL_InitSubSystem(sdl2.SDL_INIT_GAMECONTROLLER)
         display_mode = sdl2.SDL_DisplayMode()
         if sdl2.SDL_GetCurrentDisplayMode(0, display_mode) != 0:
             print("Failed to get display mode, using fallback 640x480")
@@ -33,12 +35,25 @@ class Display:
             width, height = display_mode.w, display_mode.h
             print(f"Display size: {width}x{height}")
 
-        window = sdl2.ext.Window("Minimal SDL2 GUI", size=(width, height), flags=sdl2.SDL_WINDOW_FULLSCREEN)
-        window.show()
+        self.window = sdl2.ext.Window("Minimal SDL2 GUI", size=(width, height), flags=sdl2.SDL_WINDOW_FULLSCREEN)
+        self.window.show()
 
         sdl2.SDL_SetHint(sdl2.SDL_HINT_RENDER_SCALE_QUALITY, b"2")
         # Use default renderer flags
-        self.renderer = sdl2.ext.Renderer(window, flags=sdl2.SDL_RENDERER_ACCELERATED)
+        self.renderer = sdl2.ext.Renderer(self.window, flags=sdl2.SDL_RENDERER_ACCELERATED)
+
+    def _deinit_display(self):
+        sdl2.SDL_DestroyRenderer(self.renderer.sdlrenderer)
+        self.renderer = None
+        sdl2.SDL_DestroyWindow(self.window.window)
+        self.window = None
+        sdl2.SDL_QuitSubSystem(sdl2.SDL_INIT_VIDEO)
+
+    def reinitialize(self):
+        self._deinit_display()
+        self._init_display()
+        self.clear("reinitialize")
+        self.present()
 
     def _check_for_bg_change(self):
         if(self.bg_path != self.theme.background):
@@ -132,7 +147,7 @@ class Display:
         return self.fonts[purpose].line_height;
         
     def present(self):
-        self.renderer.present();
+        self.renderer.present()
 
     def get_top_bar_height(self):
         return self.top_bar.get_top_bar_height()

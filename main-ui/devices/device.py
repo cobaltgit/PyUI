@@ -34,6 +34,11 @@ class Device(ABC):
 
     @property
     @abstractmethod
+    def max_rows_for_descriptive_list(self):
+        pass
+
+    @property
+    @abstractmethod
     def max_icons_for_large_grid_view(self):
         pass
 
@@ -53,6 +58,10 @@ class Device(ABC):
         pass
 
     @abstractmethod
+    def get_app_finder(self):
+        pass
+    
+    @abstractmethod
     def get_wifi_status(self):
         pass
 
@@ -66,6 +75,10 @@ class Device(ABC):
 
     @abstractmethod
     def run_game(self, path):
+        pass
+
+    @abstractmethod
+    def run_app(self, path):
         pass
 
     @abstractmethod

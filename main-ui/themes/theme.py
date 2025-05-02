@@ -62,6 +62,11 @@ class Theme():
     def get_title_bar_bg(self):
         return os.path.join(self.path,"skin","bg-title.png")
     
+    def get_descriptive_list_selected_bg(self):
+        return os.path.join(self.path,"skin","bg-list-l.png")
+
+    
+    
     def get_battery_icon(self,charging,battery_percent):
         if(charging):
             if(battery_percent > 97):
@@ -138,6 +143,10 @@ class Theme():
                 return os.path.join(self.path,self.grid["font"]) 
             case FontPurpose.LIST:
                 return os.path.join(self.path,self.grid["font"]) 
+            case FontPurpose.DESCRIPTIVE_LIST_TITLE:
+                return os.path.join(self.path,self.grid["font"]) 
+            case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
+                return os.path.join(self.path,self.grid["font"]) 
             case _:
                 return os.path.join(self.path,self.list["font"]) 
     
@@ -153,6 +162,10 @@ class Theme():
                 return self.grid["grid3x4"]
             case FontPurpose.LIST:
                 return self.list["size"]
+            case FontPurpose.DESCRIPTIVE_LIST_TITLE:
+                return self.list["size"]
+            case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
+                return self.grid["grid3x4"]
             case _:
                 return self.list["font"]
 
@@ -177,6 +190,10 @@ class Theme():
                 return self.hex_to_color(self.grid["color"])
             case FontPurpose.LIST:
                 return self.hex_to_color(self.grid["color"])
+            case FontPurpose.DESCRIPTIVE_LIST_TITLE:
+                return self.hex_to_color(self.grid["color"])
+            case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
+                return self.hex_to_color(self.grid["color"])
             case _:
                 return self.hex_to_color(self.grid["color"])
       
@@ -188,6 +205,21 @@ class Theme():
                 return self.hex_to_color(self.grid["selectedcolor"])
             case FontPurpose.LIST:
                 return self.hex_to_color(self.grid["selectedcolor"])
+            case FontPurpose.DESCRIPTIVE_LIST_TITLE:
+                return self.hex_to_color(self.grid["selectedcolor"])
+            case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
+                return self.hex_to_color(self.grid["selectedcolor"])
             case _:
                 return self.hex_to_color(self.grid["selectedcolor"])
     
+    def get_descriptive_list_icon_offset_x(self):
+        return 10
+    
+    def get_descriptive_list_icon_offset_y(self):
+        return 10
+    
+    def get_descriptive_list_text_offset_y(self):
+        return 15
+    
+    def get_descriptive_list_text_from_icon_offset(self):
+        return 20

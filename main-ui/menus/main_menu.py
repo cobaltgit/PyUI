@@ -2,6 +2,7 @@
 from controller.controller import Controller
 from devices.device import Device
 from display.display import Display
+from menus.app.app_menu import AppMenu
 from menus.games.system_select_menu import SystemSelectMenu
 from themes.theme import Theme
 from views.grid_view import GridView
@@ -15,6 +16,7 @@ class MainMenu:
         self.device : Device= device
         self.theme : Theme= theme
         self.system_select_menu = SystemSelectMenu(display,controller,device,theme)
+        self.app_menu = AppMenu(display,controller,device,theme)
 
     def run_main_menu_selection(self):
         image_text_list = [
@@ -29,3 +31,5 @@ class MainMenu:
         while((selected := options_list.get_selection()) is not None):        
             if(selected.get_text() == "Game"):
                 self.system_select_menu.run_system_selection()
+            elif(selected.get_text() == "App"):
+                self.app_menu.run_app_selection()

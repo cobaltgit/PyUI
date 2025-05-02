@@ -1,4 +1,5 @@
 import subprocess
+from apps.miyoo.miyoo_app_finder import MiyooAppFinder
 from controller.controller_inputs import ControllerInput
 from devices.charge.charge_status import ChargeStatus
 from devices.device import Device
@@ -57,6 +58,10 @@ class MiyooFlip(Device):
     @property
     def max_rows_for_list(self):
         return 10
+
+    @property
+    def max_rows_for_descriptive_list(self):
+        return 4
     
     #Can we dynamically calculate these?
     @property
@@ -79,6 +84,10 @@ class MiyooFlip(Device):
     def run_game(self, file_path):
         print(f"About to launch /mnt/sdcard/Emu/.emu_setup/standard_launch.sh {file_path}")
         subprocess.run(["/mnt/sdcard/Emu/.emu_setup/standard_launch.sh",file_path])
+
+    def run_app(self, file_path):
+        print(f"About to launch app {file_path}")
+        subprocess.run([file_path])
 
     #TODO untested
     def map_analog_axis(self,sdl_input, value, threshold=16000):
@@ -156,3 +165,6 @@ class MiyooFlip(Device):
             text=True
         )
         return int(output.strip()) 
+    
+    def get_app_finder(self):
+        return MiyooAppFinder()
