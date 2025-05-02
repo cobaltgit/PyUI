@@ -28,20 +28,25 @@ class SystemSelectMenu:
             if(self.use_emu_cfg):
                 systems_list.append(
                     GridOrListEntry(
-                        system,
-                        sysConfig.get_icon(),
-                        sysConfig.get_icon_selected()
-                    )
+                        text=system,
+                        image_path=sysConfig.get_icon(),
+                        image_path_selected=sysConfig.get_icon_selected(),
+                        description="Game System",
+                        icon=sysConfig.get_icon_selected(),
+                        value=system
+                    ) 
                 )
             else:
                 systems_list.append(
                     GridOrListEntry(
-                        system,
-                        self.theme.get_system_icon(system),
-                        self.theme.get_system_icon_selected(system)
-                    )
+                        text=system,
+                        image_path=self.theme.get_system_icon(system),
+                        image_path_selected=self.theme.get_system_icon_selected(system),
+                        description="Game System",
+                        icon=self.theme.get_system_icon_selected(system),
+                        value=system
+                    )                
                 )
-
 
         options_list = GridView(self.display,self.controller,self.device,self.theme, "Game", systems_list, 4, 2,
                                 self.theme.system_selected_bg())

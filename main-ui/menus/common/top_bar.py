@@ -18,7 +18,7 @@ class TopBar:
         wifi_status = self.device.get_wifi_status()
         battery_icon = self.theme.get_battery_icon(charging,battery_percent)
         wifi_icon = self.theme.get_wifi_icon(wifi_status)
-        #Improve padding to not just be 10
+        #TODO Improve padding to not just be 10
         padding = 10
         self.top_bar_w, self.top_bar_h = self.display.render_image(top_bar_bg,0,0)
         battery_text_w, battery_text_h = self.display.render_text(str(battery_percent),self.device.screen_width - padding*2, int(padding*1.25),  self.theme.text_color(FontPurpose.BATTERY_PERCENT), FontPurpose.BATTERY_PERCENT, RenderMode.TOP_RIGHT_ADJUST)

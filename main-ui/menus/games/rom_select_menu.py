@@ -39,10 +39,12 @@ class RomSelectMenu:
             img_path = self.get_image_path(imgs_dir,rom)
             rom_list.append(
                 GridOrListEntry(
-                    self.remove_extension(rom),
-                    img_path,
-                    value=rom
-                )
+                    text=self.remove_extension(rom),
+                    image_path=img_path,
+                    image_path_selected=img_path,
+                    description=system, 
+                    icon=self.theme.get_system_icon_selected(system),
+                    value=rom)
             )
 
         img_offset_x = int(3/4*self.device.screen_width)

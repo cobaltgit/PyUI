@@ -20,10 +20,39 @@ class MainMenu:
 
     def run_main_menu_selection(self):
         image_text_list = [
-            GridOrListEntry("Favorite", self.theme.favorite, self.theme.favorite_selected),
-            GridOrListEntry("Game", self.theme.game,self.theme.game_selected),
-            GridOrListEntry("App",self.theme.app,self.theme.app_selected),
-            GridOrListEntry("Setting", self.theme.settings,self.theme.settings_selected)
+                    
+            GridOrListEntry(
+                        text="Favorite",
+                        image_path=self.theme.favorite,
+                        image_path_selected=self.theme.favorite_selected,
+                        description="Your favorite games",
+                        icon=self.theme.favorite_selected,
+                        value="Favorite"
+            ),                    
+            GridOrListEntry(
+                        text="Game",
+                        image_path=self.theme.game,
+                        image_path_selected=self.theme.game_selected,
+                        description="Your games",
+                        icon=self.theme.game_selected,
+                        value="Game"
+            ),
+            GridOrListEntry(
+                        text="App",
+                        image_path=self.theme.app,
+                        image_path_selected=self.theme.app_selected,
+                        description="Your Apps",
+                        icon=self.theme.app_selected,
+                        value="App"
+            ),      
+            GridOrListEntry(
+                        text="Setting",
+                        image_path=self.theme.settings,
+                        image_path_selected=self.theme.settings_selected,
+                        description="Your Apps",
+                        icon=self.theme.settings_selected,
+                        value="Setting"
+            ),            
         ]
 
         options_list = GridView(self.display,self.controller,self.device,self.theme, "SPRUCE", image_text_list, 4, 1)

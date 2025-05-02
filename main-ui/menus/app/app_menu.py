@@ -5,7 +5,6 @@ from devices.device import Device
 from display.display import Display
 from themes.theme import Theme
 from views.descriptive_list_view import DescriptiveListView
-from views.descriptive_list_view_entry import DescriptiveListViewEntry
 from views.grid_or_list_entry import GridOrListEntry
 
 
@@ -27,8 +26,8 @@ class AppMenu:
                 app_list.append(
                     GridOrListEntry(
                         text=app.get_label(),
-                        image_path=None,
-                        image_path_selected=None,
+                        image_path=app.get_icon(),
+                        image_path_selected=app.get_icon(),
                         description=app.get_description(),
                         icon=app.get_icon(),
                         value=app.get_launch()
