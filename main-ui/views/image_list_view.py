@@ -23,7 +23,8 @@ class ImageListView(ListView):
         self.selected = 0
         self.line_height = display.get_line_height(FontPurpose.LIST) + 10  # add 10px padding between lines
         self.current_top = 0
-        self.current_bottom = min(device.max_rows_for_list,len(options))
+        self.max_rows = device.max_rows_for_list
+        self.current_bottom = min(self.max_rows,len(options))
         self.img_offset_x = img_offset_x
         self.img_offset_y = img_offset_y
      

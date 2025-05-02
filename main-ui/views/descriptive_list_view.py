@@ -23,7 +23,8 @@ class DescriptiveListView(ListView):
 
         self.selected = 0
         self.current_top = 0
-        self.current_bottom = min(device.max_rows_for_descriptive_list,len(options))
+        self.max_rows = device.max_rows_for_descriptive_list
+        self.current_bottom = min(self.max_rows,len(options))
         self.spacing = 10
      
 
