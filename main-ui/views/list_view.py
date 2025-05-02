@@ -45,12 +45,10 @@ class ListView(ABC):
         self.selected = min(len(self.options)-1, self.selected)
         
         while(self.selected < self.current_top):
-            print("Second error condition")
             self.current_top -= 1
             self.current_bottom -=1
 
         while(self.selected >= self.current_bottom):
-            print("Third error condition")
             self.current_top += 1
             self.current_bottom +=1
 
