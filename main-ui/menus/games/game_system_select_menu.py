@@ -4,13 +4,13 @@ from devices.device import Device
 from display.display import Display
 from games.utils.game_system_utils import GameSystemUtils
 from menus.games.rom_select_menu import RomSelectMenu
-from menus.games.sys_config import SysConfig
+from menus.games.game_system_config import GameSystemConfig
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 from views.grid_view import GridView
 
 
-class SystemSelectMenu:
+class GameSystemSelectMenu:
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
         self.display : Display= display
         self.controller : Controller = controller
@@ -24,7 +24,7 @@ class SystemSelectMenu:
         selected = "new"
         systems_list = []
         for system in self.game_utils.get_active_systems():
-            sysConfig = SysConfig(system)
+            sysConfig = GameSystemConfig(system)
             if(self.use_emu_cfg):
                 systems_list.append(
                     GridOrListEntry(

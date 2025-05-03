@@ -3,7 +3,7 @@ from controller.controller import Controller
 from devices.device import Device
 from display.display import Display
 from menus.app.app_menu import AppMenu
-from menus.games.system_select_menu import SystemSelectMenu
+from menus.games.game_system_select_menu import GameSystemSelectMenu
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 from views.grid_view import GridView
@@ -15,7 +15,7 @@ class MainMenu:
         self.controller : Controller = controller
         self.device : Device= device
         self.theme : Theme= theme
-        self.system_select_menu = SystemSelectMenu(display,controller,device,theme)
+        self.system_select_menu = GameSystemSelectMenu(display,controller,device,theme)
         self.app_menu = AppMenu(display,controller,device,theme)
 
     def run_main_menu_selection(self):

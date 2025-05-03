@@ -1,7 +1,7 @@
 import json
 import os
 
-class SysConfig:
+class GameSystemConfig:
     def __init__(self, system_name):
         self.system_name = system_name
         config_path = f"/mnt/sdcard/Emu/{system_name}/config.json"
