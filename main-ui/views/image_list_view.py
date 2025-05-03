@@ -12,7 +12,7 @@ from views.list_view import ListView
 class ImageListView(ListView):
 
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text,
-                 options: List[GridOrListEntry], img_offset_x : int, img_offset_y : int):
+                 options: List[GridOrListEntry], img_offset_x : int, img_offset_y : int, img_width : int, img_height: int):
         super().__init__(controller)
         self.display = display
         self.device = device
@@ -28,6 +28,8 @@ class ImageListView(ListView):
         self.current_bottom = min(self.max_rows,len(options))
         self.img_offset_x = img_offset_x
         self.img_offset_y = img_offset_y
+        self.img_width = img_width
+        self.img_height = img_height
      
 
     def _render_text(self, visible_options):
@@ -43,7 +45,9 @@ class ImageListView(ListView):
             if(actual_index == self.selected and imagePath is not None):
                 self.display.render_image_centered(imagePath, 
                                      self.img_offset_x, 
-                                     self.img_offset_y)
+                                     self.img_offset_y,
+                                     self.img_width,
+                                     self.img_height)
 
     def _render(self):
         visible_options = self.options[self.current_top:self.current_bottom]

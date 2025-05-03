@@ -52,7 +52,7 @@ class RomSelectMenu:
         img_offset_x = int(3/4*self.device.screen_width)
         img_offset_y = int(self.device.screen_height/5)
         options_list = ImageListView(self.display,self.controller,self.device,self.theme, game_system,
-                                     rom_list, img_offset_x, img_offset_y)
+                                     rom_list, img_offset_x, img_offset_y, self.theme.rom_image_width, self.theme.rom_image_height)
         while((selected := options_list.get_selection([ControllerInput.A, ControllerInput.X])) is not None):
             if(ControllerInput.A == selected.get_input()):
                 self.device.run_game(os.path.join(self.roms_path,game_system,selected.get_selection().get_value()))

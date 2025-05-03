@@ -82,20 +82,44 @@ class Display:
         sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
         self.top_bar.render_top_bar(screen)
     
-    def render(self, x, y, texture, surface, render_mode):
+    def _calculate_scaled_width_and_height(self, orig_w, orig_h, target_width, target_height):
+        # Maintain aspect ratio
+        if target_width and target_height:
+            scale = min(target_width / orig_w, target_height / orig_h)
+            render_w = int(orig_w * scale)
+            render_h = int(orig_h * scale)
+        elif target_width:
+            scale = target_width / orig_w
+            render_w = int(orig_w * scale)
+            render_h = int(orig_h * scale)
+        elif target_height:
+            scale = target_height / orig_h
+            render_w = int(orig_w * scale)
+            render_h = int(orig_h * scale)
+        else:
+            render_w = orig_w
+            render_h = orig_h
+        
+        return render_w, render_h
+
+
+    def _render_surface_texture(self, x, y, texture, surface, render_mode, target_width=None, target_height=None):
+        render_w, render_h = self._calculate_scaled_width_and_height(surface.contents.w, surface.contents.h, target_width, target_height)
+
+        # Adjust position based on render mode
         adj_x = x
         adj_y = y
 
-        # Get the width and height of the surface
-        if(RenderMode.X_CENTERED == render_mode) :
-            adj_x = x - int(surface.contents.w/2)
-        elif(RenderMode.XY_CENTERED == render_mode):
-            adj_x = x - int(surface.contents.w/2)
-            adj_y = x - int(surface.contents.h/2)
-        elif(RenderMode.TOP_RIGHT_ADJUST == render_mode):
-            adj_x = x - int(surface.contents.w)
+        if RenderMode.X_CENTERED == render_mode:
+            adj_x = x - render_w // 2
+        elif RenderMode.XY_CENTERED == render_mode:
+            adj_x = x - render_w // 2
+            adj_y = y - render_h // 2
+        elif RenderMode.TOP_RIGHT_ADJUST == render_mode:
+            adj_x = x - render_w
 
-        rect = sdl2.SDL_Rect(adj_x, adj_y, surface.contents.w, surface.contents.h)
+        # Create destination rect with adjusted position and scaled size
+        rect = sdl2.SDL_Rect(adj_x, adj_y, render_w, render_h)
 
         # Copy the texture to the renderer
         sdl2.SDL_RenderCopy(self.renderer.renderer, texture, None, rect)
@@ -104,8 +128,8 @@ class Display:
         sdl2.SDL_DestroyTexture(texture)
         sdl2.SDL_FreeSurface(surface)
 
-        return surface.contents.w, surface.contents.h
-
+        return render_w, render_h
+    
     def render_text(self,text, x, y, color, purpose : FontPurpose, render_mode = RenderMode.ABSOLUTE):
         # Create an SDL_Color
         sdl_color = sdl2.SDL_Color(color[0], color[1], color[2])
@@ -121,12 +145,12 @@ class Display:
             sdl2.SDL_FreeSurface(surface)
             raise RuntimeError("Failed to create texture from surface")
 
-        return self.render(x, y, texture, surface, render_mode)
+        return self._render_surface_texture(x, y, texture, surface, render_mode)
 
     def render_text_centered(self,text, x, y, color, purpose : FontPurpose):
         self.render_text(text, x, y, color, purpose, RenderMode.X_CENTERED)
 
-    def render_image(self, image_path: str, x: int, y: int, render_mode = RenderMode.ABSOLUTE):
+    def render_image(self, image_path: str, x: int, y: int, render_mode = RenderMode.ABSOLUTE, target_width=None, target_height=None):
         # Load the image into an SDL_Surface
         surface = sdl2.sdlimage.IMG_Load(image_path.encode('utf-8'))
         if not surface:
@@ -138,10 +162,10 @@ class Display:
             sdl2.SDL_FreeSurface(surface)
             raise RuntimeError("Failed to create texture from surface")
 
-        return self.render(x, y, texture, surface, render_mode)
+        return self._render_surface_texture(x, y, texture, surface, render_mode, target_width, target_height)
     
-    def render_image_centered(self, image_path: str, x: int, y: int):
-        return self.render_image(image_path,x,y,RenderMode.X_CENTERED)
+    def render_image_centered(self, image_path: str, x: int, y: int, target_width=None, target_height=None):
+        return self.render_image(image_path,x,y,RenderMode.X_CENTERED, target_width, target_height)
 
     def get_line_height(self, purpose : FontPurpose):
         return self.fonts[purpose].line_height;

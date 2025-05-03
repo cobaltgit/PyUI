@@ -59,6 +59,14 @@ class Theme():
         return self.path + "skin/ic-setting-f.png"   
 
     @property
+    def rom_image_width(self):
+        return 294
+    
+    @property
+    def rom_image_height(self):
+        return 294
+
+    @property
     def get_title_bar_bg(self):
         return os.path.join(self.path,"skin","bg-title.png")
     
@@ -67,6 +75,7 @@ class Theme():
 
     def get_game_config_list_selected_bg(self):
         return os.path.join(self.path,"skin","bg-list-s.png")
+
 
     
     
