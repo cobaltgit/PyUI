@@ -12,7 +12,7 @@ from views.list_view import ListView
 class DescriptiveListView(ListView):
 
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text,
-                 options: List[GridOrListEntry], selected_bg):
+                 options: List[GridOrListEntry], selected_bg, selected : int = 0):
         super().__init__(controller)
         self.display = display
         self.device = device
@@ -20,10 +20,10 @@ class DescriptiveListView(ListView):
         self.top_bar_text = top_bar_text
         self.options : List[GridOrListEntry] = options
 
-        self.selected = 0
+        self.selected : int = selected
         self.selected_bg = selected_bg
-        each_entry_height = sdl2.sdlimage.IMG_Load(selected_bg.encode('utf-8')).contents.h
-        self.max_rows = int((device.screen_height - display.get_top_bar_height()) / (each_entry_height))
+        each_entry_width, self.each_entry_height = display.get_image_dimensions(selected_bg)
+        self.max_rows = int((device.screen_height - display.get_top_bar_height()) / (self.each_entry_height))
         self.current_top = 0
         self.current_bottom = min(self.max_rows,len(options))
 
@@ -39,7 +39,7 @@ class DescriptiveListView(ListView):
             iconPath = gridOrListEntry.get_icon()
 
             if actual_index == self.selected:
-                self.bg_w, self.bg_h = self.display.render_image(
+                self.display.render_image(
                     self.selected_bg, 
                     0, 
                     row_offset_y)
@@ -69,6 +69,6 @@ class DescriptiveListView(ListView):
                     color, 
                     FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION)
 
-            row_offset_y += self.bg_h
+            row_offset_y += self.each_entry_height
 
         self.display.present()

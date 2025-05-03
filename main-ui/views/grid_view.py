@@ -120,7 +120,7 @@ class GridView:
                 elif self.controller.last_input() == ControllerInput.DPAD_DOWN:
                     self.selected+=self.cols
                 elif self.controller.last_input() in select_controller_inputs:
-                    return Selection(self.options[self.selected],self.controller.last_input())
+                    return Selection(self.options[self.selected],self.controller.last_input(), self.selected)
                 elif self.controller.last_input() == ControllerInput.B:
                     return None
 

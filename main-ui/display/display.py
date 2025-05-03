@@ -151,3 +151,7 @@ class Display:
 
     def get_top_bar_height(self):
         return self.top_bar.get_top_bar_height()
+
+    def get_image_dimensions(self, img):        
+        contents = sdl2.sdlimage.IMG_Load(img.encode('utf-8')).contents
+        return contents.w, contents.h

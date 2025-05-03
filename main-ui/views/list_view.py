@@ -30,7 +30,7 @@ class ListView(ABC):
                 elif self.controller.last_input() == ControllerInput.R1:
                     self.adjust_selected(self.max_rows-1)
                 elif self.controller.last_input() in select_controller_inputs:
-                    return Selection(self.options[self.selected],self.controller.last_input())
+                    return Selection(self.options[self.selected],self.controller.last_input(), self.selected)
                 elif self.controller.last_input() == ControllerInput.B:
                     return None
 
@@ -38,6 +38,8 @@ class ListView(ABC):
 
     def _render_common(self):
         self.display.clear(self.top_bar_text)
+        
+        self.adjust_selected_top_bottom_for_overflow()
 
         self._render()
 
@@ -81,6 +83,3 @@ class ListView(ABC):
             if(amount > 1):
                 self.current_top += amount
                 self.current_bottom += amount
-
-        # TODO rework above logic to not need this (though minor cost to leaving it)
-        self.adjust_selected_top_bottom_for_overflow()
