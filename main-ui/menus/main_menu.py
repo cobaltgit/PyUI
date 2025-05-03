@@ -58,7 +58,7 @@ class MainMenu:
         options_list = GridView(self.display,self.controller,self.device,self.theme, "SPRUCE", image_text_list, 4, 1)
         selected = "new"
         while((selected := options_list.get_selection()) is not None):        
-            if(selected.get_text() == "Game"):
+            if(selected.get_selection().get_text() == "Game"):
                 self.system_select_menu.run_system_selection()
-            elif(selected.get_text() == "App"):
+            elif(selected.get_selection().get_text() == "App"):
                 self.app_menu.run_app_selection()

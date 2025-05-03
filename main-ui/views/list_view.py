@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
+from views.selection import Selection
 
 
 class ListView(ABC):
@@ -14,7 +15,7 @@ class ListView(ABC):
     def _render(self):
         pass
     
-    def get_selection(self):
+    def get_selection(self, select_controller_inputs = [ControllerInput.A]):
         self._render_common()
         running = True
         
@@ -28,8 +29,8 @@ class ListView(ABC):
                     self.adjust_selected(-1*self.max_rows+1)
                 elif self.controller.last_input() == ControllerInput.R1:
                     self.adjust_selected(self.max_rows-1)
-                elif self.controller.last_input() == ControllerInput.A:
-                    return self.options[self.selected]
+                elif self.controller.last_input() in select_controller_inputs:
+                    return Selection(self.options[self.selected],self.controller.last_input())
                 elif self.controller.last_input() == ControllerInput.B:
                     return None
 
@@ -45,29 +46,37 @@ class ListView(ABC):
         self.selected = min(len(self.options)-1, self.selected)
         
         while(self.selected < self.current_top):
+            #print(f"    Selected is higher than current_top, moving all down by 1")
             self.current_top -= 1
             self.current_bottom -=1
 
         while(self.selected >= self.current_bottom):
+            #print(f"    Selected is lower than current_bottom, moving all down by 1")
             self.current_top += 1
             self.current_bottom +=1
 
 
     def adjust_selected(self, amount):
+        #print(f"Adjust by {amount}")
+        #print(f"    selected = {self.selected}, current_top = {self.current_top}, current_bottom = {self.current_bottom}")
         if(self.selected == 0 and amount < 0):
             # Hitting up when on the top most row
+            #print(f"    Wrapping from top to bottom")
             delta = self.current_bottom - self.current_top
             self.selected = len(self.options)-1
-            self.current_bottom = len(self.options)-1
+            self.current_bottom = len(self.options)
             self.current_top = max(0, self.current_bottom - delta)
         elif(self.selected == len(self.options)-1 and amount > 0):
             # Hitting down when on the bottom most row
+            #print(f"    Wrapping from bottom to top")
             delta = self.current_bottom - self.current_top
             self.selected = 0
             self.current_top = 0
-            self.current_bottom = min(delta, len(self.options)-1)
+            #print(f"    delta = {delta}, len(self.options) = {len(self.options)}")
+            self.current_bottom = min(delta, len(self.options))
         else :    
             # Normal adjustment
+            #print(f"    Normal Adjustment")
             self.selected += amount
             if(amount > 1):
                 self.current_top += amount

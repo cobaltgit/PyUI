@@ -51,4 +51,4 @@ class GameSystemSelectMenu:
         options_list = GridView(self.display,self.controller,self.device,self.theme, "Game", systems_list, 4, 2,
                                 self.theme.system_selected_bg())
         while((selected := options_list.get_selection()) is not None):
-            self.rom_select_menu.run_rom_selection(selected.get_text())
+            self.rom_select_menu.run_rom_selection(selected.get_selection().get_text())

@@ -2,9 +2,11 @@
 import os
 import subprocess
 from controller.controller import Controller
+from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
 from games.utils.rom_utils import RomUtils
+from menus.games.game_config_menu import GameConfigMenu
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 from views.image_list_view import ImageListView
@@ -29,29 +31,31 @@ class RomSelectMenu:
         else:
             return None
         
-    def run_rom_selection(self,system) :
-        imgs_dir = os.path.join(self.roms_path, system,"Imgs")
+    def run_rom_selection(self,game_system) :
+        imgs_dir = os.path.join(self.roms_path, game_system,"Imgs")
 
         selected = "new"
         rom_list = []
         
-        for rom in self.rom_utils.get_roms(system):
+        for rom in self.rom_utils.get_roms(game_system):
             img_path = self.get_image_path(imgs_dir,rom)
             rom_list.append(
                 GridOrListEntry(
                     text=self.remove_extension(rom),
                     image_path=img_path,
                     image_path_selected=img_path,
-                    description=system, 
-                    icon=self.theme.get_system_icon_selected(system),
+                    description=game_system, 
+                    icon=self.theme.get_system_icon_selected(game_system),
                     value=rom)
             )
 
         img_offset_x = int(3/4*self.device.screen_width)
         img_offset_y = int(self.device.screen_height/5)
-        options_list = ImageListView(self.display,self.controller,self.device,self.theme, system,
+        options_list = ImageListView(self.display,self.controller,self.device,self.theme, game_system,
                                      rom_list, img_offset_x, img_offset_y)
-        while((selected := options_list.get_selection()) is not None):
-            self.device.run_game(os.path.join(self.roms_path,system,selected.get_value()))
-            self.controller.clear_input_queue()
-
+        while((selected := options_list.get_selection([ControllerInput.A, ControllerInput.X])) is not None):
+            if(ControllerInput.A == selected.get_input()):
+                self.device.run_game(os.path.join(self.roms_path,game_system,selected.get_selection().get_value()))
+                self.controller.clear_input_queue()
+            elif(ControllerInput.X == selected.get_input()):
+                GameConfigMenu(self.display, self.controller, self.device, self.theme, game_system, selected.get_selection().get_value()).show_config()

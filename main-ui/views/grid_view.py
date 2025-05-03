@@ -8,6 +8,7 @@ from devices.device import Device
 from controller.controller import Controller
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
+from views.selection import Selection
 
 class GridView:
 
@@ -100,7 +101,7 @@ class GridView:
             
         self.display.present()
 
-    def get_selection(self):
+    def get_selection(self, select_controller_inputs = [ControllerInput.A]):
         self._render()
         running = True
         
@@ -118,8 +119,8 @@ class GridView:
                     self.selected-=self.cols
                 elif self.controller.last_input() == ControllerInput.DPAD_DOWN:
                     self.selected+=self.cols
-                elif self.controller.last_input() == ControllerInput.A:
-                    return self.options[self.selected]
+                elif self.controller.last_input() in select_controller_inputs:
+                    return Selection(self.options[self.selected],self.controller.last_input())
                 elif self.controller.last_input() == ControllerInput.B:
                     return None
 

@@ -58,10 +58,6 @@ class MiyooFlip(Device):
     @property
     def max_rows_for_list(self):
         return 10
-
-    @property
-    def max_rows_for_descriptive_list(self):
-        return 4
     
     #Can we dynamically calculate these?
     @property
@@ -85,9 +81,9 @@ class MiyooFlip(Device):
         print(f"About to launch /mnt/sdcard/Emu/.emu_setup/standard_launch.sh {file_path}")
         subprocess.run(["/mnt/sdcard/Emu/.emu_setup/standard_launch.sh",file_path])
 
-    def run_app(self, file_path):
-        print(f"About to launch app {file_path}")
-        subprocess.run([file_path])
+    def run_app(self, args):
+        print(f"About to launch app {args}")
+        subprocess.run(args)
 
     #TODO untested
     def map_analog_axis(self,sdl_input, value, threshold=16000):

@@ -111,7 +111,7 @@ class Display:
         sdl_color = sdl2.SDL_Color(color[0], color[1], color[2])
         
         # Render the text to a surface
-        surface = sdl2.sdlttf.TTF_RenderText_Blended(self.fonts[purpose].font, text.encode('utf-8'), sdl_color)
+        surface = sdl2.sdlttf.TTF_RenderUTF8_Blended(self.fonts[purpose].font, text.encode('utf-8'), sdl_color)
         if not surface:
             raise RuntimeError("Failed to render text surface")
 

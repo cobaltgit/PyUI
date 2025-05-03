@@ -12,7 +12,7 @@ from views.list_view import ListView
 class DescriptiveListView(ListView):
 
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text,
-                 options: List[GridOrListEntry]):
+                 options: List[GridOrListEntry], selected_bg):
         super().__init__(controller)
         self.display = display
         self.device = device
@@ -21,12 +21,11 @@ class DescriptiveListView(ListView):
         self.options : List[GridOrListEntry] = options
 
         self.selected = 0
+        self.selected_bg = selected_bg
+        each_entry_height = sdl2.sdlimage.IMG_Load(selected_bg.encode('utf-8')).contents.h
+        self.max_rows = int((device.screen_height - display.get_top_bar_height()) / (each_entry_height))
         self.current_top = 0
-        self.max_rows = device.max_rows_for_descriptive_list
         self.current_bottom = min(self.max_rows,len(options))
-        #TODO get spacing from theme
-        self.spacing = 10
-     
 
     def _render(self):
         visible_options: List[GridOrListEntry] = self.options[self.current_top:self.current_bottom]
@@ -35,24 +34,26 @@ class DescriptiveListView(ListView):
         #TODO get padding from theme
         row_offset_y = self.display.get_top_bar_height() + 5
         
-        for visible_index, ((gridOrListEntry)) in enumerate(visible_options):
+        for visible_index, (gridOrListEntry) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
             iconPath = gridOrListEntry.get_icon()
 
             if actual_index == self.selected:
-                selected_bg = self.theme.get_descriptive_list_selected_bg()
                 self.bg_w, self.bg_h = self.display.render_image(
-                    selected_bg, 
+                    self.selected_bg, 
                     0, 
                     row_offset_y)
                 
-            icon_w, icon_h = self.display.render_image(iconPath, 
-                                row_offset_x, 
-                                row_offset_y + self.theme.get_descriptive_list_icon_offset_y())
+            icon_w = 0
+            icon_h = 0
+            if(iconPath is not None):
+                icon_w, icon_h = self.display.render_image(iconPath, 
+                                    row_offset_x, 
+                                    row_offset_y + self.theme.get_descriptive_list_icon_offset_y())
 
             color = self.theme.text_color_selected(FontPurpose.DESCRIPTIVE_LIST_TITLE) if actual_index == self.selected else self.theme.text_color(FontPurpose.DESCRIPTIVE_LIST_TITLE)
             title_w, title_h = self.display.render_text(
-                (gridOrListEntry).get_text(), 
+                gridOrListEntry.get_text(), 
                 row_offset_x + icon_w + self.theme.get_descriptive_list_text_from_icon_offset(), 
                 row_offset_y + self.theme.get_descriptive_list_text_offset_y(), 
                 color, 
@@ -60,13 +61,14 @@ class DescriptiveListView(ListView):
 
             color = self.theme.text_color_selected(FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION) if actual_index == self.selected else self.theme.text_color(FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION)
             
-            text_w, text_h = self.display.render_text(
-                (gridOrListEntry).get_description(), 
-                row_offset_x + icon_w + self.theme.get_descriptive_list_text_from_icon_offset(), 
-                row_offset_y + + self.theme.get_descriptive_list_text_offset_y() + title_h, 
-                color, 
-                FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION)
+            if(gridOrListEntry.get_description() is not None):
+                text_w, text_h = self.display.render_text(
+                    gridOrListEntry.get_description(), 
+                    row_offset_x + icon_w + self.theme.get_descriptive_list_text_from_icon_offset(), 
+                    row_offset_y + + self.theme.get_descriptive_list_text_offset_y() + title_h, 
+                    color, 
+                    FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION)
 
-            row_offset_y += self.bg_h + self.spacing
+            row_offset_y += self.bg_h
 
         self.display.present()

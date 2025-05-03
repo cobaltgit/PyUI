@@ -62,8 +62,11 @@ class Theme():
     def get_title_bar_bg(self):
         return os.path.join(self.path,"skin","bg-title.png")
     
-    def get_descriptive_list_selected_bg(self):
+    def get_app_list_selected_bg(self):
         return os.path.join(self.path,"skin","bg-list-l.png")
+
+    def get_game_config_list_selected_bg(self):
+        return os.path.join(self.path,"skin","bg-list-s.png")
 
     
     

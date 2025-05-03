@@ -34,8 +34,8 @@ class AppMenu:
                     )
                 )
 
-        options_list = DescriptiveListView(self.display,self.controller,self.device,self.theme, "Apps", app_list)
+        options_list = DescriptiveListView(self.display,self.controller,self.device,self.theme, "Apps", app_list, self.theme.get_app_list_selected_bg())
         while((selected := options_list.get_selection()) is not None):
-            self.device.run_app(selected.get_value())
+            self.device.run_app([selected.get_selection().get_value()])
             self.controller.clear_input_queue()
             self.display.reinitialize()
