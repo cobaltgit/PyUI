@@ -206,7 +206,8 @@ class Display:
 
     def add_index_text(self, index, total):
         # TODO don't hard code these
-        y_padding = 5 
+        # TODO why is it divide by 4 and not divide by 2?
+        y_padding = max(5,self.get_bottom_bar_height() // 4)
         y_value = self.device.screen_height - y_padding
         x_padding = 10 
 
