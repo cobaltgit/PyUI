@@ -6,6 +6,7 @@ from menus.app.app_menu import AppMenu
 from menus.games.favorites_menu import FavoritesMenu
 from menus.games.game_system_select_menu import GameSystemSelectMenu
 from menus.games.recents_menu import RecentsMenu
+from menus.settings.settings_menu import SettingsMenu
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 from views.grid_view import GridView
@@ -21,7 +22,8 @@ class MainMenu:
         self.app_menu = AppMenu(display,controller,device,theme)
         self.favorites_menu = FavoritesMenu(display,controller,device,theme)
         self.recents_menu = RecentsMenu(display,controller,device,theme)
-        
+        self.settings_menu = SettingsMenu(display,controller,device,theme)
+
     def run_main_menu_selection(self):
         #TODO make this user config driven
         first_entry = "Favorite"
@@ -72,3 +74,5 @@ class MainMenu:
                 self.favorites_menu.run_rom_selection()
             elif(selected.get_selection().get_text() == "Recent"):
                 self.recents_menu.run_rom_selection()
+            elif(selected.get_selection().get_text() == "Setting"):
+                self.settings_menu.show_menu()

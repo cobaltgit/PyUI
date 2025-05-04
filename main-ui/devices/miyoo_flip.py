@@ -71,6 +71,14 @@ class MiyooFlip(Device):
         icon_size = 140
         return icon_size+int(self.large_grid_x_offset/2)
     
+    @property
+    def power_off_cmd(self):
+        return "poweroff"
+    
+    @property
+    def reboot_cmd(self):
+        return "reboot"
+
     def run_game(self, file_path):
         print(f"About to launch /mnt/sdcard/Emu/.emu_setup/standard_launch.sh {file_path}")
         subprocess.run(["/mnt/sdcard/Emu/.emu_setup/standard_launch.sh",file_path])
