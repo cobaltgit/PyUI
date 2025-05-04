@@ -3,6 +3,7 @@ from display.loaded_font import LoadedFont
 from display.render_mode import RenderMode
 from display.x_render_option import XRenderOption
 from display.y_render_option import YRenderOption
+from menus.common.bottom_bar import BottomBar
 from menus.common.top_bar import TopBar
 import sdl2
 import sdl2.ext
@@ -22,6 +23,7 @@ class Display:
         self.bg_path = ""
         self._check_for_bg_change()
         self.top_bar = TopBar(self,device,theme)
+        self.bottom_bar = BottomBar(self,device,theme)
         self.clear("init")
         self.present()
 
@@ -82,6 +84,7 @@ class Display:
         self._check_for_bg_change();
         sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
         self.top_bar.render_top_bar(screen)
+        self.bottom_bar.render_bottom_bar(screen)
     
     def _calculate_scaled_width_and_height(self, orig_w, orig_h, target_width, target_height):
         # Maintain aspect ratio
@@ -158,13 +161,15 @@ class Display:
         # Load the image into an SDL_Surface
         surface = sdl2.sdlimage.IMG_Load(image_path.encode('utf-8'))
         if not surface:
-            raise RuntimeError(f"Failed to load image: {image_path}")
+            print(f"Failed to load image: {image_path}")
+            return 0,0
 
         # Create a texture from the surface
         texture = sdl2.SDL_CreateTextureFromSurface(self.renderer.renderer, surface)
         if not texture:
             sdl2.SDL_FreeSurface(surface)
-            raise RuntimeError("Failed to create texture from surface")
+            print(f"Failed to create texture from surface")
+            return 0,0
 
         return self._render_surface_texture(x, y, texture, surface, render_mode, target_width, target_height, debug=image_path)
     
