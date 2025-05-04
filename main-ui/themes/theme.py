@@ -105,10 +105,10 @@ class Theme():
     def favorite_icon(self):
         return os.path.join(self.path,"skin","ic-favorite-mark.png")
 
-    def get_app_list_selected_bg(self):
+    def get_list_large_selected_bg(self):
         return os.path.join(self.path,"skin","bg-list-l.png")
 
-    def get_game_config_list_selected_bg(self):
+    def get_list_small_selected_bg(self):
         return os.path.join(self.path,"skin","bg-list-s.png")
     
     def get_battery_icon(self,charging,battery_percent):

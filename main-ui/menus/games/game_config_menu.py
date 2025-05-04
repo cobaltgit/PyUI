@@ -46,7 +46,7 @@ class GameConfigMenu:
                         
 
             config_list = DescriptiveListView(self.display,self.controller,self.device,self.theme, 
-                                              self.game_system + " Configuration", config_list, self.theme.get_game_config_list_selected_bg(),
+                                              self.game_system + " Configuration", config_list, self.theme.get_list_small_selected_bg(),
                                               selected.get_index())
             selected = config_list.get_selection()
 

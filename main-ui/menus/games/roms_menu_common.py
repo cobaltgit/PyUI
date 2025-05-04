@@ -66,7 +66,7 @@ class RomsMenuCommon(ABC):
             options_list = ImageListView(self.display,self.controller,self.device,self.theme, page_name,
                                         rom_list, img_offset_x, img_offset_y, self.theme.rom_image_width, self.theme.rom_image_height,
                                         selected.get_index(), ImageListView.SHOW_ICONS, RenderMode.MIDDLE_RIGHT_ALIGNED,
-                                        self.theme.get_game_config_list_selected_bg())
+                                        self.theme.get_list_small_selected_bg())
             selected = options_list.get_selection([ControllerInput.A, ControllerInput.X])
             if(selected is not None):
                 if(ControllerInput.A == selected.get_input()):
