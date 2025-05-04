@@ -3,7 +3,7 @@ from controller.controller import Controller
 from devices.device import Device
 from display.display import Display
 from games.utils.game_system_utils import GameSystemUtils
-from menus.games.rom_select_menu import RomSelectMenu
+from menus.games.game_select_menu import GameSelectMenu
 from menus.games.game_system_config import GameSystemConfig
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
@@ -17,7 +17,7 @@ class GameSystemSelectMenu:
         self.device : Device= device
         self.theme : Theme= theme
         self.game_utils : GameSystemUtils = GameSystemUtils()
-        self.rom_select_menu : RomSelectMenu = RomSelectMenu(display,controller,device,theme)
+        self.rom_select_menu : GameSelectMenu = GameSelectMenu(display,controller,device,theme)
         self.use_emu_cfg = False
 
     def run_system_selection(self) :

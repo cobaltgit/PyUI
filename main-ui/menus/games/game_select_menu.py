@@ -16,7 +16,7 @@ from views.image_list_view import ImageListView
 from views.selection import Selection
 
 
-class RomSelectMenu:
+class GameSelectMenu:
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
         self.display : Display= display
         self.controller : Controller = controller
