@@ -60,16 +60,36 @@ class Theme():
 
     @property
     def rom_image_width(self):
-        return 294
+        return 294 #TODO make percentage of device
     
     @property
     def rom_image_height(self):
-        return 400
+        return 340  #TODO make percentage of device
 
     @property
     def get_title_bar_bg(self):
         return os.path.join(self.path,"skin","bg-title.png")
+
+    @property
+    def bottom_bar_bg(self):
+        return os.path.join(self.path,"skin","tips-bar-bg.png")
+
+    @property
+    def confirm_icon(self):
+        return os.path.join(self.path,"skin","icon-A-54.png")
+
+    @property
+    def back_icon(self):
+        return os.path.join(self.path,"skin","icon-B-54.png")
+
+    @property
+    def confirm_text(self):
+        return "Okay"
     
+    @property
+    def back_text(self):
+        return "Back"
+
     @property
     def favorite_icon(self):
         return os.path.join(self.path,"skin","ic-favorite-mark.png")
