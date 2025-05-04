@@ -36,7 +36,7 @@ class MiyooFlip(Device):
         #Idea is if something were to change from he we can reload it
         #so it always has the more accurate data
         self.SystemConfig = SystemConfig("/userdata/system.json")
-        self.favorites_parser = MiyooGamesFileParser()
+        self.miyoo_games_file_parser = MiyooGamesFileParser()
 
     @property
     def screen_width(self):
@@ -160,7 +160,7 @@ class MiyooFlip(Device):
         return MiyooAppFinder()
     
     def parse_favorites(self) -> list[GameEntry]:
-        return self.favorites_parser.parse_favorites()
+        return self.miyoo_games_file_parser.parse_favorites()
     
     def parse_recents(self) -> list[GameEntry]:
-        return self.favorites_parser.parse_recents()
+        return self.miyoo_games_file_parser.parse_recents()
