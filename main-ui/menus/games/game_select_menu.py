@@ -27,7 +27,6 @@ class GameSelectMenu(RomsMenuCommon):
         return any(Path(rom_file_path).resolve() == Path(fav.rom_path).resolve() for fav in favorites)
 
     def _get_rom_list(self) -> list[GridOrListEntry]:
-        imgs_dir = os.path.join(self.roms_path, self.game_system,"Imgs")
         rom_list = []
         favorites = self.device.parse_favorites()
         for rom_file_path in self.rom_utils.get_roms(self.game_system):
