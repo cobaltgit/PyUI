@@ -64,7 +64,7 @@ class Theme():
     
     @property
     def rom_image_height(self):
-        return 294
+        return 400
 
     @property
     def get_title_bar_bg(self):
@@ -79,9 +79,6 @@ class Theme():
 
     def get_game_config_list_selected_bg(self):
         return os.path.join(self.path,"skin","bg-list-s.png")
-
-
-    
     
     def get_battery_icon(self,charging,battery_percent):
         if(charging):

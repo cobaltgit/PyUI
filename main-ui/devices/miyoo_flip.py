@@ -57,15 +57,6 @@ class MiyooFlip(Device):
     @property
     def font_size_large(self):
         return 26
-
-    @property
-    def max_rows_for_list(self):
-        return 10
-    
-    #Can we dynamically calculate these?
-    @property
-    def max_icons_for_large_grid_view(self):
-        return 4
     
     @property
     def large_grid_x_offset(self):

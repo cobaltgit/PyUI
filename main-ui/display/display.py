@@ -119,7 +119,6 @@ class Display:
 
         if(YRenderOption.CENTER == render_mode.y_mode):
             adj_y = y - render_h // 2
-            print(f"Adjusting y value from {y} to {adj_y} for {debug} : render_h = {render_h}")
         elif(YRenderOption.BOTTOM == render_mode.y_mode):
             adj_y = y - render_h
 

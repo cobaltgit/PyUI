@@ -31,16 +31,6 @@ class Device(ABC):
 
     @property
     @abstractmethod
-    def max_rows_for_list(self):
-        pass
-
-    @property
-    @abstractmethod
-    def max_icons_for_large_grid_view(self):
-        pass
-
-    @property
-    @abstractmethod
     def large_grid_x_offset(self):
         pass
 

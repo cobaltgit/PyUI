@@ -25,7 +25,6 @@ class MiyooFavoritesParser:
                             type=data['type']
                         )
                         entries.append(entry)
-                        print(f"Adding favorite : {entry.rom_path}")
                     except json.JSONDecodeError as e:
                         print(f"Error parsing line: {line}\n{e}")
 

@@ -26,17 +26,17 @@ class ImageListView(ListView):
 
         self.selected = selected_index
         self.current_top = 0
-        self.max_rows = device.max_rows_for_list
-        self.current_bottom = min(self.max_rows,len(options))
         self.img_offset_x = img_offset_x
         self.img_offset_y = img_offset_y
         self.img_width = img_width
         self.img_height = img_height
         self.base_y_offset = self.display.get_top_bar_height() + 5
         #TODO get line height padding from theme
-        self.line_height = display.get_line_height(FontPurpose.LIST) + 10  # add 10px padding between lines
         self.show_icons = show_icons
         self.image_render_mode = image_render_mode
+        self.line_height = self._calculate_line_height()
+        self.max_rows = int((device.screen_height - display.get_top_bar_height()) / (self.line_height))
+        self.current_bottom = min(self.max_rows,len(options))
 
     
     def _calculate_line_height(self):
