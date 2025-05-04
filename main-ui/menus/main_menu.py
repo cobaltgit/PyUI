@@ -24,7 +24,7 @@ class MainMenu:
         
     def run_main_menu_selection(self):
         #TODO make this user config driven
-        first_entry = "Recents"
+        first_entry = "Favorite"
 
         image_text_list = [
             GridOrListEntry(
@@ -70,5 +70,5 @@ class MainMenu:
                 self.app_menu.run_app_selection()
             elif(selected.get_selection().get_text() == "Favorite"):
                 self.favorites_menu.run_rom_selection()
-            elif(selected.get_selection().get_text() == "Recents"):
+            elif(selected.get_selection().get_text() == "Recent"):
                 self.recents_menu.run_rom_selection()
