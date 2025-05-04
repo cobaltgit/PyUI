@@ -1,5 +1,6 @@
 
 
+import os
 from controller.controller import Controller
 from devices.device import Device
 from display.display import Display
@@ -16,7 +17,8 @@ class AppMenu:
         self.theme : Theme= theme
         self.appFinder = device.get_app_finder()
 
-
+    def _convert_to_theme_version_of_icon(self, icon_path):
+        return os.path.join(self.theme.path,"icons","app",os.path.basename(icon_path))
 
     def run_app_selection(self) :
         selected = "new"
@@ -29,7 +31,7 @@ class AppMenu:
                         image_path=app.get_icon(),
                         image_path_selected=app.get_icon(),
                         description=app.get_description(),
-                        icon=app.get_icon(),
+                        icon=self._convert_to_theme_version_of_icon(app.get_icon()),
                         value=app.get_launch()
                     )
                 )
