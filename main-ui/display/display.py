@@ -1,7 +1,8 @@
 from display.font_purpose import FontPurpose
 from display.loaded_font import LoadedFont
-from display.font_size import FontSize
 from display.render_mode import RenderMode
+from display.x_render_option import XRenderOption
+from display.y_render_option import YRenderOption
 from menus.common.top_bar import TopBar
 import sdl2
 import sdl2.ext
@@ -103,20 +104,24 @@ class Display:
         return render_w, render_h
 
 
-    def _render_surface_texture(self, x, y, texture, surface, render_mode, target_width=None, target_height=None):
+    def _render_surface_texture(self, x, y, texture, surface, render_mode : RenderMode, target_width=None, target_height=None, debug=""):
         render_w, render_h = self._calculate_scaled_width_and_height(surface.contents.w, surface.contents.h, target_width, target_height)
 
         # Adjust position based on render mode
         adj_x = x
         adj_y = y
-
-        if RenderMode.X_CENTERED == render_mode:
+        
+        
+        if(XRenderOption.CENTER == render_mode.x_mode):
             adj_x = x - render_w // 2
-        elif RenderMode.XY_CENTERED == render_mode:
-            adj_x = x - render_w // 2
-            adj_y = y - render_h // 2
-        elif RenderMode.TOP_RIGHT_ADJUST == render_mode:
+        elif(XRenderOption.RIGHT == render_mode.x_mode):
             adj_x = x - render_w
+
+        if(YRenderOption.CENTER == render_mode.y_mode):
+            adj_y = y - render_h // 2
+            print(f"Adjusting y value from {y} to {adj_y} for {debug} : render_h = {render_h}")
+        elif(YRenderOption.BOTTOM == render_mode.y_mode):
+            adj_y = y - render_h
 
         # Create destination rect with adjusted position and scaled size
         rect = sdl2.SDL_Rect(adj_x, adj_y, render_w, render_h)
@@ -130,7 +135,7 @@ class Display:
 
         return render_w, render_h
     
-    def render_text(self,text, x, y, color, purpose : FontPurpose, render_mode = RenderMode.ABSOLUTE):
+    def render_text(self,text, x, y, color, purpose : FontPurpose, render_mode = RenderMode.TOP_LEFT_ALIGNED):
         # Create an SDL_Color
         sdl_color = sdl2.SDL_Color(color[0], color[1], color[2])
         
@@ -145,12 +150,12 @@ class Display:
             sdl2.SDL_FreeSurface(surface)
             raise RuntimeError("Failed to create texture from surface")
 
-        return self._render_surface_texture(x, y, texture, surface, render_mode)
+        return self._render_surface_texture(x, y, texture, surface, render_mode, debug=text)
 
     def render_text_centered(self,text, x, y, color, purpose : FontPurpose):
-        self.render_text(text, x, y, color, purpose, RenderMode.X_CENTERED)
+        self.render_text(text, x, y, color, purpose, RenderMode.TOP_CENTER_ALIGNED)
 
-    def render_image(self, image_path: str, x: int, y: int, render_mode = RenderMode.ABSOLUTE, target_width=None, target_height=None):
+    def render_image(self, image_path: str, x: int, y: int, render_mode = RenderMode.TOP_LEFT_ALIGNED, target_width=None, target_height=None):
         # Load the image into an SDL_Surface
         surface = sdl2.sdlimage.IMG_Load(image_path.encode('utf-8'))
         if not surface:
@@ -162,10 +167,10 @@ class Display:
             sdl2.SDL_FreeSurface(surface)
             raise RuntimeError("Failed to create texture from surface")
 
-        return self._render_surface_texture(x, y, texture, surface, render_mode, target_width, target_height)
+        return self._render_surface_texture(x, y, texture, surface, render_mode, target_width, target_height, debug=image_path)
     
     def render_image_centered(self, image_path: str, x: int, y: int, target_width=None, target_height=None):
-        return self.render_image(image_path,x,y,RenderMode.X_CENTERED, target_width, target_height)
+        return self.render_image(image_path,x,y,RenderMode.TOP_CENTER_ALIGNED, target_width, target_height)
 
     def get_line_height(self, purpose : FontPurpose):
         return self.fonts[purpose].line_height;

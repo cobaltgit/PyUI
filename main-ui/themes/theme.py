@@ -70,6 +70,10 @@ class Theme():
     def get_title_bar_bg(self):
         return os.path.join(self.path,"skin","bg-title.png")
     
+    @property
+    def favorite_icon(self):
+        return os.path.join(self.path,"skin","ic-favorite-mark.png")
+
     def get_app_list_selected_bg(self):
         return os.path.join(self.path,"skin","bg-list-l.png")
 

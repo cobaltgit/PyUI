@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from games.utils.favorite import Favorite
+
 class Device(ABC):
  
     @property
@@ -80,3 +82,6 @@ class Device(ABC):
     def map_input(self, sdl_input):
         pass
 
+    @abstractmethod
+    def parse_favorites(self) -> list[Favorite]:
+        pass

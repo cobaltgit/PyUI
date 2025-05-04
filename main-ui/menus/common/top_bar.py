@@ -21,12 +21,12 @@ class TopBar:
         #TODO Improve padding to not just be 10
         padding = 10
         self.top_bar_w, self.top_bar_h = self.display.render_image(top_bar_bg,0,0)
-        battery_text_w, battery_text_h = self.display.render_text(str(battery_percent),self.device.screen_width - padding*2, int(padding*1.25),  self.theme.text_color(FontPurpose.BATTERY_PERCENT), FontPurpose.BATTERY_PERCENT, RenderMode.TOP_RIGHT_ADJUST)
+        battery_text_w, battery_text_h = self.display.render_text(str(battery_percent),self.device.screen_width - padding*2, int(padding*1.25),  self.theme.text_color(FontPurpose.BATTERY_PERCENT), FontPurpose.BATTERY_PERCENT, RenderMode.TOP_RIGHT_ALIGNED)
         battery_icon_x = self.device.screen_width - battery_text_w - (padding*3)
         battery_icon_w, battery_icon_h = self.display.render_image(
-            battery_icon ,battery_icon_x,padding,RenderMode.TOP_RIGHT_ADJUST)
+            battery_icon ,battery_icon_x,padding,RenderMode.TOP_RIGHT_ALIGNED)
         wifi_icon_x = self.device.screen_width - battery_icon_w - battery_text_w - (padding*4)
-        self.display.render_image(wifi_icon,wifi_icon_x,padding, RenderMode.TOP_RIGHT_ADJUST)
+        self.display.render_image(wifi_icon,wifi_icon_x,padding, RenderMode.TOP_RIGHT_ALIGNED)
         self.display.render_text_centered(title,int(self.device.screen_width/2), 10, self.theme.text_color(FontPurpose.TOP_BAR_TEXT), FontPurpose.TOP_BAR_TEXT)
         
     def get_top_bar_height(self):

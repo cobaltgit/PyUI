@@ -25,6 +25,6 @@ class RomUtils:
                 continue
             
             # Add valid file to the list
-            valid_files.append(filename)
+            valid_files.append(filepath)
         
         return valid_files

@@ -1,15 +1,19 @@
 
 import os
+from pathlib import Path
 import subprocess
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
+from display.render_mode import RenderMode
+from games.utils.favorite import Favorite
 from games.utils.rom_utils import RomUtils
 from menus.games.game_config_menu import GameConfigMenu
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 from views.image_list_view import ImageListView
+from views.selection import Selection
 
 
 class RomSelectMenu:
@@ -31,28 +35,36 @@ class RomSelectMenu:
         else:
             return None
         
+    def _is_favorite(self, favorites: list[Favorite], rom_file_path):
+        return any(Path(rom_file_path).resolve() == Path(fav.rom_path).resolve() for fav in favorites)
+
     def run_rom_selection(self,game_system) :
         imgs_dir = os.path.join(self.roms_path, game_system,"Imgs")
 
-        selected = "new"
+        selected = Selection(None,None,0)
         rom_list = []
         
-        for rom in self.rom_utils.get_roms(game_system):
-            img_path = self.get_image_path(imgs_dir,rom)
+        favorites = self.device.parse_favorites()
+        for rom_file_path in self.rom_utils.get_roms(game_system):
+            rom_file_name = os.path.basename(rom_file_path)
+            img_path = self.get_image_path(imgs_dir,rom_file_name)
+            icon=self.theme.favorite_icon if self._is_favorite(favorites, rom_file_path) else None
             rom_list.append(
                 GridOrListEntry(
-                    text=self.remove_extension(rom),
+                    text=self.remove_extension(rom_file_name),
                     image_path=img_path,
                     image_path_selected=img_path,
                     description=game_system, 
-                    icon=self.theme.get_system_icon_selected(game_system),
-                    value=rom)
+                    icon=icon,
+                    value=rom_file_name)
             )
 
-        img_offset_x = int(3/4*self.device.screen_width)
-        img_offset_y = int(self.device.screen_height/5)
+        img_offset_x = self.device.screen_width - 10
+        img_offset_y = (self.device.screen_height - self.display.get_top_bar_height())//2 + self.display.get_top_bar_height()
+        print(f"=========img_offset_y = {img_offset_y}")
         options_list = ImageListView(self.display,self.controller,self.device,self.theme, game_system,
-                                     rom_list, img_offset_x, img_offset_y, self.theme.rom_image_width, self.theme.rom_image_height)
+                                     rom_list, img_offset_x, img_offset_y, self.theme.rom_image_width, self.theme.rom_image_height,
+                                     selected.get_index(), ImageListView.SHOW_ICONS, RenderMode.MIDDLE_RIGHT_ALIGNED)
         while((selected := options_list.get_selection([ControllerInput.A, ControllerInput.X])) is not None):
             if(ControllerInput.A == selected.get_input()):
                 self.device.run_game(os.path.join(self.roms_path,game_system,selected.get_selection().get_value()))
