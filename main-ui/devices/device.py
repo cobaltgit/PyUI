@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from games.utils.favorite import Favorite
+from games.utils.game_entry import GameEntry
 
 class Device(ABC):
  
@@ -73,5 +73,9 @@ class Device(ABC):
         pass
 
     @abstractmethod
-    def parse_favorites(self) -> list[Favorite]:
+    def parse_favorites(self) -> list[GameEntry]:
+        pass
+
+    @abstractmethod
+    def parse_recents(self) -> list[GameEntry]:
         pass

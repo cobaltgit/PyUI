@@ -1,5 +1,7 @@
 
 import os
+from pathlib import Path
+import subprocess
 from controller.controller import Controller
 from devices.device import Device
 from display.display import Display
@@ -8,13 +10,13 @@ from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 
 
-class FavoritesMenu(RomsMenuCommon):
+class RecentsMenu(RomsMenuCommon):
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
         super().__init__(display,controller,device,theme)
 
     def _get_rom_list(self) -> list[GridOrListEntry]:
         rom_list = []
-        favorites = self.device.parse_favorites()
+        favorites = self.device.parse_recents()
         for favorite in favorites:
             rom_file_name = os.path.basename(favorite.rom_path)
             img_path = self._get_image_path(favorite.rom_path)
@@ -30,4 +32,4 @@ class FavoritesMenu(RomsMenuCommon):
         return rom_list
 
     def run_rom_selection(self) :
-        self._run_rom_selection("Favorites")
+        self._run_rom_selection("Recents")

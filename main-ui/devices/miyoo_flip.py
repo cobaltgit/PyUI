@@ -4,10 +4,10 @@ from controller.controller_inputs import ControllerInput
 from devices.charge.charge_status import ChargeStatus
 from devices.device import Device
 import os
-from devices.miyoo.miyoo_favorites_parser import MiyooFavoritesParser
+from devices.miyoo.miyoo_games_file_parser import MiyooGamesFileParser
 from devices.miyoo.system_config import SystemConfig
 from devices.wifi.wifi_status import WifiStatus
-from games.utils.favorite import Favorite
+from games.utils.game_entry import GameEntry
 import sdl2
 from utils import throttle
 
@@ -36,7 +36,7 @@ class MiyooFlip(Device):
         #Idea is if something were to change from he we can reload it
         #so it always has the more accurate data
         self.SystemConfig = SystemConfig("/userdata/system.json")
-        self.favorites_parser = MiyooFavoritesParser()
+        self.favorites_parser = MiyooGamesFileParser()
 
     @property
     def screen_width(self):
@@ -159,5 +159,8 @@ class MiyooFlip(Device):
     def get_app_finder(self):
         return MiyooAppFinder()
     
-    def parse_favorites(self) -> list[Favorite]:
+    def parse_favorites(self) -> list[GameEntry]:
         return self.favorites_parser.parse_favorites()
+    
+    def parse_recents(self) -> list[GameEntry]:
+        return self.favorites_parser.parse_recents()

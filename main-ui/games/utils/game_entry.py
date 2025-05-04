@@ -2,7 +2,7 @@
 from pathlib import Path
 
 
-class Favorite:
+class GameEntry:
     def __init__(self, label, launch, rom_path, type):
         self._label = label
         self._launch = launch

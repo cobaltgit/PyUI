@@ -6,7 +6,6 @@ from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
 from display.render_mode import RenderMode
-from games.utils.favorite import Favorite
 from menus.games.game_config_menu import GameConfigMenu
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry

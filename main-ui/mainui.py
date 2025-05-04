@@ -16,7 +16,7 @@ main_menu = MainMenu(display, controller, device, theme)
 
 main_menu.run_main_menu_selection()
     
-theme.set_theme_path("/mnt/sdcard/Themes/HeyDW's Blue/") 
+theme.set_theme_path("/mnt/sdcard/Themes/STOCK/") 
 
 main_menu.run_main_menu_selection()
 

@@ -3,18 +3,13 @@ import os
 from pathlib import Path
 import subprocess
 from controller.controller import Controller
-from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
-from display.render_mode import RenderMode
-from games.utils.favorite import Favorite
+from games.utils.game_entry import GameEntry
 from games.utils.rom_utils import RomUtils
-from menus.games.game_config_menu import GameConfigMenu
 from menus.games.roms_menu_common import RomsMenuCommon
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
-from views.image_list_view import ImageListView
-from views.selection import Selection
 
 
 class GameSelectMenu(RomsMenuCommon):
@@ -23,7 +18,7 @@ class GameSelectMenu(RomsMenuCommon):
         self.roms_path = "/mnt/sdcard/Roms/"
         self.rom_utils : RomUtils= RomUtils(self.roms_path)
 
-    def _is_favorite(self, favorites: list[Favorite], rom_file_path):
+    def _is_favorite(self, favorites: list[GameEntry], rom_file_path):
         return any(Path(rom_file_path).resolve() == Path(fav.rom_path).resolve() for fav in favorites)
 
     def _get_rom_list(self) -> list[GridOrListEntry]:
@@ -40,7 +35,7 @@ class GameSelectMenu(RomsMenuCommon):
                     image_path_selected=img_path,
                     description=self.game_system, 
                     icon=icon,
-                    value=rom_file_name)
+                    value=rom_file_path)
             )
         return rom_list
 
