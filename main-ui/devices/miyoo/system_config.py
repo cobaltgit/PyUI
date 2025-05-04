@@ -12,6 +12,13 @@ class SystemConfig:
         except (FileNotFoundError, json.JSONDecodeError) as e:
             raise RuntimeError(f"Failed to load config: {e}")
 
+    def save_config(self):
+        try:
+            with open(self.filepath, 'w') as f:
+                json.dump(self.config, f, indent=8)
+        except Exception as e:
+            raise RuntimeError(f"Failed to save config: {e}")
+        
     def get_volume(self):
         return self.config.get("vol")
 
@@ -24,8 +31,12 @@ class SystemConfig:
     def get_bgm_volume(self):
         return self.config.get("bgmvol")
 
-    def get_brightness(self):
+    @property
+    def brightness(self):
         return self.config.get("brightness")
+    
+    def set_brightness(self, value):
+        self.config["brightness"] = value
 
     def get_language(self):
         return self.config.get("language")

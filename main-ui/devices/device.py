@@ -43,6 +43,11 @@ class Device(ABC):
     @abstractmethod
     def large_grid_spacing_multiplier(self):
         pass
+    
+    @property
+    @abstractmethod
+    def brightness(self):
+        pass
 
     @abstractmethod
     def get_app_finder(self):
@@ -78,4 +83,12 @@ class Device(ABC):
 
     @abstractmethod
     def parse_recents(self) -> list[GameEntry]:
+        pass
+
+    @abstractmethod
+    def lower_brightness(self):
+        pass
+
+    @abstractmethod
+    def raise_brightness(self):
         pass

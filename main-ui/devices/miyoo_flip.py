@@ -35,7 +35,7 @@ class MiyooFlip(Device):
 
         #Idea is if something were to change from he we can reload it
         #so it always has the more accurate data
-        self.SystemConfig = SystemConfig("/userdata/system.json")
+        self.system_config = SystemConfig("/userdata/system.json")
         self.miyoo_games_file_parser = MiyooGamesFileParser()
 
     @property
@@ -78,6 +78,78 @@ class MiyooFlip(Device):
     @property
     def reboot_cmd(self):
         return "reboot"
+    
+    def _map_system_brightness_to_miyoo_scale(self, true_brightness):
+        if(true_brightness >= 220):
+            return 10
+        elif(true_brightness >= 180):
+            return 9
+        elif(true_brightness >= 150):
+            return 8
+        elif(true_brightness >= 120):
+            return 7
+        elif(true_brightness >= 100):
+            return 6
+        elif(true_brightness >= 80):
+            return 5
+        elif(true_brightness >= 60):
+            return 4
+        elif(true_brightness >= 45):
+            return 3
+        elif(true_brightness >= 35):
+            return 2
+        elif(true_brightness >= 20):
+            return 1
+        else:
+            return 0
+
+    def _map_miyoo_scale_to_system_brightness(self, brightness_level):
+        if brightness_level == 10:
+            return 220
+        elif brightness_level == 9:
+            return 180
+        elif brightness_level == 8:
+            return 150
+        elif brightness_level == 7:
+            return 120
+        elif brightness_level == 6:
+            return 100
+        elif brightness_level == 5:
+            return 80
+        elif brightness_level == 4:
+            return 60
+        elif brightness_level == 3:
+            return 45
+        elif brightness_level == 2:
+            return 35
+        elif brightness_level == 1:
+            return 20
+        else: 
+            return 1
+    
+    def lower_brightness(self):
+
+        if(self.brightness > 0):
+            self.system_config.reload_config()
+            self.system_config.set_brightness(self.brightness-1)
+            self.system_config.save_config()
+            with open("/sys/class/backlight/backlight/brightness", "w") as f:
+                f.write(str(self._map_miyoo_scale_to_system_brightness(self.brightness - 1)))
+
+    def raise_brightness(self):
+        if(self.brightness < 10):
+            self.system_config.reload_config()
+            self.system_config.set_brightness(self.brightness+1)
+            self.system_config.save_config()
+            with open("/sys/class/backlight/backlight/brightness", "w") as f:
+                f.write(str(self._map_miyoo_scale_to_system_brightness(self.brightness + 1)))
+    @property
+    def brightness(self):
+        true_brightness = subprocess.check_output(
+                ["cat", "/sys/class/backlight/backlight/brightness"],
+                text=True
+            ).strip()
+        return self._map_system_brightness_to_miyoo_scale(int(true_brightness))
 
     def run_game(self, file_path):
         print(f"About to launch /mnt/sdcard/Emu/.emu_setup/standard_launch.sh {file_path}")
