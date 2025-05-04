@@ -79,7 +79,7 @@ class ImageListView(ListView):
             else:
                 pass
 
-            self.display.render_text(imageTextPair.get_text(), x_value, y_value + self.line_height//2, color, FontPurpose.LIST,
+            self.display.render_text(imageTextPair.get_primary_text(), x_value, y_value + self.line_height//2, color, FontPurpose.LIST,
                                     RenderMode.MIDDLE_LEFT_ALIGNED)
 
 

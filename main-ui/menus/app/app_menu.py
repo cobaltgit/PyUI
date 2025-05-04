@@ -25,7 +25,7 @@ class AppMenu:
             if(app.get_label() is not None):
                 app_list.append(
                     GridOrListEntry(
-                        text=app.get_label(),
+                        primary_text=app.get_label(),
                         image_path=app.get_icon(),
                         image_path_selected=app.get_icon(),
                         description=app.get_description(),

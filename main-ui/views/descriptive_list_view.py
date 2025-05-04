@@ -2,6 +2,7 @@ from typing import List
 from controller.controller_inputs import ControllerInput
 from display.display import Display
 from display.font_purpose import FontPurpose
+from display.render_mode import RenderMode
 import sdl2
 from devices.device import Device
 from controller.controller import Controller
@@ -53,11 +54,20 @@ class DescriptiveListView(ListView):
 
             color = self.theme.text_color_selected(FontPurpose.DESCRIPTIVE_LIST_TITLE) if actual_index == self.selected else self.theme.text_color(FontPurpose.DESCRIPTIVE_LIST_TITLE)
             title_w, title_h = self.display.render_text(
-                gridOrListEntry.get_text(), 
+                gridOrListEntry.get_primary_text(), 
                 row_offset_x + icon_w + self.theme.get_descriptive_list_text_from_icon_offset(), 
                 row_offset_y + self.theme.get_descriptive_list_text_offset_y(), 
                 color, 
                 FontPurpose.DESCRIPTIVE_LIST_TITLE)
+
+            if(gridOrListEntry.get_value_text() is not None):
+                self.display.render_text(
+                    gridOrListEntry.get_value_text(), 
+                    self.device.screen_width - self.theme.get_descriptive_list_text_from_icon_offset(), 
+                    row_offset_y + self.theme.get_descriptive_list_text_offset_y(), 
+                    color, 
+                    FontPurpose.DESCRIPTIVE_LIST_TITLE,
+                    RenderMode.TOP_RIGHT_ALIGNED)
 
             color = self.theme.text_color_selected(FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION) if actual_index == self.selected else self.theme.text_color(FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION)
             

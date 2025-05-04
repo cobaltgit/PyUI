@@ -30,7 +30,7 @@ class MainMenu:
 
         image_text_list = [
             GridOrListEntry(
-                        text=first_entry,
+                        primary_text=first_entry,
                         image_path=self.theme.favorite,
                         image_path_selected=self.theme.favorite_selected,
                         description=first_entry,
@@ -38,7 +38,7 @@ class MainMenu:
                         value=first_entry
             ),                    
             GridOrListEntry(
-                        text="Game",
+                        primary_text="Game",
                         image_path=self.theme.game,
                         image_path_selected=self.theme.game_selected,
                         description="Your games",
@@ -46,7 +46,7 @@ class MainMenu:
                         value="Game"
             ),
             GridOrListEntry(
-                        text="App",
+                        primary_text="App",
                         image_path=self.theme.app,
                         image_path_selected=self.theme.app_selected,
                         description="Your Apps",
@@ -54,7 +54,7 @@ class MainMenu:
                         value="App"
             ),      
             GridOrListEntry(
-                        text="Setting",
+                        primary_text="Setting",
                         image_path=self.theme.settings,
                         image_path_selected=self.theme.settings_selected,
                         description="Your Apps",
@@ -66,13 +66,13 @@ class MainMenu:
         options_list = GridView(self.display,self.controller,self.device,self.theme, "SPRUCE", image_text_list, 4, 1)
         selected = "new"
         while((selected := options_list.get_selection()) is not None):        
-            if(selected.get_selection().get_text() == "Game"):
+            if(selected.get_selection().get_primary_text() == "Game"):
                 self.system_select_menu.run_system_selection()
-            elif(selected.get_selection().get_text() == "App"):
+            elif(selected.get_selection().get_primary_text() == "App"):
                 self.app_menu.run_app_selection()
-            elif(selected.get_selection().get_text() == "Favorite"):
+            elif(selected.get_selection().get_primary_text() == "Favorite"):
                 self.favorites_menu.run_rom_selection()
-            elif(selected.get_selection().get_text() == "Recent"):
+            elif(selected.get_selection().get_primary_text() == "Recent"):
                 self.recents_menu.run_rom_selection()
-            elif(selected.get_selection().get_text() == "Setting"):
+            elif(selected.get_selection().get_primary_text() == "Setting"):
                 self.settings_menu.show_menu()

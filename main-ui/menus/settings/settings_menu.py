@@ -38,7 +38,7 @@ class SettingsMenu:
             option_list = []
             option_list.append(
                 GridOrListEntry(
-                        text="Power Off",
+                        primary_text="Power Off",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
@@ -48,7 +48,7 @@ class SettingsMenu:
             )
             option_list.append(
                 GridOrListEntry(
-                        text="Reboot",
+                        primary_text="Reboot",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
@@ -58,7 +58,8 @@ class SettingsMenu:
             )
             option_list.append(
                 GridOrListEntry(
-                        text="Brightness                        <  " + str(self.device.brightness) + "  >",
+                        primary_text="Brightness",
+                        value_text="<    " + str(self.device.brightness) + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,

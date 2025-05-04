@@ -35,7 +35,7 @@ class GameConfigMenu:
             for config_option in game_system_config.get_launchlist():
                 config_list.append(
                     GridOrListEntry(
-                        text=config_option.get('name'),
+                        primary_text=config_option.get('name'),
                         image_path=None,
                         image_path_selected=None,
                         description=None,

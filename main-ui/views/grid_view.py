@@ -110,7 +110,7 @@ class GridView:
             else:
                 real_y_text_offset = int(y_text_offset+actual_height - font_bg_pad + self.font_pad)
 
-            self.display.render_text_centered(imageTextPair.get_text(), 
+            self.display.render_text_centered(imageTextPair.get_primary_text(), 
                                     x_offset,
                                     real_y_text_offset, color,
                                     self.font_purpose)

@@ -30,7 +30,7 @@ class GameSelectMenu(RomsMenuCommon):
             icon=self.theme.favorite_icon if self._is_favorite(favorites, rom_file_path) else None
             rom_list.append(
                 GridOrListEntry(
-                    text=self._remove_extension(rom_file_name),
+                    primary_text=self._remove_extension(rom_file_name),
                     image_path=img_path,
                     image_path_selected=img_path,
                     description=self.game_system, 
