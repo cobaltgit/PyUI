@@ -98,7 +98,10 @@ class GridView:
                                     x_offset,
                                     int(y_offset+actual_height - font_bg_pad + self.font_pad), color,
                                     self.font_purpose)
-            
+        
+        # Don't display indexing for single row grids
+        if(self.rows > 1) :
+            self.display.add_index_text(self.selected+1, len(self.options))            
         self.display.present()
 
     def get_selection(self, select_controller_inputs = [ControllerInput.A]):

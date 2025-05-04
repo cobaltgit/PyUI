@@ -8,3 +8,5 @@ class FontPurpose(Enum):
     DESCRIPTIVE_LIST_DESCRIPTION = auto()
     GRID_ONE_ROW = auto()
     GRID_MULTI_ROW = auto()
+    LIST_INDEX = auto()
+    LIST_TOTAL = auto()

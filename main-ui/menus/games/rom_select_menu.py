@@ -61,7 +61,7 @@ class RomSelectMenu:
                 )
 
             img_offset_x = self.device.screen_width - 10
-            img_offset_y = (self.device.screen_height - self.display.get_top_bar_height())//2 + self.display.get_top_bar_height()
+            img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
             options_list = ImageListView(self.display,self.controller,self.device,self.theme, game_system,
                                         rom_list, img_offset_x, img_offset_y, self.theme.rom_image_width, self.theme.rom_image_height,
                                         selected.get_index(), ImageListView.SHOW_ICONS, RenderMode.MIDDLE_RIGHT_ALIGNED)

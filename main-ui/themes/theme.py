@@ -11,9 +11,12 @@ class Theme():
 
     def set_theme_path(self,path):
         self.path = path
+        self.load_defaults_for_values_not_in_miyoo_theme()
         self.load_from_file(os.path.join(path,"config.json"))
 
-    
+    def load_defaults_for_values_not_in_miyoo_theme(self):
+        setattr(self, "showBottomBar", True)
+
     def load_from_file(self, file_path):
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -64,11 +67,19 @@ class Theme():
     
     @property
     def rom_image_height(self):
-        return 340  #TODO make percentage of device
+        if(self.show_bottom_bar) :
+           return 300  #TODO make percentage of device
+        else:
+            return 340  #TODO make percentage of device
+
 
     @property
     def get_title_bar_bg(self):
         return os.path.join(self.path,"skin","bg-title.png")
+
+    @property
+    def show_bottom_bar(self):
+        return getattr(self, "showBottomBar", None) is not False
 
     @property
     def bottom_bar_bg(self):
@@ -199,17 +210,12 @@ class Theme():
                 return self.list["size"]
             case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
                 return self.grid["grid3x4"]
+            case FontPurpose.LIST_INDEX:
+                return self.currentpage["size"]
+            case FontPurpose.LIST_TOTAL:
+                return self.total["size"]
             case _:
                 return self.list["font"]
-
-    def hex_to_color(self,hex_string):
-        hex_string = hex_string.lstrip('#')
-        if len(hex_string) != 6:
-            raise ValueError("Hex string must be in the format '#RRGGBB'")
-        R = int(hex_string[0:2], 16)
-        G = int(hex_string[2:4], 16)
-        B = int(hex_string[4:6], 16)
-        return (R, G, B)
 
     def text_color(self, font_purpose : FontPurpose):
         match font_purpose:
@@ -227,6 +233,10 @@ class Theme():
                 return self.hex_to_color(self.grid["color"])
             case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
                 return self.hex_to_color(self.grid["color"])
+            case FontPurpose.LIST_INDEX:
+                return self.hex_to_color(self.currentpage["color"])
+            case FontPurpose.LIST_TOTAL:
+                return self.hex_to_color(self.total["color"])
             case _:
                 return self.hex_to_color(self.grid["color"])
       
@@ -242,9 +252,22 @@ class Theme():
                 return self.hex_to_color(self.grid["selectedcolor"])
             case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
                 return self.hex_to_color(self.grid["selectedcolor"])
+            case FontPurpose.LIST_INDEX:
+                return self.hex_to_color(self.currentpage["selectedcolor"])
+            case FontPurpose.LIST_TOTAL:
+                return self.hex_to_color(self.total["color"])
             case _:
                 return self.hex_to_color(self.grid["selectedcolor"])
     
+    def hex_to_color(self,hex_string):
+        hex_string = hex_string.lstrip('#')
+        if len(hex_string) != 6:
+            raise ValueError("Hex string must be in the format '#RRGGBB'")
+        R = int(hex_string[0:2], 16)
+        G = int(hex_string[2:4], 16)
+        B = int(hex_string[4:6], 16)
+        return (R, G, B)
+
     def get_descriptive_list_icon_offset_x(self):
         return 10
     

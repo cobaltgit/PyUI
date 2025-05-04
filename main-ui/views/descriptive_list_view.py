@@ -23,7 +23,7 @@ class DescriptiveListView(ListView):
         self.selected : int = selected
         self.selected_bg = selected_bg
         each_entry_width, self.each_entry_height = display.get_image_dimensions(selected_bg)
-        self.max_rows = int((device.screen_height - display.get_top_bar_height()) / (self.each_entry_height))
+        self.max_rows = self.display.get_usable_screen_height() // self.each_entry_height
         self.current_top = 0
         self.current_bottom = min(self.max_rows,len(options))
 
@@ -70,5 +70,3 @@ class DescriptiveListView(ListView):
                     FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION)
 
             row_offset_y += self.each_entry_height
-
-        self.display.present()

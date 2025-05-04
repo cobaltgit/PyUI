@@ -37,7 +37,7 @@ class ImageListView(ListView):
         self.show_icons = show_icons
         self.image_render_mode = image_render_mode
         self.line_height = self._calculate_line_height()
-        self.max_rows = int((device.screen_height - display.get_top_bar_height()) / (self.line_height))
+        self.max_rows = self.display.get_usable_screen_height() // self.line_height
         self.current_bottom = min(self.max_rows,len(options))
 
     
@@ -90,5 +90,3 @@ class ImageListView(ListView):
         #ensure image is rendered last so it is on top of the text
         self._render_text(visible_options)
         self._render_image(visible_options)
-
-        self.display.present()

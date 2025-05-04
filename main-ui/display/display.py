@@ -13,6 +13,7 @@ from devices.device import Device
 
 class Display:
     def __init__(self, theme: Theme, device: Device):
+        self.debug = False
         self.theme = theme
         self.device = device
         self._init_display()
@@ -81,10 +82,10 @@ class Display:
         return LoadedFont(font,line_height)
         
     def clear(self, screen):
-        self._check_for_bg_change();
+        self._check_for_bg_change()
         sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
         self.top_bar.render_top_bar(screen)
-        self.bottom_bar.render_bottom_bar(screen)
+        self.bottom_bar.render_bottom_bar()
     
     def _calculate_scaled_width_and_height(self, orig_w, orig_h, target_width, target_height):
         # Maintain aspect ratio
@@ -106,6 +107,9 @@ class Display:
         
         return render_w, render_h
 
+    def _log(self, msg):
+        if(self.debug):
+            print(msg)
 
     def _render_surface_texture(self, x, y, texture, surface, render_mode : RenderMode, target_width=None, target_height=None, debug=""):
         render_w, render_h = self._calculate_scaled_width_and_height(surface.contents.w, surface.contents.h, target_width, target_height)
@@ -117,14 +121,19 @@ class Display:
         
         if(XRenderOption.CENTER == render_mode.x_mode):
             adj_x = x - render_w // 2
+            self._log(f"XRenderOption.CENTER : Adjusting {debug} from {x}, {y} to {adj_x}, {adj_y} ")
         elif(XRenderOption.RIGHT == render_mode.x_mode):
             adj_x = x - render_w
+            self._log(f"XRenderOption.RIGHT : Adjusting {debug} from {x}, {y} to {adj_x}, {adj_y} ")
 
         if(YRenderOption.CENTER == render_mode.y_mode):
             adj_y = y - render_h // 2
+            self._log(f"YRenderOption.CENTER : Adjusting {debug} from {x}, {y} to {adj_x}, {adj_y} ")
         elif(YRenderOption.BOTTOM == render_mode.y_mode):
             adj_y = y - render_h
+            self._log(f"YRenderOption.BOTTOM : Adjusting {debug} from {x}, {y} to {adj_x}, {adj_y} ")
 
+        self._log(f"Rendering {debug} at {adj_x}, {adj_y}")
         # Create destination rect with adjusted position and scaled size
         rect = sdl2.SDL_Rect(adj_x, adj_y, render_w, render_h)
 
@@ -184,7 +193,37 @@ class Display:
 
     def get_top_bar_height(self):
         return self.top_bar.get_top_bar_height()
+    
+    def get_bottom_bar_height(self):
+        return self.bottom_bar.get_bottom_bar_height()
+    
+    def get_usable_screen_height(self):
+        return self.device.screen_height - self.get_bottom_bar_height() - self.get_top_bar_height()
 
     def get_image_dimensions(self, img):        
         contents = sdl2.sdlimage.IMG_Load(img.encode('utf-8')).contents
         return contents.w, contents.h
+
+    def add_index_text(self, index, total):
+        # TODO don't hard code these
+        y_padding = 5 
+        y_value = self.device.screen_height - y_padding
+        x_padding = 10 
+
+        total_text_x = self.device.screen_width - x_padding
+        total_text_w, total_text_h = self.render_text(
+            str(total),
+            total_text_x,
+            y_value, 
+            self.theme.text_color(FontPurpose.LIST_TOTAL), 
+            FontPurpose.LIST_TOTAL, 
+            RenderMode.BOTTOM_RIGHT_ALIGNED)
+
+        index_text_x = self.device.screen_width - x_padding - total_text_w
+        index_text_w, index_text_y = self.render_text(
+            str(index)+"/",
+            index_text_x,
+            y_value, 
+            self.theme.text_color(FontPurpose.LIST_INDEX), 
+            FontPurpose.LIST_INDEX, 
+            RenderMode.BOTTOM_RIGHT_ALIGNED)
