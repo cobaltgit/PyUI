@@ -3,6 +3,7 @@ from controller.controller import Controller
 from devices.device import Device
 from display.display import Display
 from menus.app.app_menu import AppMenu
+from menus.favorites.favorites_menu import FavoritesMenu
 from menus.games.game_system_select_menu import GameSystemSelectMenu
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
@@ -17,7 +18,7 @@ class MainMenu:
         self.theme : Theme= theme
         self.system_select_menu = GameSystemSelectMenu(display,controller,device,theme)
         self.app_menu = AppMenu(display,controller,device,theme)
-
+        self.favorites_menu = FavoritesMenu(display,controller,device,theme)
     def run_main_menu_selection(self):
         image_text_list = [
                     
@@ -62,3 +63,5 @@ class MainMenu:
                 self.system_select_menu.run_system_selection()
             elif(selected.get_selection().get_text() == "App"):
                 self.app_menu.run_app_selection()
+            elif(selected.get_selection().get_text() == "Favorite"):
+                self.favorites_menu.run_rom_selection()

@@ -25,6 +25,8 @@ class ImageListView(ListView):
         self.options = options
 
         self.selected = selected_index
+        while(self.selected > len(options) and self.selected > 0):
+            self.selected -= 1
         self.current_top = 0
         self.img_offset_x = img_offset_x
         self.img_offset_y = img_offset_y
