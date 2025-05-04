@@ -16,7 +16,7 @@ class ImageListView(ListView):
 
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text,
                  options: List[GridOrListEntry], img_offset_x : int, img_offset_y : int, img_width : int, img_height: int,
-                 selected_index : int, show_icons : bool, image_render_mode: RenderMode):
+                 selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None):
         super().__init__(controller)
         self.display = display
         self.device = device
@@ -36,7 +36,8 @@ class ImageListView(ListView):
         #TODO get line height padding from theme
         self.show_icons = show_icons
         self.image_render_mode = image_render_mode
-        self.line_height = self._calculate_line_height()
+        self.selected_bg = selected_bg
+        self.line_height = self._calculate_line_height()            
         self.max_rows = self.display.get_usable_screen_height() // self.line_height
         self.current_bottom = min(self.max_rows,len(options))
 
@@ -50,17 +51,27 @@ class ImageListView(ListView):
                     icon_w, icon_h = self.display.get_image_dimensions(gridOrListEntry.get_icon())
                     icon_line_height = max(icon_line_height, icon_h)
 
-        return max(text_line_height, icon_line_height)
+        bg_height = 0
+        if(self.selected_bg is not None):
+            bg_w, bg_height = self.display.get_image_dimensions(self.selected_bg)
+
+        return max(text_line_height, icon_line_height, bg_height)
 
 
 
     def _render_text(self, visible_options):
         for visible_index, (imageTextPair) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
-            color = self.theme.text_color_selected(FontPurpose.LIST) if actual_index == self.selected else self.theme.text_color(FontPurpose.LIST)
            
-            x_value = 50 #TODO get this from somewhere
+            x_value = 15 #TODO get this from somewhere
             y_value = self.base_y_offset + visible_index * self.line_height
+
+            if actual_index == self.selected:
+                color = self.theme.text_color_selected(FontPurpose.LIST)
+                if(self.selected_bg is not None):
+                    self.display.render_image(self.selected_bg,0, y_value)
+            else:
+                color = self.theme.text_color(FontPurpose.LIST)
 
             if(self.show_icons and imageTextPair.get_icon() is not None):
                 icon_width, icon_height = self.display.render_image(imageTextPair.get_icon(),x_value, y_value)
