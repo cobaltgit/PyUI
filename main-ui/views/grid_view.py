@@ -3,6 +3,7 @@ from controller.controller_inputs import ControllerInput
 from display.font_purpose import FontPurpose
 from display.font_size import FontSize
 from display.display import Display
+from display.render_mode import RenderMode
 import sdl2
 from devices.device import Device
 from controller.controller import Controller
@@ -71,32 +72,47 @@ class GridView:
         for visible_index, imageTextPair in enumerate(visible_options):
 
             actual_index = self.current_left + visible_index
-            imagePath = imageTextPair.get_image_path_selected() if actual_index == self.selected else imageTextPair.get_image_path()
+            image_path = imageTextPair.get_image_path_selected() if actual_index == self.selected else imageTextPair.get_image_path()
             
             x_index = visible_index % self.cols
             x_offset = int(x_pad + x_index * (icon_width)) + int(icon_width/2)
 
+
             if(self.rows == 1) : 
-                y_offset = int(usable_height / 3) + y_pad
+                y_icon_offset = self.display.get_center_of_usable_screen_height()
+                render_mode = RenderMode.MIDDLE_CENTER_ALIGNED
+                # TODO this is just for legacy miyoo skins, otherwise we should calculate
+                # this some other way
+                y_text_offset = int(usable_height / 3) + y_pad + 50
             else :
                 y_index = int(visible_index / self.cols) 
-                y_offset = int(y_pad + y_index * (icon_height + y_gap))
+                y_icon_offset = int(y_pad + y_index * (icon_height + y_gap))
+                render_mode = RenderMode.TOP_CENTER_ALIGNED
+                y_text_offset = int(y_pad + y_index * (icon_height + y_gap))
 
             font_bg_pad = 0
             if(self.selected_bg is not None):
                 font_bg_pad = self.font_bg_pad
                 if(actual_index == self.selected):
-                    self.display.render_image_centered(self.selected_bg, 
+                    self.display.render_image(self.selected_bg, 
                                             x_offset, 
-                                            y_offset)
+                                            y_icon_offset,
+                                            render_mode)
 
-            actual_height, actual_width = self.display.render_image_centered(imagePath, 
+            actual_height, actual_width = self.display.render_image(image_path, 
                                      x_offset, 
-                                     y_offset)
+                                     y_icon_offset,
+                                     render_mode)
             color = self.theme.text_color_selected(self.font_purpose) if actual_index == self.selected else self.theme.text_color(self.font_purpose)
+
+            if(self.rows == 1) : 
+                real_y_text_offset = 325
+            else:
+                real_y_text_offset = int(y_text_offset+actual_height - font_bg_pad + self.font_pad)
+
             self.display.render_text_centered(imageTextPair.get_text(), 
                                     x_offset,
-                                    int(y_offset+actual_height - font_bg_pad + self.font_pad), color,
+                                    real_y_text_offset, color,
                                     self.font_purpose)
         
         # Don't display indexing for single row grids

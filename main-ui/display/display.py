@@ -82,10 +82,9 @@ class Display:
         return LoadedFont(font,line_height)
         
     def clear(self, screen):
+        self.screen = screen
         self._check_for_bg_change()
         sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
-        self.top_bar.render_top_bar(screen)
-        self.bottom_bar.render_bottom_bar()
     
     def _calculate_scaled_width_and_height(self, orig_w, orig_h, target_width, target_height):
         # Maintain aspect ratio
@@ -189,6 +188,8 @@ class Display:
         return self.fonts[purpose].line_height;
         
     def present(self):
+        self.top_bar.render_top_bar(self.screen)
+        self.bottom_bar.render_bottom_bar()
         self.renderer.present()
 
     def get_top_bar_height(self):
@@ -199,6 +200,9 @@ class Display:
     
     def get_usable_screen_height(self):
         return self.device.screen_height - self.get_bottom_bar_height() - self.get_top_bar_height()
+    
+    def get_center_of_usable_screen_height(self):
+        return ((self.device.screen_height - self.get_bottom_bar_height() - self.get_top_bar_height()) // 2) + self.get_top_bar_height() 
 
     def get_image_dimensions(self, img):        
         contents = sdl2.sdlimage.IMG_Load(img.encode('utf-8')).contents

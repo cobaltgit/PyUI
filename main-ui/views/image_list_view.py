@@ -63,7 +63,7 @@ class ImageListView(ListView):
         for visible_index, (imageTextPair) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
            
-            x_value = 15 #TODO get this from somewhere
+            x_value = 20 #TODO get this from somewhere
             y_value = self.base_y_offset + visible_index * self.line_height
 
             if actual_index == self.selected:
