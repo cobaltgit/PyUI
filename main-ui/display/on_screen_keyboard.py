@@ -15,7 +15,6 @@ class OnScreenKeyboard:
         self.theme : Theme= theme
 
         self.normal_keys = [
-            #["CAPS","SHIFT","UP","DOWN","LEFT","RIGHT", "DEL"],
             ["~", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+"],        # Top row (numbers and symbols)
             ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\"],       # QWERTY row
             ["⇪", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "←"],                  # Home row
@@ -24,7 +23,6 @@ class OnScreenKeyboard:
         ]
 
         self.shifted_keys = [
-            #["CAPS","SHIFT","UP","DOWN","LEFT","RIGHT", "DEL"],
             ["`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "="],       # Shifted top row
             ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|"],       # Shifted QWERTY row
             ["⇪", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", '"', "←"],                 # Shifted home row

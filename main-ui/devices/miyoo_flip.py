@@ -247,16 +247,32 @@ class MiyooFlip(Device):
     
     @throttle.limit_refresh(15)
     def get_wifi_status(self):
-        link_quality_level = self.get_wifi_link_quality_level()
-        if(link_quality_level >= 70):
-            return WifiStatus.GREAT
-        elif(link_quality_level >= 50):
-            return WifiStatus.GOOD
-        elif(link_quality_level >= 30):
-            return WifiStatus.OKAY
-        else:
-            return WifiStatus.BAD
+        if(self.is_wifi_enabled()):
+            link_quality_level = self.get_wifi_link_quality_level()
+            if(link_quality_level >= 70):
+                return WifiStatus.GREAT
+            elif(link_quality_level >= 50):
+                return WifiStatus.GOOD
+            elif(link_quality_level >= 30):
+                return WifiStatus.OKAY
+            else:
+                return WifiStatus.BAD
+        else:            
+            return WifiStatus.OFF
         
+    def is_wifi_enabled(self, interface="wlan0"):
+        result = subprocess.run(["ip", "link", "show", interface], capture_output=True, text=True)
+        return "UP" in result.stdout
+    
+    
+    def disable_wifi(self,interface="wlan0"):
+        subprocess.run(["ip", "link", "set", interface, "down"], capture_output=True, text=True)
+        self.get_wifi_status.force_refresh()
+
+    def enable_wifi(self,interface="wlan0"):
+        subprocess.run(["ip", "link", "set", interface, "up"], capture_output=True, text=True)
+        self.get_wifi_status.force_refresh()
+
     @throttle.limit_refresh(15)
     def get_charge_status(self):
         output = subprocess.check_output(

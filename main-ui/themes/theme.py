@@ -207,6 +207,8 @@ class Theme():
                 return os.path.join(self.path,self.grid["font"]) 
             case FontPurpose.DESCRIPTIVE_LIST_TITLE:
                 return os.path.join(self.path,self.grid["font"]) 
+            case FontPurpose.MESSAGE:
+                return os.path.join(self.path,self.grid["font"]) 
             case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
                 return os.path.join(self.path,self.grid["font"]) 
             case _:
@@ -227,6 +229,8 @@ class Theme():
             case FontPurpose.LIST:
                 return self.list["size"]
             case FontPurpose.DESCRIPTIVE_LIST_TITLE:
+                return self.list["size"]
+            case FontPurpose.MESSAGE:
                 return self.list["size"]
             case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
                 return self.grid["grid3x4"]
@@ -253,6 +257,8 @@ class Theme():
                 return self.hex_to_color(self.grid["color"])
             case FontPurpose.DESCRIPTIVE_LIST_TITLE:
                 return self.hex_to_color(self.grid["color"])
+            case FontPurpose.MESSAGE:
+                return self.hex_to_color(self.grid["color"])
             case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
                 return self.hex_to_color(self.grid["color"])
             case FontPurpose.LIST_INDEX:
@@ -271,6 +277,8 @@ class Theme():
             case FontPurpose.LIST:
                 return self.hex_to_color(self.grid["selectedcolor"])
             case FontPurpose.DESCRIPTIVE_LIST_TITLE:
+                return self.hex_to_color(self.grid["selectedcolor"])
+            case FontPurpose.MESSAGE:
                 return self.hex_to_color(self.grid["selectedcolor"])
             case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
                 return self.hex_to_color(self.grid["selectedcolor"])

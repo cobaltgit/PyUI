@@ -10,7 +10,9 @@ class WiFiNetwork:
     signal_level: int
     flags: str
     ssid: str
-
+    def requires_password(self) -> bool:
+        return "WPA" in self.flags or "WEP" in self.flags
+    
 class WiFiScanner:
     def __init__(self, interface="wlan0", delay=2, max_idle_scans=3):
         self.interface = interface
@@ -73,3 +75,33 @@ class WiFiScanner:
                 idle_count += 1
 
         return all_networks
+    
+    def get_connected_ssid(self):
+        ssid = None
+        freq = None
+        try:
+            result = subprocess.run(
+                ["wpa_cli", "status"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            for line in result.stdout.splitlines():
+                if line.startswith("ssid="):
+                    ssid = line.split("=", 1)[1]
+                elif line.startswith("freq="):
+                    freq = int(line.split("=", 1)[1])
+        
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to get Wi-Fi details: {e}")        
+
+        return ssid, freq
+    
+    def reload_wpa_supplicant_config(self):
+        try:
+            # Trigger the reconfiguration to reload wpa_supplicant.conf
+            subprocess.run(["wpa_cli", "reconfigure"], check=True)
+            print("wpa_supplicant.conf reloaded successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"Error reloading wpa_supplicant.conf: {e}")
+            

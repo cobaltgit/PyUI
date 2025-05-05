@@ -49,7 +49,13 @@ class SettingsMenu:
         print(self.on_screen_keyboard.get_input())
 
     def show_wifi_menu(self, input):
-        self.wifi_menu.scan_for_networks()
+        if(ControllerInput.DPAD_LEFT == input or ControllerInput.DPAD_RIGHT == input):
+            if(self.device.is_wifi_enabled()):
+                self.device.disable_wifi()
+            else:
+                self.device.enable_wifi()
+        else:
+            self.wifi_menu.show_wifi_menu()
 
     def show_menu(self) :
         selected = Selection(None, None, 0)
@@ -81,7 +87,7 @@ class SettingsMenu:
             option_list.append(
                 GridOrListEntry(
                         primary_text="WiFi",
-                        value_text=None,
+                        value_text="<    " + ("On" if self.device.is_wifi_enabled() else "Off") + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
@@ -120,10 +126,10 @@ class SettingsMenu:
                         value=self.reboot
                     )
             )
-            option_list = DescriptiveListView(self.display,self.controller,self.device,self.theme, 
+            list_view = DescriptiveListView(self.display,self.controller,self.device,self.theme, 
                                               "Settings", option_list, self.theme.get_list_small_selected_bg(),
                                               selected.get_index())
-            selected = option_list.get_selection([ControllerInput.A, ControllerInput.DPAD_LEFT, ControllerInput.DPAD_RIGHT,
+            selected = list_view.get_selection([ControllerInput.A, ControllerInput.DPAD_LEFT, ControllerInput.DPAD_RIGHT,
                                                   ControllerInput.L1, ControllerInput.R1])
 
             if(selected is not None):

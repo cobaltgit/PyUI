@@ -56,9 +56,21 @@ class Device(ABC):
     @abstractmethod
     def get_wifi_status(self):
         pass
+    
+    @abstractmethod
+    def get_wifi_status(self):
+        pass
 
     @abstractmethod
-    def get_charge_status(self):
+    def is_wifi_enabled(self):
+        pass
+
+    @abstractmethod
+    def disable_wifi(self):
+        pass
+
+    @abstractmethod
+    def enable_wifi(self):
         pass
 
     @abstractmethod
