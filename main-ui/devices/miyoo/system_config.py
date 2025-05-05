@@ -37,6 +37,9 @@ class SystemConfig:
     
     def set_brightness(self, value):
         self.config["brightness"] = value
+    
+    def set_volume(self, value):
+        self.config["vol"] = value
 
     def get_language(self):
         return self.config.get("language")

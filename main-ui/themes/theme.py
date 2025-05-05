@@ -108,6 +108,22 @@ class Theme():
     def get_list_large_selected_bg(self):
         return os.path.join(self.path,"skin","bg-list-l.png")
 
+    @property
+    def keyboard_bg(self):
+        return os.path.join(self.path,"skin","bg-grid-s.png")
+
+    @property
+    def keyboard_entry_bg(self):
+        return os.path.join(self.path,"skin","bg-list-l.png")
+
+    @property
+    def key_bg(self):
+        return os.path.join(self.path,"skin","bg-btn-01-n.png")
+
+    @property
+    def key_selected_bg(self):
+        return os.path.join(self.path,"skin","bg-btn-01-f.png")
+
     def get_list_small_selected_bg(self):
         return os.path.join(self.path,"skin","bg-list-s.png")
     
@@ -181,6 +197,8 @@ class Theme():
                 return os.path.join(self.path,self.grid["font"]) 
             case FontPurpose.BATTERY_PERCENT:
                 return os.path.join(self.path,self.grid["font"]) 
+            case FontPurpose.ON_SCREEN_KEYBOARD:
+                return os.path.join(self.path,self.grid["font"]) 
             case FontPurpose.GRID_ONE_ROW:
                 return os.path.join(self.path,self.grid["font"]) 
             case FontPurpose.GRID_MULTI_ROW:
@@ -199,6 +217,8 @@ class Theme():
             case FontPurpose.TOP_BAR_TEXT:
                 return self.list["size"]
             case FontPurpose.BATTERY_PERCENT:
+                return self.list["size"]
+            case FontPurpose.ON_SCREEN_KEYBOARD:
                 return self.list["size"]
             case FontPurpose.GRID_ONE_ROW:
                 return self.grid["grid1x4"]
@@ -223,6 +243,8 @@ class Theme():
                 return self.hex_to_color(self.grid["selectedcolor"])
             case FontPurpose.BATTERY_PERCENT:
                 return self.hex_to_color(self.grid["selectedcolor"])
+            case FontPurpose.ON_SCREEN_KEYBOARD:
+                return self.hex_to_color(self.grid["color"])
             case FontPurpose.GRID_ONE_ROW:
                 return self.hex_to_color(self.grid["color"])
             case FontPurpose.GRID_MULTI_ROW:
@@ -256,6 +278,8 @@ class Theme():
                 return self.hex_to_color(self.currentpage["selectedcolor"])
             case FontPurpose.LIST_TOTAL:
                 return self.hex_to_color(self.total["color"])
+            case FontPurpose.ON_SCREEN_KEYBOARD:
+                return self.hex_to_color(self.grid["selectedcolor"])
             case _:
                 return self.hex_to_color(self.grid["selectedcolor"])
     

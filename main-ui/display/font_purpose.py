@@ -10,3 +10,4 @@ class FontPurpose(Enum):
     GRID_MULTI_ROW = auto()
     LIST_INDEX = auto()
     LIST_TOTAL = auto()
+    ON_SCREEN_KEYBOARD = auto()

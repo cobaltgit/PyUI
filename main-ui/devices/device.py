@@ -92,3 +92,12 @@ class Device(ABC):
     @abstractmethod
     def raise_brightness(self):
         pass
+
+    @abstractmethod
+    def change_volume(self, amount):
+        pass
+
+    @property
+    @abstractmethod
+    def volume(self):
+        pass

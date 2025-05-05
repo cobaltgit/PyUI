@@ -1,3 +1,4 @@
+import re
 import subprocess
 from apps.miyoo.miyoo_app_finder import MiyooAppFinder
 from controller.controller_inputs import ControllerInput
@@ -143,6 +144,7 @@ class MiyooFlip(Device):
             self.system_config.save_config()
             with open("/sys/class/backlight/backlight/brightness", "w") as f:
                 f.write(str(self._map_miyoo_scale_to_system_brightness(self.brightness + 1)))
+
     @property
     def brightness(self):
         true_brightness = subprocess.check_output(
@@ -150,6 +152,45 @@ class MiyooFlip(Device):
                 text=True
             ).strip()
         return self._map_system_brightness_to_miyoo_scale(int(true_brightness))
+
+    def _set_volume(self, volume):
+        if(volume < 0):
+            volume = 0
+        elif(volume > 100):
+            volume = 100
+
+        try:
+            subprocess.run(
+                ["amixer", "cset", f"name='SPK Volume'", str(volume)],
+                check=True
+            )
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to set volume: {e}")
+
+        self.system_config.reload_config()
+        self.system_config.set_volume(volume // 5)
+        self.system_config.save_config()
+
+
+    def change_volume(self, amount):
+        self._set_volume(self.volume + amount)
+
+    @property
+    def volume(self):
+        try:
+            output = subprocess.check_output(
+                ["amixer", "cget", "name='SPK Volume'"],
+                text=True
+            )
+            match = re.search(r": values=(\d+)", output)
+            if match:
+                return int(match.group(1))
+            else:
+                print("Volume value not found in amixer output.")
+                return 0 # ???
+        except subprocess.CalledProcessError as e:
+            print(f"Command failed: {e}")
+            return 0 # ???
 
     def run_game(self, file_path):
         print(f"About to launch /mnt/sdcard/Emu/.emu_setup/standard_launch.sh {file_path}")

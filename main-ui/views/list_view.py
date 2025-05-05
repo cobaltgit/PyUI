@@ -25,12 +25,12 @@ class ListView(ABC):
                     self.adjust_selected(-1)
                 elif self.controller.last_input() == ControllerInput.DPAD_DOWN:
                     self.adjust_selected(1)
+                elif self.controller.last_input() in select_controller_inputs: #requested inputs have priority over the rest
+                    return Selection(self.options[self.selected],self.controller.last_input(), self.selected)
                 elif self.controller.last_input() == ControllerInput.L1:
                     self.adjust_selected(-1*self.max_rows+1)
                 elif self.controller.last_input() == ControllerInput.R1:
                     self.adjust_selected(self.max_rows-1)
-                elif self.controller.last_input() in select_controller_inputs:
-                    return Selection(self.options[self.selected],self.controller.last_input(), self.selected)
                 elif self.controller.last_input() == ControllerInput.B:
                     return None
 

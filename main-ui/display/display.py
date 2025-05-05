@@ -95,10 +95,10 @@ class Display:
         elif target_width:
             scale = target_width / orig_w
             render_w = int(orig_w * scale)
-            render_h = int(orig_h * scale)
+            render_h = orig_h
         elif target_height:
+            render_w = orig_w
             scale = target_height / orig_h
-            render_w = int(orig_w * scale)
             render_h = int(orig_h * scale)
         else:
             render_w = orig_w
