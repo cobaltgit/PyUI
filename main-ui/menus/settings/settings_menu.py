@@ -5,6 +5,7 @@ from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
 from display.on_screen_keyboard import OnScreenKeyboard
+from menus.settings.wifi_menu import WifiMenu
 from themes.theme import Theme
 from views.descriptive_list_view import DescriptiveListView
 from views.grid_or_list_entry import GridOrListEntry
@@ -18,6 +19,7 @@ class SettingsMenu:
         self.device = device
         self.theme = theme
         self.on_screen_keyboard = OnScreenKeyboard(display,controller,device,theme)
+        self.wifi_menu = WifiMenu(display,controller,device,theme)
     
     def shutdown(self, input: ControllerInput):
         if(ControllerInput.A == input):
@@ -46,6 +48,9 @@ class SettingsMenu:
     def show_on_screen_keyboard(self, input):
         print(self.on_screen_keyboard.get_input())
 
+    def show_wifi_menu(self, input):
+        self.wifi_menu.scan_for_networks()
+
     def show_menu(self) :
         selected = Selection(None, None, 0)
 
@@ -71,6 +76,17 @@ class SettingsMenu:
                         description=None,
                         icon=None,
                         value=self.volume_adjust
+                    )
+            )
+            option_list.append(
+                GridOrListEntry(
+                        primary_text="WiFi",
+                        value_text=None,
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.show_wifi_menu
                     )
             )
             option_list.append(
