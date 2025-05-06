@@ -53,7 +53,7 @@ class GameSystemSelectMenu:
                 )
 
         view = self.view_creator.create_view(
-            view_type=ViewType.GRID_VIEW,
+            view_type=self.theme.get_view_type_for_system_select_menu(),
             top_bar_text="Game", 
             options=systems_list, 
             cols=4, 

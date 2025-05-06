@@ -337,3 +337,14 @@ class Theme():
         view_type_str = getattr(self, "mainMenuViewType", "GRID_VIEW")
         view_type = getattr(ViewType, view_type_str, ViewType.GRID_VIEW)
         return view_type
+            
+    def get_view_type_for_system_select_menu(self):
+        view_type_str = getattr(self, "systemSelectViewType", "GRID_VIEW")
+        view_type = getattr(ViewType, view_type_str, ViewType.GRID_VIEW)
+        return view_type
+            
+    def get_view_type_for_app_menu(self):
+        view_type_str = getattr(self, "appMenuViewType", "DESCRIPTIVE_LIST_VIEW")
+        view_type = getattr(ViewType, view_type_str, ViewType.DESCRIPTIVE_LIST_VIEW)
+        return view_type
+    
