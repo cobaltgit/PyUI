@@ -39,23 +39,23 @@ class ImageListView(NonDescriptiveListView):
             actual_index = self.current_top + visible_index
            
             x_value = 20 #TODO get this from somewhere
-            y_value = self.base_y_offset + visible_index * self.line_height
-
+            y_value = (self.base_y_offset + visible_index * self.line_height)  + self.line_height//2
+            render_mode=RenderMode.MIDDLE_LEFT_ALIGNED
             if actual_index == self.selected:
                 color = self.theme.text_color_selected(FontPurpose.LIST)
                 if(self.selected_bg is not None):
-                    self.display.render_image(self.selected_bg,0, y_value)
+                    self.display.render_image(self.selected_bg,0, y_value, render_mode)
             else:
                 color = self.theme.text_color(FontPurpose.LIST)
 
             if(self.show_icons and imageTextPair.get_icon() is not None):
-                icon_width, icon_height = self.display.render_image(imageTextPair.get_icon(),x_value, y_value)
+                icon_width, icon_height = self.display.render_image(imageTextPair.get_icon(),x_value, y_value, render_mode)
                 x_value += icon_width
             else:
                 pass
 
-            self.display.render_text(imageTextPair.get_primary_text(), x_value, y_value + self.line_height//2, color, FontPurpose.LIST,
-                                    RenderMode.MIDDLE_LEFT_ALIGNED)
+            self.display.render_text(imageTextPair.get_primary_text(), x_value, y_value, color, FontPurpose.LIST,
+                                    render_mode)
 
 
     def _render_image(self, visible_options):
