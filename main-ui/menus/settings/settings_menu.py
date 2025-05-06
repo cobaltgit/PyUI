@@ -7,20 +7,22 @@ from display.display import Display
 from display.on_screen_keyboard import OnScreenKeyboard
 from menus.settings.wifi_menu import WifiMenu
 from themes.theme import Theme
+from utils.py_ui_config import PyUiConfig
 from views.descriptive_list_view import DescriptiveListView
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
 
 
 class SettingsMenu:
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
+    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, config: PyUiConfig):
         self.display = display
         self.controller = controller
         self.device = device
         self.theme = theme
+        self.config : PyUiConfig = config 
         self.on_screen_keyboard = OnScreenKeyboard(display,controller,device,theme)
         self.wifi_menu = WifiMenu(display,controller,device,theme)
-    
+
     def shutdown(self, input: ControllerInput):
         if(ControllerInput.A == input):
            self.device.run_app(self.device.power_off_cmd)
@@ -56,6 +58,31 @@ class SettingsMenu:
                 self.device.enable_wifi()
         else:
             self.wifi_menu.show_wifi_menu()
+
+    def get_theme_folders(self):
+        theme_dir = self.config["theme_dir"]
+        return sorted(
+            [name for name in os.listdir(theme_dir)
+            if os.path.isdir(os.path.join(theme_dir, name))]
+        )    
+    
+    def change_theme(self, input):
+        theme_folders = self.get_theme_folders()
+        selected_index = theme_folders.index(self.config["theme"])
+
+        if(ControllerInput.DPAD_LEFT == input):
+            selected_index-=1
+            if(selected_index < 0):
+                selected_index = len(theme_folders) -1
+        elif(ControllerInput.DPAD_RIGHT == input):
+            selected_index+=1
+            if(selected_index == len(theme_folders)):
+                selected_index = 0
+
+        self.config["theme"] = theme_folders[selected_index]
+        self.config.save()
+        self.theme.set_theme_path(os.path.join(self.config["theme_dir"], theme_folders[selected_index]))
+        self.display.init_fonts()   
 
     def show_menu(self) :
         selected = Selection(None, None, 0)
@@ -95,6 +122,19 @@ class SettingsMenu:
                         value=self.show_wifi_menu
                     )
             )
+            
+            option_list.append(
+                GridOrListEntry(
+                        primary_text="Theme",
+                        value_text="<    " + self.config["theme"] + "    >",
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.change_theme
+                    )
+            )
+
             option_list.append(
                 GridOrListEntry(
                         primary_text="On Screen Keyboard",

@@ -1,3 +1,4 @@
+import os
 import sdl2
 import sdl2.ext
 
@@ -6,21 +7,21 @@ from controller.controller import Controller
 from display.display import Display
 from themes.theme import Theme
 from devices.miyoo_flip import MiyooFlip
+from utils.py_ui_config import PyUiConfig
 
-theme = Theme("/mnt/sdcard/Themes/SPRUCE/") 
+config = PyUiConfig()
+config.load()
+
+selected_theme = os.path.join(config["theme_dir"],config["theme"])
+                              
+print(f"{selected_theme}")
+
+theme = Theme(os.path.join(config["theme_dir"],config["theme"]))
+
 device = MiyooFlip()
 display = Display(theme, device)
 controller = Controller(device)
 
-main_menu = MainMenu(display, controller, device, theme)
+main_menu = MainMenu(display, controller, device, theme, config)
 
 main_menu.run_main_menu_selection()
-
-theme.set_theme_path("/mnt/sdcard/Themes/HeyDW's Blue/") 
-main_menu.run_main_menu_selection()
-
-theme.set_theme_path("/mnt/sdcard/Themes/STOCK/") 
-
-main_menu.run_main_menu_selection()
-
-

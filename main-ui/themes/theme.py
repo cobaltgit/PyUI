@@ -27,39 +27,39 @@ class Theme():
 
     @property
     def background(self):
-        return self.path + "skin/background.png"
+        return os.path.join(self.path,"skin","background.png")
 
     @property
     def favorite(self):
-        return self.path + "skin/ic-favorite-n.png"
+        return os.path.join(self.path,"skin","ic-favorite-n.png")
 
     @property
     def favorite_selected(self):
-        return self.path + "skin/ic-favorite-f.png"    
+        return os.path.join(self.path,"skin","ic-favorite-f.png")
 
     @property
     def game(self):
-        return self.path + "skin/ic-game-n.png"    
+        return os.path.join(self.path,"skin","ic-game-n.png")
 
     @property
     def game_selected(self):
-        return self.path + "skin/ic-game-f.png"    
+        return os.path.join(self.path,"skin","ic-game-f.png")
 
     @property
     def app(self):
-        return self.path + "skin/ic-app-n.png"    
+        return os.path.join(self.path,"skin","ic-app-n.png")
     
     @property
     def app_selected(self):
-        return self.path + "skin/ic-app-f.png"    
+        return os.path.join(self.path,"skin","ic-app-f.png")
 
     @property
     def settings(self):
-        return self.path + "skin/ic-setting-n.png"    
+        return os.path.join(self.path,"skin","ic-setting-n.png")
 
     @property
     def settings_selected(self):
-        return self.path + "skin/ic-setting-f.png"   
+        return os.path.join(self.path,"skin","ic-setting-f.png")
 
     @property
     def rom_image_width(self):
@@ -166,13 +166,13 @@ class Theme():
             return os.path.join(self.path,"skin","icon-wifi-locked.png")
 
     def system(self, system):
-        return self.path + "icons/" + system.lower() +".png"
+        return os.path.join(self.path,"icons",system.lower() +".png")
     
     def system_selected(self, system):
-        return self.path + "icons/sel/" + system.lower() +".png"
+        return os.path.join(self.path,"icons","sel",system.lower() +".png")
     
     def system_selected_bg(self):
-        return self.path + "skin/bg-game-item-f.png"
+        return os.path.join(self.path,"skin","bg-game-item-f.png")
     
     def get_system_icon_name(self,system):
         if("32X" == system):
@@ -194,50 +194,55 @@ class Theme():
     def get_font(self, font_purpose : FontPurpose):
         match font_purpose:
             case FontPurpose.TOP_BAR_TEXT:
-                return os.path.join(self.path,self.grid["font"]) 
+                font = os.path.join(self.path,self.list["font"]) 
             case FontPurpose.BATTERY_PERCENT:
-                return os.path.join(self.path,self.grid["font"]) 
+                font = os.path.join(self.path,self.list["font"]) 
             case FontPurpose.ON_SCREEN_KEYBOARD:
-                return os.path.join(self.path,self.grid["font"]) 
+                font = os.path.join(self.path,self.list["font"]) 
             case FontPurpose.GRID_ONE_ROW:
-                return os.path.join(self.path,self.grid["font"]) 
+                font = os.path.join(self.path,self.grid["font"]) 
             case FontPurpose.GRID_MULTI_ROW:
-                return os.path.join(self.path,self.grid["font"]) 
+                font = os.path.join(self.path,self.grid["font"]) 
             case FontPurpose.LIST:
-                return os.path.join(self.path,self.grid["font"]) 
+                font = os.path.join(self.path,self.list["font"]) 
             case FontPurpose.DESCRIPTIVE_LIST_TITLE:
-                return os.path.join(self.path,self.grid["font"]) 
+                font = os.path.join(self.path,self.list["font"]) 
             case FontPurpose.MESSAGE:
-                return os.path.join(self.path,self.grid["font"]) 
+                font = os.path.join(self.path,self.list["font"]) 
             case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
-                return os.path.join(self.path,self.grid["font"]) 
+                font = os.path.join(self.path,self.list["font"]) 
             case _:
-                return os.path.join(self.path,self.list["font"]) 
+                font = os.path.join(self.path,self.list["font"]) 
+            
+        if os.path.exists(font):
+            return font 
+        else:
+            return "/mnt/sdcard/Themes/SPRUCE/nunwen.ttf"
     
     def get_font_size(self, font_purpose : FontPurpose):
         match font_purpose:
             case FontPurpose.TOP_BAR_TEXT:
-                return self.list["size"]
+                return self.list.get("size", 24)
             case FontPurpose.BATTERY_PERCENT:
-                return self.list["size"]
+                return self.list.get("size", 24)
             case FontPurpose.ON_SCREEN_KEYBOARD:
-                return self.list["size"]
+                return self.list.get("size", 24)
             case FontPurpose.GRID_ONE_ROW:
-                return self.grid["grid1x4"]
+                return self.grid.get("grid1x4", self.grid.get("size",25))
             case FontPurpose.GRID_MULTI_ROW:
-                return self.grid["grid3x4"]
+                return self.grid.get("grid3x4", self.grid.get("size",18))
             case FontPurpose.LIST:
-                return self.list["size"]
+                return self.list.get("size", 24)
             case FontPurpose.DESCRIPTIVE_LIST_TITLE:
-                return self.list["size"]
+                return self.list.get("size", 24)
             case FontPurpose.MESSAGE:
-                return self.list["size"]
+                return self.list.get("size", 24)
             case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
-                return self.grid["grid3x4"]
+                return self.grid.get("grid3x4", self.grid.get("size",18))
             case FontPurpose.LIST_INDEX:
-                return self.currentpage["size"]
+                return self.currentpage.get("size", 22)
             case FontPurpose.LIST_TOTAL:
-                return self.total["size"]
+                return self.total.get("size", 22)
             case _:
                 return self.list["font"]
 

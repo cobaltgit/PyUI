@@ -17,16 +17,21 @@ class Display:
         self.theme = theme
         self.device = device
         self._init_display()
-        self.fonts = {
-            purpose: self._load_font(purpose)
-            for purpose in FontPurpose
-        }        
+        self.init_fonts()
         self.bg_path = ""
         self._check_for_bg_change()
         self.top_bar = TopBar(self,device,theme)
         self.bottom_bar = BottomBar(self,device,theme)
         self.clear("init")
         self.present()
+
+
+    def init_fonts(self):
+        self.fonts = {
+            purpose: self._load_font(purpose)
+            for purpose in FontPurpose
+        }        
+
 
     def _init_display(self):
         sdl2.ext.init(controller=True)
@@ -77,7 +82,7 @@ class Display:
         
         font = sdl2.sdlttf.TTF_OpenFont(font_path.encode('utf-8'), font_size)
         if not font:
-            raise RuntimeError("Could not load font")
+            raise RuntimeError(f"Could not load font {font_path} : {sdl2.sdlttf.TTF_GetError().decode('utf-8')}")
         line_height = sdl2.sdlttf.TTF_FontHeight(font)
         return LoadedFont(font,line_height)
         
@@ -152,13 +157,15 @@ class Display:
         # Render the text to a surface
         surface = sdl2.sdlttf.TTF_RenderUTF8_Blended(self.fonts[purpose].font, text.encode('utf-8'), sdl_color)
         if not surface:
-            raise RuntimeError("Failed to render text surface")
-
+            print(f"Failed to render text surface for {text}: {sdl2.sdlttf.TTF_GetError().decode('utf-8')}")
+            return 0,0
+        
         # Create a texture from the surface
         texture = sdl2.SDL_CreateTextureFromSurface(self.renderer.renderer, surface)
         if not texture:
             sdl2.SDL_FreeSurface(surface)
-            raise RuntimeError("Failed to create texture from surface")
+            print(f"FaiFailed to create texture from surface {text}: {sdl2.sdlttf.TTF_GetError().decode('utf-8')}")
+            return 0,0
 
         return self._render_surface_texture(x, y, texture, surface, render_mode, debug=text)
 
