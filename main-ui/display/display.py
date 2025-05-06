@@ -92,6 +92,8 @@ class Display:
         self.screen = screen
         self._check_for_bg_change()
         sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
+        self.top_bar.render_top_bar(self.screen)
+        self.bottom_bar.render_bottom_bar()
 
     def _calculate_scaled_width_and_height(self, orig_w, orig_h, target_width, target_height):
         # Maintain aspect ratio
@@ -196,10 +198,7 @@ class Display:
     def get_line_height(self, purpose : FontPurpose):
         return self.fonts[purpose].line_height;
         
-    def present(self, include_top_and_bottom_bar = True):
-        if(include_top_and_bottom_bar):
-            self.top_bar.render_top_bar(self.screen)
-            self.bottom_bar.render_bottom_bar()
+    def present(self):
         self.renderer.present()
 
     def get_top_bar_height(self):
