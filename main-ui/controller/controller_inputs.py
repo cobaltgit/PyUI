@@ -23,3 +23,4 @@ class ControllerInput(Enum):
     RIGHT_STICK_DOWN = auto()
     RIGHT_STICK_LEFT = auto()
     RIGHT_STICK_RIGHT = auto()
+    UNKNOWN = auto()

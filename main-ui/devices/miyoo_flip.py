@@ -225,8 +225,11 @@ class MiyooFlip(Device):
         return None
     
     def map_input(self, sdl_input):
-        return self.sdl_button_to_input[sdl_input]
-    
+        mapping = self.sdl_button_to_input.get(sdl_input, ControllerInput.UNKNOWN)
+        if(ControllerInput.UNKNOWN == mapping):
+            print(f"Unknown input {sdl_input}")
+        return mapping
+
     def get_wifi_link_quality_level(self):
         try:
             output = subprocess.check_output(
