@@ -13,6 +13,9 @@ from views.image_list_view import ImageListView
 from views.selection import Selection
 from abc import ABC, abstractmethod
 
+from views.view_creator import ViewCreator
+from views.view_type import ViewType
+
 
 class RomsMenuCommon(ABC):
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
@@ -20,6 +23,7 @@ class RomsMenuCommon(ABC):
         self.controller : Controller = controller
         self.device : Device= device
         self.theme : Theme= theme
+        self.view_creator = ViewCreator(display,controller,device,theme)
 
     def _remove_extension(self,file_name):
         return os.path.splitext(file_name)[0]
@@ -63,11 +67,8 @@ class RomsMenuCommon(ABC):
 
             img_offset_x = self.device.screen_width - 10
             img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
-            options_list = ImageListView(
-                display=self.display,
-                controller=self.controller,
-                device=self.device,
-                theme=self.theme, 
+            options_list = self.view_creator.create_view(
+                view_type=ViewType.TEXT_AND_IMAGE_LIST_VIEW,
                 top_bar_text=page_name,
                 options=rom_list, 
                 img_offset_x=img_offset_x, 
