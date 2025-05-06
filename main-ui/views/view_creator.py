@@ -94,7 +94,8 @@ class ViewCreator():
                     options=options,
                     cols=cols,
                     rows=rows,
-                    selected_bg=self.theme.get_grid_bg(rows,cols)
+                    selected_bg=self.theme.get_grid_bg(rows,cols),
+                    selected_index=selected_index
                 )
             case _:
                 print(f"Error: unrecognized view_type {view_type}")
