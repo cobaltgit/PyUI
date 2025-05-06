@@ -73,7 +73,7 @@ class RomsMenuCommon(ABC):
                 options=rom_list, 
                 img_offset_x=img_offset_x, 
                 img_offset_y=img_offset_y, 
-                show_icons=False,
+                show_icons=ImageListView.SHOW_ICONS,
                 selected_index=selected.index,
                 img_width=self.theme.rom_image_width, 
                 img_height=self.theme.rom_image_height,
