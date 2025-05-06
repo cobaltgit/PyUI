@@ -24,6 +24,7 @@ class MiyooFlip(Device):
             sdl2.SDL_CONTROLLER_BUTTON_B: ControllerInput.A,
             sdl2.SDL_CONTROLLER_BUTTON_X: ControllerInput.Y,
             sdl2.SDL_CONTROLLER_BUTTON_Y: ControllerInput.X,
+            sdl2.SDL_CONTROLLER_BUTTON_GUIDE: ControllerInput.MENU,
             sdl2.SDL_CONTROLLER_BUTTON_DPAD_UP: ControllerInput.DPAD_UP,
             sdl2.SDL_CONTROLLER_BUTTON_DPAD_DOWN: ControllerInput.DPAD_DOWN,
             sdl2.SDL_CONTROLLER_BUTTON_DPAD_LEFT: ControllerInput.DPAD_LEFT,
