@@ -8,6 +8,8 @@ from themes.theme import Theme
 from views.descriptive_list_view import DescriptiveListView
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
+from views.view_creator import ViewCreator
+from views.view_type import ViewType
 
 
 # Would like this to be generic in the future but this is so Miyoo specific right now 
@@ -20,7 +22,8 @@ class GameConfigMenu:
         self.theme = theme
         self.game_system = game_system
         self.game = game
-    
+        self.view_creator = ViewCreator(display,controller,device,theme)
+
 
 
     def show_config(self) :
@@ -44,11 +47,13 @@ class GameConfigMenu:
                     )
                 )
                         
+            view = self.view_creator.create_view(
+                view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
+                top_bar_text=self.game_system + " Configuration", 
+                options=config_list,
+                selected_index=selected.get_index())
 
-            config_list = DescriptiveListView(self.display,self.controller,self.device,self.theme, 
-                                              self.game_system + " Configuration", config_list, self.theme.get_list_small_selected_bg(),
-                                              selected.get_index())
-            selected = config_list.get_selection()
+            selected = view.get_selection()
 
             if(selected is not None):
                 # Miyoo handles this strangley

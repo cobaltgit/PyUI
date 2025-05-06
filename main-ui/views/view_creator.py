@@ -27,6 +27,12 @@ class ViewCreator():
                  cols=None, rows=None):
         match view_type:
             case ViewType.DESCRIPTIVE_LIST_VIEW:
+                selected_bg = self.theme.get_list_small_selected_bg()
+                for option in options:
+                    icon = option.get_icon()
+                    if icon is not None:
+                        selected_bg = self.theme.get_list_large_selected_bg()
+
                 return DescriptiveListView(
                     display=self.display, 
                     controller=self.controller, 
@@ -35,7 +41,7 @@ class ViewCreator():
                     top_bar_text=top_bar_text,
                     options=options,
                     selected=selected_index,
-                    selected_bg=self.theme.get_list_large_selected_bg()
+                    selected_bg=selected_bg
                 )
             case ViewType.TEXT_AND_IMAGE_LIST_VIEW:
                 img_offset_x = self.device.screen_width - 10
