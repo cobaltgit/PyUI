@@ -63,10 +63,21 @@ class RomsMenuCommon(ABC):
 
             img_offset_x = self.device.screen_width - 10
             img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
-            options_list = ImageListView(self.display,self.controller,self.device,self.theme, page_name,
-                                        rom_list, img_offset_x, img_offset_y, self.theme.rom_image_width, self.theme.rom_image_height,
-                                        selected.get_index(), ImageListView.SHOW_ICONS, RenderMode.MIDDLE_RIGHT_ALIGNED,
-                                        self.theme.get_list_small_selected_bg())
+            options_list = ImageListView(
+                display=self.display,
+                controller=self.controller,
+                device=self.device,
+                theme=self.theme, 
+                top_bar_text=page_name,
+                options=rom_list, 
+                img_offset_x=img_offset_x, 
+                img_offset_y=img_offset_y, 
+                show_icons=False,
+                selected_index=selected.index,
+                img_width=self.theme.rom_image_width, 
+                img_height=self.theme.rom_image_height,
+                image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
+                selected_bg=self.theme.get_list_small_selected_bg())
             selected = options_list.get_selection([ControllerInput.A, ControllerInput.X])
             if(selected is not None):
                 if(ControllerInput.A == selected.get_input()):

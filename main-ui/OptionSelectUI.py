@@ -56,11 +56,21 @@ for entry in data:
 while(selected is not None):
     img_offset_x = device.screen_width - 10
     img_offset_y = (device.screen_height - display.get_top_bar_height() + display.get_bottom_bar_height())//2 + display.get_top_bar_height() - display.get_bottom_bar_height()
-    options_list = ImageListView(display,controller,device,theme, title,
-                                option_list, img_offset_x, img_offset_y, theme.rom_image_width, theme.rom_image_height,
-                                selected.get_index(), ImageListView.SHOW_ICONS, RenderMode.MIDDLE_RIGHT_ALIGNED,
-                                theme.get_list_small_selected_bg())
-    selected = options_list.get_selection([ControllerInput.A])
+    view = ImageListView(display=display,
+                         controller=controller,
+                         device=device,
+                         theme=theme, 
+                         top_bar_text=title,
+                         options=option_list, 
+                         img_offset_x=img_offset_x, 
+                         img_offset_y=img_offset_y, 
+                         img_width=theme.rom_image_width, 
+                         img_height=theme.rom_image_height,
+                         selected_index=selected.get_index(), 
+                         show_icons=ImageListView.SHOW_ICONS, 
+                         image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
+                         selected_bg=theme.get_list_small_selected_bg())
+    selected = view.get_selection([ControllerInput.A])
     if(selected is not None):
         if(ControllerInput.A == selected.get_input()):
             subprocess.run(selected.get_selection().get_value(), shell=True)
