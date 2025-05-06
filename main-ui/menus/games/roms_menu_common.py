@@ -65,20 +65,11 @@ class RomsMenuCommon(ABC):
         while(selected is not None):
             rom_list = self._get_rom_list()
 
-            img_offset_x = self.device.screen_width - 10
-            img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
             view = self.view_creator.create_view(
                 view_type=ViewType.TEXT_AND_IMAGE_LIST_VIEW,
                 top_bar_text=page_name,
-                options=rom_list, 
-                img_offset_x=img_offset_x, 
-                img_offset_y=img_offset_y, 
-                show_icons=ImageListView.SHOW_ICONS,
-                selected_index=selected.index,
-                img_width=self.theme.rom_image_width, 
-                img_height=self.theme.rom_image_height,
-                image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
-                selected_bg=self.theme.get_list_small_selected_bg())
+                options=rom_list,
+                selected_index=selected.get_index())
             selected = view.get_selection([ControllerInput.A, ControllerInput.X])
             if(selected is not None):
                 if(ControllerInput.A == selected.get_input()):
