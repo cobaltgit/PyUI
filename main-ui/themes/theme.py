@@ -217,7 +217,7 @@ class Theme():
         if os.path.exists(font):
             return font 
         else:
-            return "/mnt/SDCARD//Themes/SPRUCE/nunwen.ttf"
+            return "/mnt/SDCARD/Themes/SPRUCE/nunwen.ttf"
     
     def get_font_size(self, font_purpose : FontPurpose):
         match font_purpose:
