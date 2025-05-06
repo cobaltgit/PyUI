@@ -68,7 +68,8 @@ class MainMenu:
                 ),            
             ]
 
-            options_list = GridView(self.display,self.controller,self.device,self.theme, "SPRUCE", image_text_list, 4, 1)
+            options_list = GridView(self.display,self.controller,self.device,self.theme,
+                                     "SPRUCE", image_text_list, 4, 1)
             if((selected := options_list.get_selection()) is not None):        
                 if(selected.get_selection().get_primary_text() == "Game"):
                     self.system_select_menu.run_system_selection()

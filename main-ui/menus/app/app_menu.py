@@ -36,8 +36,8 @@ class AppMenu:
                     )
                 )
 
-        options_list = DescriptiveListView(self.display,self.controller,self.device,self.theme, "Apps", app_list, self.theme.get_list_large_selected_bg())
-        while((selected := options_list.get_selection()) is not None):
+        view = DescriptiveListView(self.display,self.controller,self.device,self.theme, "Apps", app_list, self.theme.get_list_large_selected_bg())
+        while((selected := view.get_selection()) is not None):
             filepath = selected.get_selection().get_value()
             directory = os.path.dirname(filepath)
             self.display.deinit_display()
