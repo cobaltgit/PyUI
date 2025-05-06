@@ -33,14 +33,9 @@ class ViewCreator():
                     device=self.device, 
                     theme=self.theme, 
                     top_bar_text=top_bar_text,
-                    img_offset_x=img_offset_x,
-                    img_offset_y=img_offset_y,
-                    img_width=img_width,
-                    img_height=img_height,
-                    selected_index=selected_index,
-                    show_icons=show_icons,
-                    image_render_mode=image_render_mode,
-                    selected_bg=selected_bg
+                    options=options,
+                    selected=selected_index,
+                    selected_bg=self.theme.get_list_large_selected_bg()
                 )
             case ViewType.TEXT_AND_IMAGE_LIST_VIEW:
                 img_offset_x = self.device.screen_width - 10

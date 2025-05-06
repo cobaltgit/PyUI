@@ -7,6 +7,9 @@ from display.display import Display
 from themes.theme import Theme
 from views.descriptive_list_view import DescriptiveListView
 from views.grid_or_list_entry import GridOrListEntry
+from views.selection import Selection
+from views.view_creator import ViewCreator
+from views.view_type import ViewType
 
 
 class AppMenu:
@@ -16,12 +19,13 @@ class AppMenu:
         self.device : Device= device
         self.theme : Theme= theme
         self.appFinder = device.get_app_finder()
+        self.view_creator = ViewCreator(display,controller,device,theme)
 
     def _convert_to_theme_version_of_icon(self, icon_path):
         return os.path.join(self.theme.path,"icons","app",os.path.basename(icon_path))
 
     def run_app_selection(self) :
-        selected = "new"
+        selected = Selection(None,None,0)
         app_list = []
         for app in self.appFinder.get_apps():
             if(app.get_label() is not None):
@@ -36,7 +40,12 @@ class AppMenu:
                     )
                 )
 
-        view = DescriptiveListView(self.display,self.controller,self.device,self.theme, "Apps", app_list, self.theme.get_list_large_selected_bg())
+        view = self.view_creator.create_view(
+            view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
+            top_bar_text="Apps", 
+            options=app_list,
+            selected_index=selected.get_index())
+        
         while((selected := view.get_selection()) is not None):
             filepath = selected.get_selection().get_value()
             directory = os.path.dirname(filepath)
