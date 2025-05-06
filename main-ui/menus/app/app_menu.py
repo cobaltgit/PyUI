@@ -41,7 +41,7 @@ class AppMenu:
                 )
 
         view = self.view_creator.create_view(
-            view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
+            view_type=self.theme.get_view_type_for_app_menu(),
             top_bar_text="Apps", 
             options=app_list,
             selected_index=selected.get_index())
