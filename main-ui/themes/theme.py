@@ -171,7 +171,7 @@ class Theme():
     def system_selected(self, system):
         return os.path.join(self.path,"icons","sel",system.lower() +".png")
     
-    def system_selected_bg(self):
+    def _grid_4_x_2_selected_bg(self):
         return os.path.join(self.path,"skin","bg-game-item-f.png")
     
     def get_system_icon_name(self,system):
@@ -319,3 +319,10 @@ class Theme():
     
     def get_grid_multirow_text_offset_y(self):
         return getattr(self, "gridMultirowTextOffsetY", -25)
+
+    def get_grid_bg(self, rows, cols):
+        if(rows > 1):
+            #TODO better handle this dynamically
+            return self._grid_4_x_2_selected_bg()
+        else:
+            return None

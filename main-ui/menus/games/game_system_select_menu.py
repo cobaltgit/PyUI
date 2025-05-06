@@ -56,8 +56,7 @@ class GameSystemSelectMenu:
             top_bar_text="Game", 
             options=systems_list, 
             cols=4, 
-            rows=2,
-            selected_bg=self.theme.system_selected_bg())
+            rows=2)
 
         while((selected := view.get_selection()) is not None):
             self.rom_select_menu.run_rom_selection(selected.get_selection().get_primary_text())

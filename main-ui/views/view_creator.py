@@ -86,7 +86,7 @@ class ViewCreator():
                     options=options,
                     cols=cols,
                     rows=rows,
-                    selected_bg=selected_bg
+                    selected_bg=self.theme.get_grid_bg(rows,cols)
                 )
             case _:
                 pass
