@@ -82,7 +82,7 @@ class Device(ABC):
         pass
 
     @abstractmethod
-    def run_app(self, args):
+    def run_app(self, args, dir = None):
         pass
 
     @abstractmethod

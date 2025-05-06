@@ -199,9 +199,12 @@ class MiyooFlip(Device):
         print(f"About to launch /mnt/SDCARD/Emu/.emu_setup/standard_launch.sh {file_path}")
         subprocess.run(["/mnt/SDCARD/Emu/.emu_setup/standard_launch.sh",file_path])
 
-    def run_app(self, args):
+    def run_app(self, args, dir = None):
         print(f"About to launch app {args}")
-        subprocess.run(args)
+        if(dir is not None):
+            subprocess.run(args, cwd = dir)
+        else:
+            subprocess.run(args, cwd = dir)
 
     #TODO untested
     def map_analog_axis(self,sdl_input, value, threshold=16000):
