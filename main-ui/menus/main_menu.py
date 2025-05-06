@@ -12,6 +12,7 @@ from utils.py_ui_config import PyUiConfig
 from views.grid_or_list_entry import GridOrListEntry
 from views.grid_view import GridView
 from views.view_creator import ViewCreator
+from views.view_type import ViewType
 
 
 class MainMenu:
@@ -70,11 +71,8 @@ class MainMenu:
                 ),            
             ]
 
-            view = GridView(
-                display=self.display,
-                controller=self.controller,
-                device=self.device,
-                theme=self.theme,
+            view = self.view_creator.create_view(
+                view_type=ViewType.GRID_VIEW,
                 top_bar_text="SPRUCE", 
                 options=image_text_list, 
                 cols=4, 

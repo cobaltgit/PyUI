@@ -21,9 +21,9 @@ class ViewCreator():
         self.device = device
         self.theme = theme
 
-    def create_view(self, view_type: ViewType, options: List[GridOrListEntry], top_bar_text, img_offset_x : int, 
-                    img_offset_y : int, img_width : int, img_height: int,
-                 selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None,
+    def create_view(self, view_type: ViewType, options: List[GridOrListEntry], top_bar_text, img_offset_x : int = None, 
+                    img_offset_y : int = None, img_width : int = None, img_height: int = None,
+                 selected_index : int = None, show_icons : bool = None, image_render_mode: RenderMode = RenderMode.TOP_LEFT_ALIGNED, selected_bg = None,
                  cols=None, rows=None):
         match view_type:
             case ViewType.DESCRIPTIVE_LIST_VIEW:
