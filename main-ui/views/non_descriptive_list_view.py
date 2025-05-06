@@ -24,7 +24,6 @@ class NonDescriptiveListView(ListView):
         self.theme = theme
         self.top_bar_text = top_bar_text
         self.options = options
-
         self.selected = selected_index
         while(self.selected > len(options) and self.selected > 0):
             self.selected -= 1

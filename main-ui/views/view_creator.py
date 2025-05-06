@@ -80,7 +80,7 @@ class ViewCreator():
                     img_width=self.theme.rom_image_width,
                     img_height=self.theme.rom_image_height,
                     selected_index=selected_index,
-                    show_icons=ImageListView.SHOW_ICONS, #maybe not
+                    show_icons=ImageListView.DONT_SHOW_ICONS,
                     image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
                     selected_bg=self.theme.get_list_small_selected_bg()
                 )
@@ -97,4 +97,6 @@ class ViewCreator():
                     selected_bg=self.theme.get_grid_bg(rows,cols)
                 )
             case _:
+                print(f"Error: unrecognized view_type {view_type}")
+
                 pass

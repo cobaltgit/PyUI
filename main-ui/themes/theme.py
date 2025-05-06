@@ -3,6 +3,7 @@ import os
 
 from devices.wifi.wifi_status import WifiStatus
 from display.font_purpose import FontPurpose
+from views.view_type import ViewType
 
 class Theme():
     
@@ -10,6 +11,7 @@ class Theme():
         self.set_theme_path(path)
 
     def set_theme_path(self,path):
+        self.__dict__.clear()
         self.path = path
         self.load_defaults_for_values_not_in_miyoo_theme()
         self.load_from_file(os.path.join(path,"config.json"))
@@ -24,6 +26,10 @@ class Theme():
         # Store top-level keys as attributes
         for key, value in data.items():
             setattr(self, key, value)
+
+        description = getattr(self, "description", "UNKNOWN")
+        print(f"Loaded Theme : {description}")
+     
 
     @property
     def background(self):
@@ -326,3 +332,8 @@ class Theme():
             return self._grid_4_x_2_selected_bg()
         else:
             return None
+        
+    def get_view_type_for_main_menu(self):
+        view_type_str = getattr(self, "mainMenuViewType", "GRID_VIEW")
+        view_type = getattr(ViewType, view_type_str, ViewType.GRID_VIEW)
+        return view_type

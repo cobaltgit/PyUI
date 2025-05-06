@@ -13,7 +13,7 @@ from devices.device import Device
 
 class Display:
     def __init__(self, theme: Theme, device: Device):
-        self.debug = True
+        self.debug = False
         self.theme = theme
         self.device = device
         self._init_display()
