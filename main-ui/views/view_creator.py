@@ -21,10 +21,13 @@ class ViewCreator():
         self.device = device
         self.theme = theme
 
-    def create_view(self, view_type: ViewType, options: List[GridOrListEntry], top_bar_text, img_offset_x : int = None, 
-                    img_offset_y : int = None, img_width : int = None, img_height: int = None,
-                 selected_index : int = None, show_icons : bool = None, image_render_mode: RenderMode = RenderMode.TOP_LEFT_ALIGNED, selected_bg = None,
-                 cols=None, rows=None):
+    def create_view(self, 
+                    view_type: ViewType, 
+                    options: List[GridOrListEntry], 
+                    top_bar_text, 
+                    selected_index : int = None, 
+                    cols=None, 
+                    rows=None):
         match view_type:
             case ViewType.DESCRIPTIVE_LIST_VIEW:
                 selected_bg = self.theme.get_list_small_selected_bg()
@@ -63,6 +66,8 @@ class ViewCreator():
                     selected_bg=self.theme.get_list_small_selected_bg()
                 )            
             case ViewType.TEXT_LIST_VIEW:
+                img_offset_x = self.device.screen_width - 10
+                img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
                 return TextListView(
                     display=self.display, 
                     controller=self.controller, 
@@ -72,12 +77,12 @@ class ViewCreator():
                     options=options,
                     img_offset_x=img_offset_x,
                     img_offset_y=img_offset_y,
-                    img_width=img_width,
-                    img_height=img_height,
+                    img_width=self.theme.rom_image_width,
+                    img_height=self.theme.rom_image_height,
                     selected_index=selected_index,
-                    show_icons=show_icons,
-                    image_render_mode=image_render_mode,
-                    selected_bg=selected_bg
+                    show_icons=ImageListView.SHOW_ICONS, #maybe not
+                    image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
+                    selected_bg=self.theme.get_list_small_selected_bg()
                 )
             case ViewType.GRID_VIEW:
                 return GridView(
