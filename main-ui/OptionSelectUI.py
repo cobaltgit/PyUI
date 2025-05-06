@@ -16,6 +16,8 @@ from utils.py_ui_config import PyUiConfig
 from views.grid_or_list_entry import GridOrListEntry
 from views.image_list_view import ImageListView
 from views.selection import Selection
+from views.view_creator import ViewCreator
+from views.view_type import ViewType
 
 # Really quickly written just a proof of concept for testing
 
@@ -30,6 +32,7 @@ theme = Theme(os.path.join(config["theme_dir"],config["theme"]))
 device = MiyooFlip()
 display = Display(theme, device)
 controller = Controller(device)
+view_creator = ViewCreator(display,controller,device,theme)
 
 title = sys.argv[1]
 input_json = sys.argv[2]
@@ -56,20 +59,19 @@ for entry in data:
 while(selected is not None):
     img_offset_x = device.screen_width - 10
     img_offset_y = (device.screen_height - display.get_top_bar_height() + display.get_bottom_bar_height())//2 + display.get_top_bar_height() - display.get_bottom_bar_height()
-    view = ImageListView(display=display,
-                         controller=controller,
-                         device=device,
-                         theme=theme, 
-                         top_bar_text=title,
-                         options=option_list, 
-                         img_offset_x=img_offset_x, 
-                         img_offset_y=img_offset_y, 
-                         img_width=theme.rom_image_width, 
-                         img_height=theme.rom_image_height,
-                         selected_index=selected.get_index(), 
-                         show_icons=ImageListView.SHOW_ICONS, 
-                         image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
-                         selected_bg=theme.get_list_small_selected_bg())
+    view = view_creator.create_view(
+                view_type=ViewType.TEXT_AND_IMAGE_LIST_VIEW,
+                top_bar_text=title,
+                options=option_list, 
+                img_offset_x=img_offset_x, 
+                img_offset_y=img_offset_y, 
+                show_icons=ImageListView.SHOW_ICONS,
+                selected_index=selected.get_index(), 
+                img_width=theme.rom_image_width, 
+                img_height=theme.rom_image_height,
+                image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
+                selected_bg=theme.get_list_small_selected_bg())
+
     selected = view.get_selection([ControllerInput.A])
     if(selected is not None):
         if(ControllerInput.A == selected.get_input()):

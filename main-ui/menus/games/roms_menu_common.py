@@ -67,7 +67,7 @@ class RomsMenuCommon(ABC):
 
             img_offset_x = self.device.screen_width - 10
             img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
-            options_list = self.view_creator.create_view(
+            view = self.view_creator.create_view(
                 view_type=ViewType.TEXT_AND_IMAGE_LIST_VIEW,
                 top_bar_text=page_name,
                 options=rom_list, 
@@ -79,7 +79,7 @@ class RomsMenuCommon(ABC):
                 img_height=self.theme.rom_image_height,
                 image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
                 selected_bg=self.theme.get_list_small_selected_bg())
-            selected = options_list.get_selection([ControllerInput.A, ControllerInput.X])
+            selected = view.get_selection([ControllerInput.A, ControllerInput.X])
             if(selected is not None):
                 if(ControllerInput.A == selected.get_input()):
                     self.device.run_game(selected.get_selection().get_value())
