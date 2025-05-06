@@ -24,8 +24,6 @@ class GameConfigMenu:
         self.game = game
         self.view_creator = ViewCreator(display,controller,device,theme)
 
-
-
     def show_config(self) :
         selected = Selection(None, None, 0)
         #Loop is weird here due to how these options are handled.

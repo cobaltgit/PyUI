@@ -11,6 +11,8 @@ from utils.py_ui_config import PyUiConfig
 from views.descriptive_list_view import DescriptiveListView
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
+from views.view_creator import ViewCreator
+from views.view_type import ViewType
 
 
 class SettingsMenu:
@@ -22,6 +24,7 @@ class SettingsMenu:
         self.config : PyUiConfig = config 
         self.on_screen_keyboard = OnScreenKeyboard(display,controller,device,theme)
         self.wifi_menu = WifiMenu(display,controller,device,theme)
+        self.view_creator = ViewCreator(display,controller,device,theme)
 
     def shutdown(self, input: ControllerInput):
         if(ControllerInput.A == input):
@@ -166,9 +169,12 @@ class SettingsMenu:
                         value=self.reboot
                     )
             )
-            list_view = DescriptiveListView(self.display,self.controller,self.device,self.theme, 
-                                              "Settings", option_list, self.theme.get_list_small_selected_bg(),
-                                              selected.get_index())
+            list_view = self.view_creator.create_view(
+                view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
+                top_bar_text="Settings", 
+                options=option_list,
+                selected_index=selected.get_index())
+
             selected = list_view.get_selection([ControllerInput.A, ControllerInput.DPAD_LEFT, ControllerInput.DPAD_RIGHT,
                                                   ControllerInput.L1, ControllerInput.R1])
 
