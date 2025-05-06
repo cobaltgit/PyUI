@@ -29,7 +29,7 @@ class SettingsMenu:
     
     def reboot(self, input: ControllerInput):
         if(ControllerInput.A == input):
-            self.device.run_app(self.device.power_off_cmd)
+            self.device.run_app(self.device.reboot_cmd)
     
     def brightness_adjust(self, input: ControllerInput):
         if(ControllerInput.DPAD_LEFT == input or ControllerInput.L1 == input):

@@ -113,3 +113,13 @@ class Device(ABC):
     @abstractmethod
     def volume(self):
         pass
+
+    @property
+    @abstractmethod
+    def power_off_cmd(self):
+        pass
+    
+    @property
+    @abstractmethod
+    def reboot_cmd(self):
+        pass
