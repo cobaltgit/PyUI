@@ -40,6 +40,7 @@ class AppMenu:
         while((selected := options_list.get_selection()) is not None):
             filepath = selected.get_selection().get_value()
             directory = os.path.dirname(filepath)
+            self.display.deinit_display()
             self.device.run_app([filepath], directory)
             self.controller.clear_input_queue()
             self.display.reinitialize()

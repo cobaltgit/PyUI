@@ -56,6 +56,7 @@ class GameConfigMenu:
                 # example arg /media/sdcard0/Emu/PORTS/../../Roms/PORTS/PokeMMO.sh
                 #/media/sdcard0/Emu/PORTS/../../Roms/PORTS/PokeMMO.sh
                 miyoo_game_path = os.path.join("/media/sdcard0/Emu", self.game_system, "../../Roms", self.game_system, self.game)
+                self.display.deinit_display()
                 self.device.run_app([selected.get_selection().get_value(), miyoo_game_path])
                 # TODO Once we remove the display_kill and popups from launch.sh we can remove this
                 # For a good speedup
