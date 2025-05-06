@@ -206,9 +206,6 @@ class Display:
         return self.bottom_bar.get_bottom_bar_height()
     
     def get_usable_screen_height(self):
-        print(f"self.device.screen_height {self.device.screen_height}")
-        print(f"self.get_top_bar_height() {self.get_top_bar_height()}")
-        print(f"self.get_bottom_bar_height() {self.get_bottom_bar_height()}")
         return self.device.screen_height - self.get_bottom_bar_height() - self.get_top_bar_height()
     
     def get_center_of_usable_screen_height(self):
