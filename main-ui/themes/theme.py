@@ -1,6 +1,7 @@
 import json
 import os
 
+from devices.charge.charge_status import ChargeStatus
 from devices.wifi.wifi_status import WifiStatus
 from display.font_purpose import FontPurpose
 from views.view_type import ViewType
@@ -134,7 +135,7 @@ class Theme():
         return os.path.join(self.path,"skin","bg-list-s.png")
     
     def get_battery_icon(self,charging,battery_percent):
-        if(charging):
+        if(ChargeStatus.CHARGING == charging):
             if(battery_percent > 97):
                 return os.path.join(self.path,"skin","ic-power-charge-100%.png")
             elif(battery_percent >= 75):
