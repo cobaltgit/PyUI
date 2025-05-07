@@ -1,5 +1,6 @@
 import re
 import subprocess
+import time
 from apps.miyoo.miyoo_app_finder import MiyooAppFinder
 from controller.controller_inputs import ControllerInput
 from devices.charge.charge_status import ChargeStatus
@@ -7,6 +8,7 @@ from devices.device import Device
 import os
 from devices.miyoo.miyoo_games_file_parser import MiyooGamesFileParser
 from devices.miyoo.system_config import SystemConfig
+from devices.wifi.wifi_connection_quality_info import WiFiConnectionQualityInfo
 from devices.wifi.wifi_status import WifiStatus
 from games.utils.game_entry import GameEntry
 from games.utils.rom_utils import RomUtils
@@ -41,7 +43,7 @@ class MiyooFlip(Device):
         #Idea is if something were to change from he we can reload it
         #so it always has the more accurate data
         self.system_config = SystemConfig("/userdata/system.json")
-        self.miyoo_games_file_parser = MiyooGamesFileParser()
+        self.miyoo_games_file_parser = MiyooGamesFileParser()        
 
     @property
     def screen_width(self):
@@ -237,7 +239,9 @@ class MiyooFlip(Device):
             print(f"Unknown input {sdl_input}")
         return mapping
 
-    def get_wifi_link_quality_level(self):
+
+
+    def get_wifi_connection_quality_info(self) -> WiFiConnectionQualityInfo:
         try:
             output = subprocess.check_output(
                 ["cat", "/proc/net/wireless"],
@@ -249,36 +253,76 @@ class MiyooFlip(Device):
                 data_line = output[2]
                 parts = data_line.split()
                 
-                # parts[2] is the link quality, parts[3] is the level
-                link_level = float(parts[3].strip('.'))  # Remove trailing dot
-                return int(link_level)
+                # According to the standard format:
+                # parts[2] = link quality (float ending in '.')
+                # parts[3] = signal level
+                # parts[4] = noise level
+                link_quality = int(float(parts[2].strip('.')))
+                signal_level = int(float(parts[3].strip('.')))
+                noise_level = int(float(parts[4].strip('.')))
+
+                return WiFiConnectionQualityInfo(
+                    noise_level=noise_level,
+                    signal_level=signal_level,
+                    link_quality=link_quality
+                )
         except Exception as e:
-            return 0
-    
+            return WiFiConnectionQualityInfo(noise_level=0, signal_level=0, link_quality=0)
+        
     @throttle.limit_refresh(15)
     def get_wifi_status(self):
         if(self.is_wifi_enabled()):
-            link_quality_level = self.get_wifi_link_quality_level()
-            if(link_quality_level >= 70):
+            wifi_connection_quality_info = self.get_wifi_connection_quality_info()
+            print(f"WiFi Connection Quality Info = {wifi_connection_quality_info}")
+            if wifi_connection_quality_info.link_quality >= 55:
                 return WifiStatus.GREAT
-            elif(link_quality_level >= 50):
+            elif wifi_connection_quality_info.link_quality >= 40:
                 return WifiStatus.GOOD
-            elif(link_quality_level >= 30):
+            elif wifi_connection_quality_info.link_quality >= 25:
                 return WifiStatus.OKAY
             else:
-                return WifiStatus.BAD
+                return WifiStatus.BAD        
         else:            
             return WifiStatus.OFF
-        
+
+    def ensure_wpa_supplicant_running(self):
+        try:
+            # Check if wpa_supplicant is running using ps -f
+            result = subprocess.run(['ps', '-f'], capture_output=True, text=True)
+            if 'wpa_supplicant' in result.stdout:
+                print("wpa_supplicant is already running.")
+                return
+
+            # If not running, start it in the background
+            print("Starting wpa_supplicant...")
+            subprocess.Popen([
+                'wpa_supplicant',
+                '-B',
+                '-D', 'nl80211',
+                '-i', 'wlan0',
+                '-c', '/userdata/cfg/wpa_supplicant.conf'
+            ])
+            time.sleep(1)  # Wait for it to initialize
+            print("wpa_supplicant started.")
+        except Exception as e:
+            print(f"Error: {e}")
+
     def is_wifi_enabled(self, interface="wlan0"):
         result = subprocess.run(["ip", "link", "show", interface], capture_output=True, text=True)
         return "UP" in result.stdout
 
     def disable_wifi(self,interface="wlan0"):
+        self.system_config.reload_config()
+        self.system_config.set_wifi(0)
+        self.system_config.save_config()
         subprocess.run(["ip", "link", "set", interface, "down"], capture_output=True, text=True)
         self.get_wifi_status.force_refresh()
 
     def enable_wifi(self,interface="wlan0"):
+        self.system_config.reload_config()
+        self.system_config.set_wifi(1)
+        self.system_config.save_config()
+        self.ensure_wpa_supplicant_running()
         subprocess.run(["ip", "link", "set", interface, "up"], capture_output=True, text=True)
         self.get_wifi_status.force_refresh()
 
@@ -335,3 +379,7 @@ class MiyooFlip(Device):
                             cwd='/usr/libexec/bluetooth/',
                             stdout=subprocess.DEVNULL,
                             stderr=subprocess.DEVNULL)
+            
+    def perform_startup_tasks(self):
+        if(self.system_config.is_wifi_enabled()):        
+            self.ensure_wpa_supplicant_running()
