@@ -44,6 +44,12 @@ class MiyooFlip(Device):
         #so it always has the more accurate data
         self.system_config = SystemConfig("/userdata/system.json")
         self.miyoo_games_file_parser = MiyooGamesFileParser()        
+        subprocess.Popen([
+                'ifconfig',
+                'wlan0',
+                'up'
+            ])
+
 
     @property
     def screen_width(self):
@@ -273,15 +279,22 @@ class MiyooFlip(Device):
     def get_wifi_status(self):
         if(self.is_wifi_enabled()):
             wifi_connection_quality_info = self.get_wifi_connection_quality_info()
-            print(f"WiFi Connection Quality Info = {wifi_connection_quality_info}")
-            if wifi_connection_quality_info.link_quality >= 55:
+            # Composite score out of 100 based on weighted contribution
+            # Adjust weights as needed based on empirical testing
+            score = (
+                (wifi_connection_quality_info.link_quality / 70.0) * 0.5 +          # 50% weight
+                (wifi_connection_quality_info.signal_level / 70.0) * 0.3 +        # 30% weight
+                ((70 - wifi_connection_quality_info.noise_level) / 70.0) * 0.2    # 20% weight (less noise is better)
+            ) * 100
+
+            if score >= 80:
                 return WifiStatus.GREAT
-            elif wifi_connection_quality_info.link_quality >= 40:
+            elif score >= 60:
                 return WifiStatus.GOOD
-            elif wifi_connection_quality_info.link_quality >= 25:
+            elif score >= 40:
                 return WifiStatus.OKAY
             else:
-                return WifiStatus.BAD        
+                return WifiStatus.BAD
         else:            
             return WifiStatus.OFF
 
@@ -290,7 +303,6 @@ class MiyooFlip(Device):
             # Check if wpa_supplicant is running using ps -f
             result = subprocess.run(['ps', '-f'], capture_output=True, text=True)
             if 'wpa_supplicant' in result.stdout:
-                print("wpa_supplicant is already running.")
                 return
 
             # If not running, start it in the background
@@ -302,7 +314,7 @@ class MiyooFlip(Device):
                 '-i', 'wlan0',
                 '-c', '/userdata/cfg/wpa_supplicant.conf'
             ])
-            time.sleep(1)  # Wait for it to initialize
+            time.sleep(0.5)  # Wait for it to initialize
             print("wpa_supplicant started.")
         except Exception as e:
             print(f"Error: {e}")
