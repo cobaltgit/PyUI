@@ -329,7 +329,7 @@ class MiyooFlip(Device):
         self.system_config.reload_config()
         self.system_config.set_wifi(0)
         self.system_config.save_config()
-        subprocess.run(["ip", "link", "set", interface, "down"], capture_output=True, text=True)
+        subprocess.run(["ifconfig",interface,"down"], capture_output=True, text=True)
         self.get_wifi_status.force_refresh()
 
     def enable_wifi(self,interface="wlan0"):
@@ -337,6 +337,7 @@ class MiyooFlip(Device):
         self.system_config.set_wifi(1)
         self.system_config.save_config()
         self.ensure_wpa_supplicant_running()
+        subprocess.run(["ifconfig",interface,"up"], capture_output=True, text=True)
         subprocess.run(["ip", "link", "set", interface, "up"], capture_output=True, text=True)
         self.get_wifi_status.force_refresh()
 
