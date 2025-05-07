@@ -73,8 +73,10 @@ class RomsMenuCommon(ABC):
             selected = view.get_selection([ControllerInput.A, ControllerInput.X])
             if(selected is not None):
                 if(ControllerInput.A == selected.get_input()):
+                    self.display.deinit_display()
                     self.device.run_game(selected.get_selection().get_value())
                     self.controller.clear_input_queue()
+                    self.display.reinitialize()
                 elif(ControllerInput.X == selected.get_input()):
                     GameConfigMenu(self.display, self.controller, self.device, self.theme, 
                                    self._extract_game_system(selected.get_selection().get_value()), 
