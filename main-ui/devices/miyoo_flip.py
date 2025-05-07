@@ -44,11 +44,7 @@ class MiyooFlip(Device):
         #so it always has the more accurate data
         self.system_config = SystemConfig("/userdata/system.json")
         self.miyoo_games_file_parser = MiyooGamesFileParser()        
-        subprocess.Popen([
-                'ifconfig',
-                'wlan0',
-                'up'
-            ])
+        self.ensure_wpa_supplicant_running()
 
 
     @property
@@ -300,6 +296,12 @@ class MiyooFlip(Device):
 
     def ensure_wpa_supplicant_running(self):
         try:
+            # Ensure wlan0 is up
+            subprocess.Popen([
+                    'ifconfig',
+                    'wlan0',
+                    'up'
+                ])
             # Check if wpa_supplicant is running using ps -f
             result = subprocess.run(['ps', '-f'], capture_output=True, text=True)
             if 'wpa_supplicant' in result.stdout:
