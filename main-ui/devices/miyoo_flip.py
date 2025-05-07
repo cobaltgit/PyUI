@@ -338,7 +338,6 @@ class MiyooFlip(Device):
         self.system_config.save_config()
         self.ensure_wpa_supplicant_running()
         subprocess.run(["ifconfig",interface,"up"], capture_output=True, text=True)
-        subprocess.run(["ip", "link", "set", interface, "up"], capture_output=True, text=True)
         self.get_wifi_status.force_refresh()
 
     @throttle.limit_refresh(15)
@@ -396,5 +395,4 @@ class MiyooFlip(Device):
                             stderr=subprocess.DEVNULL)
             
     def perform_startup_tasks(self):
-        if(self.system_config.is_wifi_enabled()):        
-            self.ensure_wpa_supplicant_running()
+        pass
