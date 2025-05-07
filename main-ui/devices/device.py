@@ -123,3 +123,7 @@ class Device(ABC):
     @abstractmethod
     def reboot_cmd(self):
         pass
+
+    @abstractmethod
+    def get_rom_utils(self):
+        pass

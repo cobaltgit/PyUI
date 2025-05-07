@@ -9,6 +9,7 @@ from devices.miyoo.miyoo_games_file_parser import MiyooGamesFileParser
 from devices.miyoo.system_config import SystemConfig
 from devices.wifi.wifi_status import WifiStatus
 from games.utils.game_entry import GameEntry
+from games.utils.rom_utils import RomUtils
 import sdl2
 from utils import throttle
 
@@ -310,3 +311,6 @@ class MiyooFlip(Device):
     
     def parse_recents(self) -> list[GameEntry]:
         return self.miyoo_games_file_parser.parse_recents()
+
+    def get_rom_utils(self):
+        return RomUtils("/mnt/SDCARD/Roms/")
