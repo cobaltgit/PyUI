@@ -5,6 +5,7 @@ from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
 from display.on_screen_keyboard import OnScreenKeyboard
+from menus.settings.bluetooth_menu import BluetoothMenu
 from menus.settings.wifi_menu import WifiMenu
 from themes.theme import Theme
 from utils.py_ui_config import PyUiConfig
@@ -24,6 +25,7 @@ class SettingsMenu:
         self.config : PyUiConfig = config 
         self.on_screen_keyboard = OnScreenKeyboard(display,controller,device,theme)
         self.wifi_menu = WifiMenu(display,controller,device,theme)
+        self.bt_menu = BluetoothMenu(display,controller,device,theme)
         self.view_creator = ViewCreator(display,controller,device,theme)
 
     def shutdown(self, input: ControllerInput):
@@ -61,6 +63,17 @@ class SettingsMenu:
                 self.device.enable_wifi()
         else:
             self.wifi_menu.show_wifi_menu()
+
+    def show_bt_menu(self, input):
+        if(ControllerInput.DPAD_LEFT == input or ControllerInput.DPAD_RIGHT == input):
+            if(self.device.is_bluetooth_enabled()):
+                self.device.disable_bluetooth()
+            else:
+                self.device.enable_bluetooth()
+        else:
+            self.bt_menu.show_bluetooth_menu()
+
+
 
     def get_theme_folders(self):
         theme_dir = self.config["theme_dir"]
@@ -123,6 +136,17 @@ class SettingsMenu:
                         description=None,
                         icon=None,
                         value=self.show_wifi_menu
+                    )
+            )
+            option_list.append(
+                GridOrListEntry(
+                        primary_text="Bluetooth",
+                        value_text="<    " + ("On" if self.device.is_bluetooth_enabled() else "Off") + "    >",
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.show_bt_menu
                     )
             )
             

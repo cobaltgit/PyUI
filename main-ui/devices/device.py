@@ -66,6 +66,18 @@ class Device(ABC):
         pass
 
     @abstractmethod
+    def is_bluetooth_enabled(self):
+        pass
+
+    @abstractmethod
+    def disable_bluetooth(self):
+        pass
+
+    @abstractmethod
+    def enable_bluetooth(self):
+        pass
+
+    @abstractmethod
     def disable_wifi(self):
         pass
 

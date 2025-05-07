@@ -273,8 +273,7 @@ class MiyooFlip(Device):
     def is_wifi_enabled(self, interface="wlan0"):
         result = subprocess.run(["ip", "link", "show", interface], capture_output=True, text=True)
         return "UP" in result.stdout
-    
-    
+
     def disable_wifi(self,interface="wlan0"):
         subprocess.run(["ip", "link", "set", interface, "down"], capture_output=True, text=True)
         self.get_wifi_status.force_refresh()
@@ -314,3 +313,25 @@ class MiyooFlip(Device):
 
     def get_rom_utils(self):
         return RomUtils("/mnt/SDCARD/Roms/")
+    
+    
+    def is_bluetooth_enabled(self):
+        try:
+            # Run 'ps' to check for bluetoothd process
+            result = subprocess.run(['ps', 'aux'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            # Check if bluetoothd is in the process list
+            return 'bluetoothd' in result.stdout
+        except Exception as e:
+            print(f"Error checking bluetoothd status: {e}")
+            return False
+    
+    
+    def disable_bluetooth(self):
+        subprocess.run(["killall","-9","bluetoothd"])
+
+    def enable_bluetooth(self):
+        if(not self.is_bluetooth_enabled()):
+            subprocess.Popen(['./bluetoothd',"-f","/etc/bluetooth/main.conf"],
+                            cwd='/usr/libexec/bluetooth/',
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL)
