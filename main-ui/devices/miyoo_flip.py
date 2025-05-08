@@ -92,7 +92,7 @@ class MiyooFlip(Device):
     
     @property
     def input_timeout_default(self):
-        return 1/60
+        return 2 # 2 seconds
     
     
     def _map_system_brightness_to_miyoo_scale(self, true_brightness):

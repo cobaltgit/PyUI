@@ -26,7 +26,7 @@ theme = Theme(os.path.join(config["theme_dir"],config["theme"]))
 
 device = MiyooFlip()
 display = Display(theme, device)
-controller = Controller(device)
+controller = Controller(device, config)
 
 main_menu = MainMenu(display, controller, device, theme, config)
 
