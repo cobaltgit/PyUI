@@ -46,10 +46,14 @@ class Controller:
     def still_held_down(self):
         return sdl2.SDL_GameControllerGetButton(self.controller, self.event.cbutton.button)
     
-    def get_input(self):
+    def get_input(self, timeout = -2):
+        if(-2 == timeout):
+            timeout = self.device.input_timeout_default
+
         sdl2.SDL_PumpEvents()
         start_time = time.time()
 
+        #TODO move the time delay to the caller
         while(self.still_held_down() and time.time() - start_time < 0.12):
             sdl2.SDL_PumpEvents()
             
@@ -58,8 +62,11 @@ class Controller:
             self._last_event().type = 0
             while(self._last_event().type != sdl2.SDL_CONTROLLERBUTTONDOWN):
                 poll_result = 0
-                while(poll_result == 0):
+                reached_timeout = False
+                while(0 == poll_result and not reached_timeout):
                     poll_result = sdl2.SDL_PollEvent(byref(self.event))
+                    if(time.time() - start_time < timeout):
+                        reached_timeout = True
 
         self.last_input_time = time.time()
         return self.last_event_was_controller()        

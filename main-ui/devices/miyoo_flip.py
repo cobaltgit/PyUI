@@ -89,6 +89,11 @@ class MiyooFlip(Device):
     def reboot_cmd(self):
         return "reboot"
     
+    @property
+    def input_timeout_default(self):
+        return 1/60
+    
+    
     def _map_system_brightness_to_miyoo_scale(self, true_brightness):
         if(true_brightness >= 220):
             return 10
