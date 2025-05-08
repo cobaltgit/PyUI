@@ -202,10 +202,45 @@ class MiyooFlip(Device):
         except subprocess.CalledProcessError as e:
             print(f"Command failed: {e}")
             return 0 # ???
+        
+    def convert_game_path_to_miyoo_path(self,original_path):
+        # Define the part of the path to be replaced
+        base_dir = "/mnt/SDCARD/Roms/"
+
+        # Check if the original path starts with the base directory
+        if original_path.startswith(base_dir):
+            # Extract the subdirectory after Roms/
+            subdirectory = original_path[len(base_dir):].split(os.sep, 1)[0]
+            
+            # Construct the new path using the desired format
+            new_path = original_path.replace(f"Roms{os.sep}{subdirectory}", f"Emu{os.sep}{subdirectory}{os.sep}..{os.sep}..{os.sep}Roms{os.sep}{subdirectory}")
+            new_path = new_path.replace("/mnt/SDCARD/", "/media/sdcard0/")
+            return new_path
+        else:
+            print(f"Unable to convert {original_path} to miyoo path")
+            return original_path
+        
+    def write_cmd_to_run(self, command):
+        with open('/tmp/cmd_to_run.sh', 'w') as file:
+            file.write(command)
+
+    def delete_cmd_to_run(self):
+        try:
+            os.remove('/tmp/cmd_to_run.sh')
+        except FileNotFoundError:
+            pass  # File doesn't exist, no action needed
+        except Exception as e:
+            print(f"Failed to delete file: {e}")
 
     def run_game(self, file_path):
-        print(f"About to launch /mnt/SDCARD/Emu/.emu_setup/standard_launch.sh {file_path}")
+        #file_path = /mnt/SDCARD/Roms/FAKE08/Alpine Alpaca.p8
+        #miyoo maps it to /media/sdcard0/Emu/FAKE08/../../Roms/FAKE08/Alpine Alpaca.p8
+        miyoo_app_path = self.convert_game_path_to_miyoo_path(file_path)
+        self.write_cmd_to_run(f'''chmod a+x "/media/sdcard0/Emu/FC/../.emu_setup/standard_launch.sh";"/media/sdcard0/Emu/FC/../.emu_setup/standard_launch.sh" "{miyoo_app_path}"''')
+
+        print(f"About to launch /mnt/SDCARD/Emu/.emu_setup/standard_launch.sh {file_path} | {miyoo_app_path}")
         subprocess.run(["/mnt/SDCARD/Emu/.emu_setup/standard_launch.sh",file_path])
+        self.delete_cmd_to_run()
 
     def run_app(self, args, dir = None):
         print(f"About to launch app {args}")
