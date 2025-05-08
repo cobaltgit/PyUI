@@ -44,7 +44,8 @@ class MiyooFlip(Device):
         #so it always has the more accurate data
         self.system_config = SystemConfig("/userdata/system.json")
         self.miyoo_games_file_parser = MiyooGamesFileParser()        
-        self.ensure_wpa_supplicant_running()
+        self.start_wpa_supplicant()
+        subprocess.run(["ifconfig","wlan0","up"], capture_output=True, text=True)
 
 
     @property
@@ -294,21 +295,19 @@ class MiyooFlip(Device):
         else:            
             return WifiStatus.OFF
 
-    def ensure_wpa_supplicant_running(self):
+    def stop_wpa_supplicant_running(self):
+        subprocess.run(['killall', '-15', 'wpa_supplicant'], capture_output=True, text=True)
+        time.sleep(0.1)  
+        subprocess.run(['killall', '-9', 'wpa_supplicant'], capture_output=True, text=True)
+
+    def start_wpa_supplicant(self):
         try:
-            # Ensure wlan0 is up
-            subprocess.Popen([
-                    'ifconfig',
-                    'wlan0',
-                    'up'
-                ])
             # Check if wpa_supplicant is running using ps -f
             result = subprocess.run(['ps', '-f'], capture_output=True, text=True)
             if 'wpa_supplicant' in result.stdout:
                 return
 
             # If not running, start it in the background
-            print("Starting wpa_supplicant...")
             subprocess.Popen([
                 'wpa_supplicant',
                 '-B',
@@ -330,14 +329,15 @@ class MiyooFlip(Device):
         self.system_config.set_wifi(0)
         self.system_config.save_config()
         subprocess.run(["ifconfig",interface,"down"], capture_output=True, text=True)
+        self.stop_wpa_supplicant_running()
         self.get_wifi_status.force_refresh()
 
     def enable_wifi(self,interface="wlan0"):
         self.system_config.reload_config()
         self.system_config.set_wifi(1)
         self.system_config.save_config()
-        self.ensure_wpa_supplicant_running()
         subprocess.run(["ifconfig",interface,"up"], capture_output=True, text=True)
+        self.start_wpa_supplicant()
         self.get_wifi_status.force_refresh()
 
     @throttle.limit_refresh(15)
@@ -385,6 +385,8 @@ class MiyooFlip(Device):
     
     
     def disable_bluetooth(self):
+        subprocess.run(["killall","-15","bluetoothd"])
+        time.sleep(0.1)  
         subprocess.run(["killall","-9","bluetoothd"])
 
     def enable_bluetooth(self):
