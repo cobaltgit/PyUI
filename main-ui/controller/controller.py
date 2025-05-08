@@ -60,12 +60,12 @@ class Controller:
 
         if(not self.still_held_down()):
             self._last_event().type = 0
-            while(self._last_event().type != sdl2.SDL_CONTROLLERBUTTONDOWN):
+            reached_timeout = False
+            while(self._last_event().type != sdl2.SDL_CONTROLLERBUTTONDOWN and not reached_timeout):
                 poll_result = 0
-                reached_timeout = False
                 while(0 == poll_result and not reached_timeout):
                     poll_result = sdl2.SDL_PollEvent(byref(self.event))
-                    if(time.time() - start_time < timeout):
+                    if(time.time() - start_time > timeout):
                         reached_timeout = True
 
         self.last_input_time = time.time()

@@ -203,8 +203,9 @@ class SettingsMenu:
             else:
                 list_view.set_options(option_list)
 
-            selected = list_view.get_selection([ControllerInput.A, ControllerInput.DPAD_LEFT, ControllerInput.DPAD_RIGHT,
-                                                  ControllerInput.L1, ControllerInput.R1])
+            control_options = [ControllerInput.A, ControllerInput.DPAD_LEFT, ControllerInput.DPAD_RIGHT,
+                                                  ControllerInput.L1, ControllerInput.R1]
+            selected = list_view.get_selection(control_options)
 
-            if(selected is not None):
+            if(selected is not None and selected.get_input() in control_options):
                 selected.get_selection().get_value()(selected.get_input())
