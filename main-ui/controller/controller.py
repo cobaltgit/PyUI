@@ -57,7 +57,9 @@ class Controller:
         if(not self.still_held_down()):
             self._last_event().type = 0
             while(self._last_event().type != sdl2.SDL_CONTROLLERBUTTONDOWN):
-                sdl2.SDL_WaitEvent(byref(self.event))
+                poll_result = 0
+                while(poll_result == 0):
+                    poll_result = sdl2.SDL_PollEvent(byref(self.event))
 
         self.last_input_time = time.time()
         return self.last_event_was_controller()        
