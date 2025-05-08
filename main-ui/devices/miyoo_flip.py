@@ -95,25 +95,25 @@ class MiyooFlip(Device):
     
     
     def _map_system_brightness_to_miyoo_scale(self, true_brightness):
-        if(true_brightness >= 220):
+        if(true_brightness >= 255):
             return 10
-        elif(true_brightness >= 180):
+        elif(true_brightness >= 225):
             return 9
-        elif(true_brightness >= 150):
+        elif(true_brightness >= 200):
             return 8
-        elif(true_brightness >= 120):
+        elif(true_brightness >= 175):
             return 7
-        elif(true_brightness >= 100):
+        elif(true_brightness >= 150):
             return 6
-        elif(true_brightness >= 80):
+        elif(true_brightness >= 125):
             return 5
-        elif(true_brightness >= 60):
+        elif(true_brightness >= 100):
             return 4
-        elif(true_brightness >= 45):
+        elif(true_brightness >= 75):
             return 3
-        elif(true_brightness >= 35):
+        elif(true_brightness >= 50):
             return 2
-        elif(true_brightness >= 20):
+        elif(true_brightness >= 25):
             return 1
         else:
             return 0
