@@ -382,10 +382,10 @@ class MiyooFlip(Device):
         self.start_wpa_supplicant()
         self.get_wifi_status.force_refresh()
 
-    @throttle.limit_refresh(15)
+    @throttle.limit_refresh(5)
     def get_charge_status(self):
         output = subprocess.check_output(
-            ["cat", "/sys/class/power_supply/usb/online"],
+            ["cat", "/sys/class/power_supply/ac/online"],
             text=True
         )
 
