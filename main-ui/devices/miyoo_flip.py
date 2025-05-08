@@ -115,25 +115,25 @@ class MiyooFlip(Device):
 
     def _map_miyoo_scale_to_system_brightness(self, brightness_level):
         if brightness_level == 10:
-            return 220
+            return 255
         elif brightness_level == 9:
-            return 180
+            return 225
         elif brightness_level == 8:
-            return 150
+            return 200
         elif brightness_level == 7:
-            return 120
+            return 175
         elif brightness_level == 6:
-            return 100
+            return 150
         elif brightness_level == 5:
-            return 80
+            return 125
         elif brightness_level == 4:
-            return 60
+            return 100
         elif brightness_level == 3:
-            return 45
+            return 75
         elif brightness_level == 2:
-            return 35
+            return 50
         elif brightness_level == 1:
-            return 20
+            return 25
         else: 
             return 1
     
