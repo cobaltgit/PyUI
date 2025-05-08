@@ -69,6 +69,7 @@ class Display:
     def reinitialize(self):
         self.deinit_display()
         self._init_display()
+        self.init_fonts()
         self.clear("reinitialize")
         self.present()
 
