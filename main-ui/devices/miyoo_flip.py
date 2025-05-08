@@ -340,7 +340,7 @@ class MiyooFlip(Device):
             return WifiStatus.OFF
 
     def run_and_print(self, args, check = False):
-        print(f"Executing {args}")
+        PyUiLogger.debug(f"Executing {args}")
         result = subprocess.run(args, capture_output=True, text=True, check=check)
         if result.stdout:
             PyUiLogger.debug(f"stdout: {result.stdout.strip()}")
@@ -378,7 +378,6 @@ class MiyooFlip(Device):
 
     def is_wifi_enabled(self, interface="wlan0"):
         result = self.run_and_print(["ip", "link", "show", interface])
-        print("Running ip link show")
         return "UP" in result.stdout
 
     def disable_wifi(self,interface="wlan0"):
