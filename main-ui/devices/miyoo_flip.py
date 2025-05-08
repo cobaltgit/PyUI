@@ -46,7 +46,7 @@ class MiyooFlip(Device):
         self.miyoo_games_file_parser = MiyooGamesFileParser()        
         self.start_wpa_supplicant()
         subprocess.run(["ifconfig","wlan0","up"], capture_output=True, text=True)
-
+        self._set_brightness_to_config()
 
     @property
     def screen_width(self):
@@ -137,22 +137,24 @@ class MiyooFlip(Device):
         else: 
             return 1
     
-    def lower_brightness(self):
+    def _set_brightness_to_config(self):
+        with open("/sys/class/backlight/backlight/brightness", "w") as f:
+            f.write(str(self._map_miyoo_scale_to_system_brightness(self.system_config.brightness)))
 
-        if(self.brightness > 0):
-            self.system_config.reload_config()
-            self.system_config.set_brightness(self.brightness-1)
+
+    def lower_brightness(self):
+        self.system_config.reload_config()
+        if(self.system_config.brightness > 0):
+            self.system_config.set_brightness(self.system_config.brightness - 1)
             self.system_config.save_config()
-            with open("/sys/class/backlight/backlight/brightness", "w") as f:
-                f.write(str(self._map_miyoo_scale_to_system_brightness(self.brightness - 1)))
+            self._set_brightness_to_config()
 
     def raise_brightness(self):
-        if(self.brightness < 10):
-            self.system_config.reload_config()
-            self.system_config.set_brightness(self.brightness+1)
+        self.system_config.reload_config()
+        if(self.system_config.brightness < 10):
+            self.system_config.set_brightness(self.system_config.brightness + 1)
             self.system_config.save_config()
-            with open("/sys/class/backlight/backlight/brightness", "w") as f:
-                f.write(str(self._map_miyoo_scale_to_system_brightness(self.brightness + 1)))
+            self._set_brightness_to_config()
 
     @property
     def brightness(self):
