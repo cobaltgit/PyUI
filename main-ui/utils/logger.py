@@ -64,16 +64,16 @@ class PyUiLogger:
     
     
     @classmethod
-    def get_logger(cls, msg, name="PyUiLogger"):
+    def error(cls, msg, name="PyUiLogger"):
         return cls._logger.error(msg)
     
     
     @classmethod
-    def get_logger(cls, msg, name="PyUiLogger"):
+    def debug(cls, msg, name="PyUiLogger"):
         return cls._logger.debug(msg)
     
     
     @classmethod
-    def get_logger(cls, msg, name="PyUiLogger"):
+    def warning(cls, msg, name="PyUiLogger"):
         return cls._logger.warning(msg)
 

@@ -14,6 +14,7 @@ from games.utils.game_entry import GameEntry
 from games.utils.rom_utils import RomUtils
 import sdl2
 from utils import throttle
+from utils.logger import PyUiLogger
 
 os.environ["SDL_VIDEODRIVER"] = "KMSDRM"
 os.environ["SDL_RENDER_DRIVER"] = "kmsdrm"
@@ -45,7 +46,7 @@ class MiyooFlip(Device):
         self.system_config = SystemConfig("/userdata/system.json")
         self.miyoo_games_file_parser = MiyooGamesFileParser()        
         self.start_wpa_supplicant()
-        subprocess.run(["ifconfig","wlan0","up"], capture_output=True, text=True)
+        self.run_and_print(["ifconfig","wlan0","up"])
         self._set_brightness_to_config()
 
     @property
@@ -176,7 +177,8 @@ class MiyooFlip(Device):
             volume = 100
 
         try:
-            subprocess.run(
+            
+            self.run_and_print(
                 ["amixer", "cset", f"name='SPK Volume'", str(volume)],
                 check=True
             )
@@ -337,17 +339,27 @@ class MiyooFlip(Device):
         else:            
             return WifiStatus.OFF
 
+    def run_and_print(self, args, check = False):
+        print(f"Executing {args}")
+        result = subprocess.run(args, capture_output=True, text=True, check=check)
+        if result.stdout:
+            PyUiLogger.debug(f"stdout: {result.stdout.strip()}")
+        if result.stderr:
+            PyUiLogger.error(f"stderr: {result.stderr.strip()}")
+
+        return result
+
+
     def stop_wpa_supplicant_running(self):
-        subprocess.run(['killall', '-15', 'wpa_supplicant'], capture_output=True, text=True)
+        self.run_and_print(['killall', '-15', 'wpa_supplicant'])
         time.sleep(0.1)  
-        subprocess.run(['killall', '-9', 'wpa_supplicant'], capture_output=True, text=True)
-        print("Stopping wpa_supplicant")
+        self.run_and_print(['killall', '-9', 'wpa_supplicant'])
 
 
     def start_wpa_supplicant(self):
         try:
             # Check if wpa_supplicant is running using ps -f
-            result = subprocess.run(['ps', '-f'], capture_output=True, text=True)
+            result = self.run_and_print(['ps', '-f'])
             if 'wpa_supplicant' in result.stdout:
                 return
 
@@ -365,7 +377,7 @@ class MiyooFlip(Device):
             print(f"Error: {e}")
 
     def is_wifi_enabled(self, interface="wlan0"):
-        result = subprocess.run(["ip", "link", "show", interface], capture_output=True, text=True)
+        result = self.run_and_print(["ip", "link", "show", interface])
         print("Running ip link show")
         return "UP" in result.stdout
 
@@ -373,7 +385,7 @@ class MiyooFlip(Device):
         self.system_config.reload_config()
         self.system_config.set_wifi(0)
         self.system_config.save_config()
-        subprocess.run(["ifconfig",interface,"down"], capture_output=True, text=True)
+        self.run_and_print(["ifconfig",interface,"down"])
         print("Running ifconfig wlan0 down")
         self.stop_wpa_supplicant_running()
         self.get_wifi_status.force_refresh()
@@ -382,7 +394,7 @@ class MiyooFlip(Device):
         self.system_config.reload_config()
         self.system_config.set_wifi(1)
         self.system_config.save_config()
-        subprocess.run(["ifconfig",interface,"up"], capture_output=True, text=True)
+        self.run_and_print(["ifconfig",interface,"up"])
         print("Running ifconfig wlan0 up")
         self.start_wpa_supplicant()
         self.get_wifi_status.force_refresh()
@@ -423,7 +435,7 @@ class MiyooFlip(Device):
     def is_bluetooth_enabled(self):
         try:
             # Run 'ps' to check for bluetoothd process
-            result = subprocess.run(['ps', 'aux'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            result = self.run_and_print(['ps', 'aux'])
             # Check if bluetoothd is in the process list
             return 'bluetoothd' in result.stdout
         except Exception as e:
@@ -432,9 +444,9 @@ class MiyooFlip(Device):
     
     
     def disable_bluetooth(self):
-        subprocess.run(["killall","-15","bluetoothd"])
+        self.run_and_print(["killall","-15","bluetoothd"])
         time.sleep(0.1)  
-        subprocess.run(["killall","-9","bluetoothd"])
+        self.run_and_print(["killall","-9","bluetoothd"])
 
     def enable_bluetooth(self):
         if(not self.is_bluetooth_enabled()):
