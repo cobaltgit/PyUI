@@ -80,6 +80,9 @@ class Controller:
 
                 if event_available and self._last_event().type == sdl2.SDL_CONTROLLERBUTTONDOWN:
                     break
+                elif(event_available and self._last_event().type == sdl2.SDL_CONTROLLERDEVICEADDED):
+                    print("New controller detected")
+                    self._init_controller()
 
         self.last_input_time = time.time()
         return self.last_event_was_controller() 
