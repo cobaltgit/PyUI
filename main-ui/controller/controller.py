@@ -13,14 +13,16 @@ class Controller:
         self.index = None
         self.name = None
         self.mapping = None
-        self._init_controller()
         self.event = sdl2.SDL_Event()
+        self._init_controller()
         self.device = device
         self.last_input_time = 0
         self.config = config
 
 
     def _init_controller(self):
+        #Force new connection to be processed byt SDL by polling it off the queue
+        self.clear_input_queue()
         print("Checking for a controller")
         count = sdl2.SDL_NumJoysticks()
         for index in range(count):
@@ -34,8 +36,9 @@ class Controller:
                     self.mapping = sdl2.SDL_GameControllerMapping(controller).decode()
                     print(f"Opened GameController {index}: {self.name}")
                     print(f" {self.mapping}")
-                    return
-        print("No game controller found.")
+
+    def new_bt_device_paired(self):
+        self._init_controller()
 
     def get_controller(self):
         return self.controller
