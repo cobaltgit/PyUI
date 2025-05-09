@@ -1,5 +1,7 @@
+from pathlib import Path
 import re
 import subprocess
+import threading
 import time
 from apps.miyoo.miyoo_app_finder import MiyooAppFinder
 from controller.controller_inputs import ControllerInput
@@ -8,6 +10,7 @@ from devices.device import Device
 import os
 from devices.miyoo.miyoo_games_file_parser import MiyooGamesFileParser
 from devices.miyoo.system_config import SystemConfig
+from devices.utils.process_runner import ProcessRunner
 from devices.wifi.wifi_connection_quality_info import WiFiConnectionQualityInfo
 from devices.wifi.wifi_status import WifiStatus
 from games.utils.game_entry import GameEntry
@@ -45,9 +48,24 @@ class MiyooFlip(Device):
         #so it always has the more accurate data
         self.system_config = SystemConfig("/userdata/system.json")
         self.miyoo_games_file_parser = MiyooGamesFileParser()        
-        self.start_wpa_supplicant()
-        self.run_and_print(["ifconfig","wlan0","up"])
         self._set_brightness_to_config()
+        self.ensure_wpa_supplicant_conf()
+        threading.Thread(target=self.monitor_wifi, daemon=True).start()
+
+    def ensure_wpa_supplicant_conf(self):
+        conf_path = Path("/userdata/cfg/wpa_supplicant.conf")
+        
+        if not conf_path.exists():
+            conf_path.parent.mkdir(parents=True, exist_ok=True)  # Ensure /userdata/cfg exists
+            conf_content = (
+                "ctrl_interface=/var/run/wpa_supplicant\n"
+                "update_config=1\n\n"
+            )
+            with conf_path.open("w") as f:
+                f.write(conf_content)
+            print("Created missing wpa_supplicant.conf.")
+        else:
+            print("wpa_supplicant.conf already exists.")
 
     @property
     def screen_width(self):
@@ -178,7 +196,7 @@ class MiyooFlip(Device):
 
         try:
             
-            self.run_and_print(
+            ProcessRunner.run_and_print(
                 ["amixer", "cset", f"name='SPK Volume'", str(volume)],
                 check=True
             )
@@ -316,7 +334,33 @@ class MiyooFlip(Device):
         except Exception as e:
             return WiFiConnectionQualityInfo(noise_level=0, signal_level=0, link_quality=0)
         
-    @throttle.limit_refresh(15)
+
+    def is_wifi_up(self):
+        result = ProcessRunner.run_and_print(["ip", "link", "show", "wlan0"])
+        return "UP" in result.stdout
+    
+    def restart_wifi_services(self):
+        self.stop_wifi_services()
+        self.start_wifi_services()
+
+    def wifi_error_detected(self):
+        self.wifi_error = True
+        
+    def monitor_wifi(self):
+        self.wifi_error = False
+        while True:
+            if self.is_wifi_enabled():
+                if self.wifi_error or not self.is_wifi_up():
+                    self.wifi_error = False
+                    PyUiLogger.error("Detected wlan0 disappeared, restarting wifi services")
+                    self.restart_wifi_services()
+                else:
+                    PyUiLogger.debug("WiFi is up")
+
+            time.sleep(10)
+
+
+    @throttle.limit_refresh(10)
     def get_wifi_status(self):
         if(self.is_wifi_enabled()):
             wifi_connection_quality_info = self.get_wifi_connection_quality_info()
@@ -349,17 +393,29 @@ class MiyooFlip(Device):
 
         return result
 
+    def set_wifi_power(self, value):
+        with open('/sys/class/rkwifi/wifi_power', 'w') as f:
+            f.write(str(value))
 
-    def stop_wpa_supplicant_running(self):
-        self.run_and_print(['killall', '-15', 'wpa_supplicant'])
+    def stop_wifi_services(self):
+        ProcessRunner.run_and_print(['killall', '-15', 'wpa_supplicant'])
         time.sleep(0.1)  
-        self.run_and_print(['killall', '-9', 'wpa_supplicant'])
+        ProcessRunner.run_and_print(['killall', '-9', 'wpa_supplicant'])
+        time.sleep(0.1)  
+        ProcessRunner.run_and_print(['killall', '-15', 'udhcpc'])
+        time.sleep(0.1)  
+        ProcessRunner.run_and_print(['killall', '-9', 'udhcpc'])
+        time.sleep(0.1)  
+        self.set_wifi_power(0)
 
+    def get_running_processes(self):
+        #bypass ProcessRunner.run_and_print() as it makes the log too big
+        return subprocess.run(['ps', '-f'], capture_output=True, text=True)
 
     def start_wpa_supplicant(self):
         try:
             # Check if wpa_supplicant is running using ps -f
-            result = self.run_and_print(['ps', '-f'])
+            result = self.get_running_processes()
             if 'wpa_supplicant' in result.stdout:
                 return
 
@@ -374,28 +430,53 @@ class MiyooFlip(Device):
             time.sleep(0.5)  # Wait for it to initialize
             print("wpa_supplicant started.")
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error starting wpa_supplicant: {e}")
 
-    def is_wifi_enabled(self, interface="wlan0"):
-        result = self.run_and_print(["ip", "link", "show", interface])
-        return "UP" in result.stdout
+    def start_udhcpc(self):
+        try:
+            # Check if wpa_supplicant is running using ps -f
+            result = self.get_running_processes()
+            if 'udhcpc' in result.stdout:
+                return
 
-    def disable_wifi(self,interface="wlan0"):
+            # If not running, start it in the background
+            subprocess.Popen([
+                'udhcpc',
+                '-i', 'wlan0'
+            ])
+            time.sleep(0.5)  # Wait for it to initialize
+            print("udhcpc started.")
+        except Exception as e:
+            print(f"Error starting udhcpc: {e}")
+
+
+    def start_wifi_services(self):
+        self.set_wifi_power(0)
+        time.sleep(1)  
+        self.set_wifi_power(1)
+        time.sleep(1)  
+        self.start_wpa_supplicant()
+        self.start_udhcpc()
+
+    def is_wifi_enabled(self):
+        return self.system_config.is_wifi_enabled()
+
+    def disable_wifi(self):
         self.system_config.reload_config()
         self.system_config.set_wifi(0)
         self.system_config.save_config()
-        self.run_and_print(["ifconfig",interface,"down"])
+        ProcessRunner.run_and_print(["ifconfig","wlan0","down"])
         print("Running ifconfig wlan0 down")
-        self.stop_wpa_supplicant_running()
+        self.stop_wifi_services()
         self.get_wifi_status.force_refresh()
 
-    def enable_wifi(self,interface="wlan0"):
+    def enable_wifi(self):
         self.system_config.reload_config()
         self.system_config.set_wifi(1)
         self.system_config.save_config()
-        self.run_and_print(["ifconfig",interface,"up"])
+        ProcessRunner.run_and_print(["ifconfig","wlan0","up"])
         print("Running ifconfig wlan0 up")
-        self.start_wpa_supplicant()
+        self.start_wifi_services()
         self.get_wifi_status.force_refresh()
 
     @throttle.limit_refresh(5)
@@ -434,7 +515,7 @@ class MiyooFlip(Device):
     def is_bluetooth_enabled(self):
         try:
             # Run 'ps' to check for bluetoothd process
-            result = self.run_and_print(['ps', 'aux'])
+            result = self.get_running_processes()
             # Check if bluetoothd is in the process list
             return 'bluetoothd' in result.stdout
         except Exception as e:
@@ -443,9 +524,9 @@ class MiyooFlip(Device):
     
     
     def disable_bluetooth(self):
-        self.run_and_print(["killall","-15","bluetoothd"])
+        ProcessRunner.run_and_print(["killall","-15","bluetoothd"])
         time.sleep(0.1)  
-        self.run_and_print(["killall","-9","bluetoothd"])
+        ProcessRunner.run_and_print(["killall","-9","bluetoothd"])
 
     def enable_bluetooth(self):
         if(not self.is_bluetooth_enabled()):
