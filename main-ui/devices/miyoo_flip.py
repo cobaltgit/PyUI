@@ -474,6 +474,7 @@ class MiyooFlip(Device):
         return result
 
     def set_wifi_power(self, value):
+        print(f"Setting /sys/class/rkwifi/wifi_power to {str(value)}")
         with open('/sys/class/rkwifi/wifi_power', 'w') as f:
             f.write(str(value))
 
