@@ -1,5 +1,8 @@
 import logging
+from logging.handlers import RotatingFileHandler
 import os
+from pathlib import Path
+import shutil
 import sys
 
 class StreamToLogger:
@@ -25,6 +28,8 @@ class PyUiLogger:
         if cls._logger is not None:
             return cls._logger
 
+        cls.rotate_logs()  # Ensure logs are rotated before initializing logger
+
         logger = logging.getLogger(name)
         logger.setLevel(logging.DEBUG)
 
@@ -39,7 +44,10 @@ class PyUiLogger:
             console_handler.setFormatter(formatter)
 
             # File handler
-            file_handler = logging.FileHandler("/mnt/SDCARD/Saves/spruce/pyui.log")
+            file_handler = RotatingFileHandler("/mnt/SDCARD/Saves/spruce/pyui.log",
+                maxBytes=10 * 1024,  # 1MB file size limit
+                backupCount=5               # Keep up to 5 backup files)
+            )
             file_handler.setLevel(logging.DEBUG)
             file_handler.setFormatter(formatter)
 
@@ -53,6 +61,25 @@ class PyUiLogger:
         cls._logger = logger
         return cls._logger
     
+    @staticmethod
+    def rotate_logs():
+        # Perform log rotation before initializing the logger
+        log_path = "/mnt/SDCARD/Saves/spruce/pyui.log"
+        backup_path = "/mnt/SDCARD/Saves/spruce/pyui.log.5"
+
+        # Rotate logs manually before starting
+        if os.path.exists(backup_path):
+            os.remove(backup_path)
+        for i in range(4, 0, -1):
+            src = f"{log_path}.{i}" if i > 1 else log_path
+            dest = f"{log_path}.{i + 1}"
+            if os.path.exists(src):
+                os.rename(src, dest)
+
+        # Optionally, delete the pyui-5.log if it exists
+        if os.path.exists(f"{log_path}.5"):
+            os.remove(f"{log_path}.5")
+            
     @classmethod
     def get_logger(cls):
         return cls._logger
