@@ -384,6 +384,7 @@ class MiyooFlip(Device):
         return "UP" in result.stdout
     
     def restart_wifi_services(self):
+        print("Restarting WiFi services")
         self.stop_wifi_services()
         self.start_wifi_services()
 
@@ -479,6 +480,7 @@ class MiyooFlip(Device):
             f.write(str(value))
 
     def stop_wifi_services(self):
+        print("Stopping WiFi Services")
         ProcessRunner.run_and_print(['killall', '-15', 'wpa_supplicant'])
         time.sleep(0.1)  
         ProcessRunner.run_and_print(['killall', '-9', 'wpa_supplicant'])
@@ -532,6 +534,7 @@ class MiyooFlip(Device):
 
 
     def start_wifi_services(self):
+        print("Starting WiFi Services")
         self.set_wifi_power(0)
         time.sleep(1)  
         self.set_wifi_power(1)
