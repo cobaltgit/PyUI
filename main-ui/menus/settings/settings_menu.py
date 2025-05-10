@@ -125,6 +125,16 @@ class SettingsMenu:
         option_list = []
         option_list.append(
                 GridOrListEntry(
+                        primary_text="Power Off",
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.shutdown
+                    )
+            )
+        option_list.append(
+                GridOrListEntry(
                         primary_text="Lumination",
                         value_text="<    " + str(self.device.lumination) + "    >",
                         image_path=None,
@@ -134,39 +144,7 @@ class SettingsMenu:
                         value=self.lumination_adjust
                     )
             )
-        option_list.append(
-                GridOrListEntry(
-                        primary_text="Brightness",
-                        value_text="<    " + str(self.device.brightness) + "    >",
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.brightness_adjust
-                    )
-            )
-        option_list.append(
-                GridOrListEntry(
-                        primary_text="Contrast",
-                        value_text="<    " + str(self.device.contrast) + "    >",
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.contrast_adjust
-                    )
-            )
-        option_list.append(
-                GridOrListEntry(
-                        primary_text="Saturation",
-                        value_text="<    " + str(self.device.saturation) + "    >",
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.saturation_adjust
-                    )
-            )
+
         option_list.append(
                 GridOrListEntry(
                         primary_text="Volume",
@@ -212,7 +190,39 @@ class SettingsMenu:
                         value=self.change_theme
                     )
             )
-
+        option_list.append(
+                GridOrListEntry(
+                        primary_text="Brightness",
+                        value_text="<    " + str(self.device.brightness) + "    >",
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.brightness_adjust
+                    )
+            )
+        option_list.append(
+                GridOrListEntry(
+                        primary_text="Contrast",
+                        value_text="<    " + str(self.device.contrast) + "    >",
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.contrast_adjust
+                    )
+            )
+        option_list.append(
+                GridOrListEntry(
+                        primary_text="Saturation",
+                        value_text="<    " + str(self.device.saturation) + "    >",
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.saturation_adjust
+                    )
+            )
         option_list.append(
                 GridOrListEntry(
                         primary_text="On Screen Keyboard",
@@ -222,16 +232,6 @@ class SettingsMenu:
                         description=None,
                         icon=None,
                         value=self.show_on_screen_keyboard
-                    )
-            )
-        option_list.append(
-                GridOrListEntry(
-                        primary_text="Power Off",
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.shutdown
                     )
             )
         option_list.append(
