@@ -42,6 +42,12 @@ class SettingsMenu:
         elif(ControllerInput.DPAD_RIGHT == input or ControllerInput.R1 == input):
             self.device.raise_lumination()
     
+    def brightness_adjust(self, input: ControllerInput):
+        if(ControllerInput.DPAD_LEFT == input or ControllerInput.L1 == input):
+            self.device.lower_brightness()
+        elif(ControllerInput.DPAD_RIGHT == input or ControllerInput.R1 == input):
+            self.device.raise_brightness()
+
     def contrast_adjust(self, input: ControllerInput):
         if(ControllerInput.DPAD_LEFT == input or ControllerInput.L1 == input):
             self.device.lower_contrast()
@@ -126,6 +132,17 @@ class SettingsMenu:
                         description=None,
                         icon=None,
                         value=self.lumination_adjust
+                    )
+            )
+        option_list.append(
+                GridOrListEntry(
+                        primary_text="Brightness",
+                        value_text="<    " + str(self.device.brightness) + "    >",
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.brightness_adjust
                     )
             )
         option_list.append(

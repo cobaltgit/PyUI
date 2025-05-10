@@ -138,6 +138,14 @@ class Device(ABC):
         pass
 
     @abstractmethod
+    def lower_brightness(self):
+        pass
+
+    @abstractmethod
+    def raise_brightness(self):
+        pass
+
+    @abstractmethod
     def lower_contrast(self):
         pass
 

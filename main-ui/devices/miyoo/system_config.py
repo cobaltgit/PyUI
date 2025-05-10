@@ -34,7 +34,10 @@ class SystemConfig:
     @property
     def brightness(self):
         return self.config.get("brightness")
-    
+
+    def get_brightness(self):
+        return self.config.get("brightness")
+
     def set_brightness(self, value):
         self.config["brightness"] = value
     

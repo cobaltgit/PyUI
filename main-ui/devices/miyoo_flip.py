@@ -51,6 +51,7 @@ class MiyooFlip(Device):
         self._set_lumination_to_config()
         self._set_contrast_to_config()
         self._set_saturation_to_config()
+        self._set_brightness_to_config()
         self.ensure_wpa_supplicant_conf()
         threading.Thread(target=self.monitor_wifi, daemon=True).start()
 
@@ -202,6 +203,12 @@ class MiyooFlip(Device):
         ProcessRunner.run_and_print(["modetest", "-M", "rockchip", "-a", "-w", 
                                      "179:saturation:"+str(self.system_config.saturation * 5)])
 
+    def _set_brightness_to_config(self):
+        ProcessRunner.run_and_print(["modetest", "-M", "rockchip", "-a", "-w", 
+                                     "179:brightness:"+str(self.system_config.brightness * 5)])
+
+
+
     def lower_lumination(self):
         self.system_config.reload_config()
         if(self.system_config.lumination > 0):
@@ -239,6 +246,26 @@ class MiyooFlip(Device):
     @property
     def contrast(self):
         return self.system_config.get_contrast()
+    
+    
+    def lower_brightness(self):
+        self.system_config.reload_config()
+        if(self.system_config.brightness > 0): 
+            self.system_config.set_brightness(self.system_config.brightness - 1)
+            self.system_config.save_config()
+            self._set_brightness_to_config()
+
+    def raise_brightness(self):
+        self.system_config.reload_config()
+        if(self.system_config.brightness < 20):
+            self.system_config.set_brightness(self.system_config.brightness + 1)
+            self.system_config.save_config()
+            self._set_brightness_to_config()
+
+    @property
+    def brightness(self):
+        return self.system_config.get_brightness()
+
 
     def lower_saturation(self):
         self.system_config.reload_config()
