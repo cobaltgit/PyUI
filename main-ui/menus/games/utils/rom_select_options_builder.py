@@ -2,6 +2,7 @@
 
 import os
 from pathlib import Path
+from typing import Callable
 from devices.device import Device
 from games.utils.rom_utils import RomUtils
 from themes.theme import Theme
@@ -43,24 +44,25 @@ class RomSelectOptionsBuilder:
 
         return favorite_paths
 
-    def build_rom_list(self, game_system) -> list[GridOrListEntry]:
+    def build_rom_list(self, game_system, filter: Callable[[str], bool] = lambda a: True) -> list[GridOrListEntry]:
         rom_list = []
         favorites = self._build_favorites_dict()
 
         resolved_folder = str(Path(self.rom_utils.get_system_rom_directory(game_system.folder_name)).resolve())
         for rom_file_path in self.rom_utils.get_roms(game_system.folder_name):
-            rom_file_name = os.path.basename(rom_file_path)
-            img_path = self.get_image_path(rom_file_path)
-            resolved_file_path = resolved_folder+"/"+rom_file_name
-            icon=self.theme.favorite_icon if resolved_file_path in favorites else None
-            rom_list.append(
-                GridOrListEntry(
-                    primary_text=self._remove_extension(rom_file_name),
-                    image_path=img_path,
-                    image_path_selected=img_path,
-                    description=game_system.folder_name, 
-                    icon=icon,
-                    value=rom_file_path)
-            )
+            if(filter(rom_file_path)):
+                rom_file_name = os.path.basename(rom_file_path)
+                img_path = self.get_image_path(rom_file_path)
+                resolved_file_path = resolved_folder+"/"+rom_file_name
+                icon=self.theme.favorite_icon if resolved_file_path in favorites else None
+                rom_list.append(
+                    GridOrListEntry(
+                        primary_text=self._remove_extension(rom_file_name),
+                        image_path=img_path,
+                        image_path_selected=img_path,
+                        description=game_system.folder_name, 
+                        icon=icon,
+                        value=rom_file_path)
+                )
 
         return rom_list

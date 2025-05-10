@@ -409,8 +409,6 @@ class MiyooFlip(Device):
             print(f"Unknown input {sdl_input}")
         return mapping
 
-
-
     def get_wifi_connection_quality_info(self) -> WiFiConnectionQualityInfo:
         try:
             with open("/proc/net/wireless", "r") as f:
