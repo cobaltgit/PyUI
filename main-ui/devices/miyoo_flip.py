@@ -81,6 +81,7 @@ class MiyooFlip(Device):
             if status.lower() == 'disconnected':
                 return False
             else:
+                print(f"HDMI Connected")
                 return True
         except FileNotFoundError:
             print("Error: The file '/sys/class/drm/card0-HDMI-A-1/status' does not exist.")
@@ -96,6 +97,12 @@ class MiyooFlip(Device):
     @property
     def screen_height(self):
         return 480
+
+    def get_scale_factor(self):
+        if(self.is_hdmi_connected()):
+            return 2.25
+        else:
+            return 1
 
     @property
     def font_size_small(self):
