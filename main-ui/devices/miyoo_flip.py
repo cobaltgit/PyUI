@@ -69,6 +69,26 @@ class MiyooFlip(Device):
         else:
             print("wpa_supplicant.conf already exists.")
 
+    #Untested
+    @throttle.limit_refresh(10)
+    def is_hdmi_connected(self):
+        try:
+            # Read the HDMI status from the file
+            with open('/sys/class/drm/card0-HDMI-A-1/status', 'r') as f:
+                status = f.read().strip()
+
+            # Check if the status is 'disconnected'
+            if status.lower() == 'disconnected':
+                return False
+            else:
+                return True
+        except FileNotFoundError:
+            print("Error: The file '/sys/class/drm/card0-HDMI-A-1/status' does not exist.")
+            return False
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return False
+
     @property
     def screen_width(self):
         return 640
