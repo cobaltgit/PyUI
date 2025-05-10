@@ -351,18 +351,29 @@ class MiyooFlip(Device):
         except Exception as e:
             print(f"Failed to delete file: {e}")
 
+    def fix_sleep_sound_bug(self):
+        self.system_config.reload_config()
+        proper_volume = self.system_config.get_volume()
+        ProcessRunner.run_and_print(["amixer", "cset","numid=5", "0"])
+        time.sleep(0.2)  
+        ProcessRunner.run_and_print(["amixer", "cset","numid=5", str(proper_volume*5)])
+
+
     def run_game(self, file_path):
         #file_path = /mnt/SDCARD/Roms/FAKE08/Alpine Alpaca.p8
         #miyoo maps it to /media/sdcard0/Emu/FAKE08/../../Roms/FAKE08/Alpine Alpaca.p8
         miyoo_app_path = self.convert_game_path_to_miyoo_path(file_path)
         self.write_cmd_to_run(f'''chmod a+x "/media/sdcard0/Emu/FC/../.emu_setup/standard_launch.sh";"/media/sdcard0/Emu/FC/../.emu_setup/standard_launch.sh" "{miyoo_app_path}"''')
 
+        self.fix_sleep_sound_bug()
         print(f"About to launch /mnt/SDCARD/Emu/.emu_setup/standard_launch.sh {file_path} | {miyoo_app_path}")
         subprocess.run(["/mnt/SDCARD/Emu/.emu_setup/standard_launch.sh",file_path])
+
         self.delete_cmd_to_run()
 
     def run_app(self, args, dir = None):
         print(f"About to launch app {args}")
+        self.fix_sleep_sound_bug()
         if(dir is not None):
             subprocess.run(args, cwd = dir)
         else:
