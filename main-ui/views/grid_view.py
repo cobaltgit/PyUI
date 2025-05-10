@@ -32,13 +32,10 @@ class GridView:
         self.rows = rows
         self.cols = cols
 
-        #TODO Get padding from theme
         if(rows > 1):
             self.font_purpose = FontPurpose.GRID_MULTI_ROW
-            self.font_bg_pad = 12
         else:
             self.font_purpose = FontPurpose.GRID_ONE_ROW
-            self.font_bg_pad = 0
 
         self.selected_bg = selected_bg
      
@@ -50,12 +47,12 @@ class GridView:
         self.selected = min(len(self.options)-1, self.selected)
         
         while(self.selected < self.current_left):
-            self.current_left -= (self.cols*2)
-            self.current_right -= (self.cols*2)
+            self.current_left -= (self.cols*self.rows)
+            self.current_right -= (self.cols*self.rows)
 
         while(self.selected >= self.current_right):
-            self.current_left += (self.cols*2)
-            self.current_right += (self.cols*2)
+            self.current_left += (self.cols*self.rows)
+            self.current_right += (self.cols*self.rows)
 
     def _render(self):
         self.display.clear(self.top_bar_text)
@@ -67,16 +64,12 @@ class GridView:
         x_pad = 9 * self.cols
         usable_width = self.device.screen_width - (2 * x_pad)
         icon_width = usable_width / self.cols  # Initial icon width
-
-        y_pad = self.display.get_top_bar_height() + 5
-        usable_height = self.device.screen_height - (2 * y_pad)
-        icon_height = usable_height / self.rows  # Initial icon width
-        total_gap_height =  (self.rows - 1) * 10 if self.rows > 1 else 0
-        y_gap = total_gap_height / (self.rows - 1)  if self.rows > 1 else 0
         
         for visible_index, imageTextPair in enumerate(visible_options):
 
             actual_index = self.current_left + visible_index
+            print(f"actual_index = {actual_index}")
+            print(f"self.selected = {self.selected}")
             image_path = imageTextPair.get_image_path_selected() if actual_index == self.selected else imageTextPair.get_image_path()
             
             x_index = visible_index % self.cols

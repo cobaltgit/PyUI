@@ -63,8 +63,8 @@ class GameSystemSelectMenu:
                 view_type=self.theme.get_view_type_for_system_select_menu(),
                 top_bar_text="Game", 
                 options=systems_list, 
-                cols=4, 
-                rows=2,
+                cols=self.theme.get_game_system_select_col_count(), 
+                rows=self.theme.get_game_system_select_row_count(),
                 selected_index=selected.get_index())
         else:
             view.set_options(systems_list)
