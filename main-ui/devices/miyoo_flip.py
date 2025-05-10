@@ -445,7 +445,7 @@ class MiyooFlip(Device):
                 ["ping", "-c", "1", "1.1.1.1"],
                 timeout=1)
             
-            return not ("Network is unreachable") in result.stderr
+            return "Network is unreachable" not in result.stderr
 
         except subprocess.TimeoutExpired:
             return False
