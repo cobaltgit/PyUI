@@ -225,9 +225,7 @@ class MiyooFlip(Device):
 
     @property
     def lumination(self):
-        with open("/sys/class/backlight/backlight/brightness", "r") as f:
-            true_lumination = f.read().strip()
-        return self._map_system_lumination_to_miyoo_scale(int(true_lumination))
+        return self.system_config.lumination
 
     def lower_contrast(self):
         self.system_config.reload_config()
@@ -246,7 +244,6 @@ class MiyooFlip(Device):
     @property
     def contrast(self):
         return self.system_config.get_contrast()
-    
     
     def lower_brightness(self):
         self.system_config.reload_config()
