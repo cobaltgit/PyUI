@@ -83,9 +83,14 @@ class Display:
 
     def _load_bg_texture(self):
         self.bg_path = self.theme.background
-        surf = sdl2.ext.load_image(self.theme.background)
-        self.background_texture = sdl2.SDL_CreateTextureFromSurface(self.renderer.sdlrenderer, surf)
-        sdl2.SDL_FreeSurface(surf)
+        # Load the image into an SDL_Surface
+        surface = sdl2.sdlimage.IMG_Load(self.bg_path.encode('utf-8'))
+        if not surface:
+            print(f"Failed to load image: {self.bg_path}")
+        self.background_texture = sdl2.SDL_CreateTextureFromSurface(self.renderer.renderer, surface)
+        if not self.background_texture:
+            sdl2.SDL_FreeSurface(surface)
+            print(f"Failed to create texture from surface")
 
     def _check_for_bg_change(self):
         if self.bg_path != self.theme.background:
@@ -110,7 +115,8 @@ class Display:
     def clear(self, screen):
         self.screen = screen
         self._check_for_bg_change()
-        sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
+        if(self.background_texture is not None):
+            sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
         self.top_bar.render_top_bar(self.screen)
         self.bottom_bar.render_bottom_bar()
 
