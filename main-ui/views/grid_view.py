@@ -126,10 +126,10 @@ class GridView:
                 self.selected+=1
                 self.correct_selected_for_off_list()
             elif self.controller.last_input() == ControllerInput.L1:
-                self.selected-=1
+                self.selected-=self.cols*self.rows
                 self.correct_selected_for_off_list()
             elif self.controller.last_input() == ControllerInput.R1:
-                self.selected+=1
+                self.selected+=self.cols*self.rows
                 self.correct_selected_for_off_list()
             if self.controller.last_input() == ControllerInput.DPAD_UP:
                 self.selected-=self.cols
