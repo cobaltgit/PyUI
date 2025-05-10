@@ -56,6 +56,13 @@ class SystemConfig:
     def get_hibernate(self):
         return self.config.get("hibernate")
 
+    @property
+    def lumination(self):
+        return self.config.get("lumination")
+    
+    def set_lumination(self, value):
+        self.config["lumination"] = value
+    
     def get_lumination(self):
         return self.config.get("lumination")
 

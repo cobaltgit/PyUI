@@ -51,7 +51,7 @@ class Device(ABC):
     
     @property
     @abstractmethod
-    def brightness(self):
+    def lumination(self):
         pass
 
     @property
@@ -130,11 +130,11 @@ class Device(ABC):
         pass
 
     @abstractmethod
-    def lower_brightness(self):
+    def lower_lumination(self):
         pass
 
     @abstractmethod
-    def raise_brightness(self):
+    def raise_lumination(self):
         pass
 
     @abstractmethod
