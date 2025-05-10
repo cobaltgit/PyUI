@@ -113,6 +113,12 @@ class GridView:
             self.display.add_index_text(self.selected+1, len(self.options))            
         self.display.present()
 
+    def get_selected_option(self):
+        if 0 <= self.selected < len(self.options):
+            return self.options[self.selected]
+        else:
+            return None
+
     def get_selection(self, select_controller_inputs = [ControllerInput.A]):
         self._render()
         
@@ -136,8 +142,8 @@ class GridView:
                 self.selected+=self.cols
                 self.correct_selected_for_off_list()
             elif self.controller.last_input() in select_controller_inputs:
-                return Selection(self.options[self.selected],self.controller.last_input(), self.selected)
+                return Selection(self.get_selected_option(),self.controller.last_input(), self.selected)
             elif self.controller.last_input() == ControllerInput.B:
-                return Selection(self.options[self.selected],self.controller.last_input(), self.selected)
+                return Selection(self.get_selected_option(),self.controller.last_input(), self.selected)
                 
-        return Selection(self.options[self.selected],None, self.selected)
+        return Selection(self.get_selected_option(),None, self.selected)
