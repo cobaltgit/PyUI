@@ -71,7 +71,7 @@ class SettingsMenu:
             self.device.change_volume(+1)
 
     def show_on_screen_keyboard(self, input):
-        print(self.on_screen_keyboard.get_input())
+        print(self.on_screen_keyboard.get_input("On Screen Keyboard Test"))
 
     def show_wifi_menu(self, input):
         if(ControllerInput.DPAD_LEFT == input or ControllerInput.DPAD_RIGHT == input):

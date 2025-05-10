@@ -32,7 +32,7 @@ class OnScreenKeyboard:
             [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "] 
         ]
 
-    def get_input(self, title_text = None):
+    def get_input(self, title_text):
         self.shifted = False
         self.caps = False
 

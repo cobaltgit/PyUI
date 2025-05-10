@@ -16,7 +16,7 @@ class SearchedRomsMenu(RomsMenuCommon):
         super().__init__(display,controller,device,theme)
         self.rom_select_options_builder = RomSelectOptionsBuilder(device, theme)
         on_screen_keyboard = OnScreenKeyboard(display,controller,device,theme)
-        self.search_str = on_screen_keyboard.get_input().upper()
+        self.search_str = on_screen_keyboard.get_input("Rom Search:").upper()
 
     def include_rom(self,rom_file_path):
         rom_file_name = os.path.splitext(os.path.basename(rom_file_path))[0]
