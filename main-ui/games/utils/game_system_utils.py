@@ -30,14 +30,8 @@ class GameSystemUtils:
         except FileNotFoundError:
             return []  # or handle the error as needed
         
-        # Step 2–3: Check if the system is active
-        for folder in folders:
-            if self.is_system_active(folder):
-                active_systems.append(folder)
-        
-        # Step 4: Sort the list alphabetically
-        active_systems.sort()
-
-        # Step 5: Return the list
-        return active_systems
- 
+        # Step 2: return a sorted list of active systems
+        return sorted(
+            folder for folder in folders
+            if self.is_system_active(folder)
+        )
