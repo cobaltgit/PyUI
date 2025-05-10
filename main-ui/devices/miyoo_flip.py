@@ -168,28 +168,18 @@ class MiyooFlip(Device):
             return 0
 
     def _map_miyoo_scale_to_system_lumination(self, lumination_level):
-        if lumination_level == 10:
-            return 255
-        elif lumination_level == 9:
-            return 225
-        elif lumination_level == 8:
-            return 200
-        elif lumination_level == 7:
-            return 175
-        elif lumination_level == 6:
-            return 150
-        elif lumination_level == 5:
-            return 125
-        elif lumination_level == 4:
-            return 100
-        elif lumination_level == 3:
-            return 75
-        elif lumination_level == 2:
-            return 50
-        elif lumination_level == 1:
-            return 25
-        else: 
-            return 1
+        match lumination_level:
+            case 10: return 255
+            case 9: return 225
+            case 8: return 200
+            case 7: return 175
+            case 6: return 150
+            case 5: return 125
+            case 4: return 100
+            case 3: return 75
+            case 2: return 50
+            case 1: return 25
+            case _: return 1
     
     def _set_lumination_to_config(self):
         with open("/sys/class/backlight/backlight/brightness", "w") as f:
