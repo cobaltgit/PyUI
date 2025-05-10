@@ -68,8 +68,6 @@ class GridView:
         for visible_index, imageTextPair in enumerate(visible_options):
 
             actual_index = self.current_left + visible_index
-            print(f"actual_index = {actual_index}")
-            print(f"self.selected = {self.selected}")
             image_path = imageTextPair.get_image_path_selected() if actual_index == self.selected else imageTextPair.get_image_path()
             
             x_index = visible_index % self.cols

@@ -11,6 +11,7 @@ from games.utils.rom_utils import RomUtils
 from menus.games.roms_menu_common import RomsMenuCommon
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
+from games.utils.game_system import GameSystem 
 
 
 class GameSelectMenu(RomsMenuCommon):
@@ -35,8 +36,8 @@ class GameSelectMenu(RomsMenuCommon):
         favorites = self._build_favorites_dict()
         start_time = time.time()
 
-        resolved_folder = str(Path(self.rom_utils.get_system_rom_directory(self.game_system)).resolve())
-        for rom_file_path in self.rom_utils.get_roms(self.game_system):
+        resolved_folder = str(Path(self.rom_utils.get_system_rom_directory(self.game_system.folder_name)).resolve())
+        for rom_file_path in self.rom_utils.get_roms(self.game_system.folder_name):
             rom_file_name = os.path.basename(rom_file_path)
             img_path = self._get_image_path(rom_file_path)
             resolved_file_path = resolved_folder+"/"+rom_file_name
@@ -46,7 +47,7 @@ class GameSelectMenu(RomsMenuCommon):
                     primary_text=self._remove_extension(rom_file_name),
                     image_path=img_path,
                     image_path_selected=img_path,
-                    description=self.game_system, 
+                    description=self.game_system.folder_name, 
                     icon=icon,
                     value=rom_file_path)
             )
@@ -54,6 +55,6 @@ class GameSelectMenu(RomsMenuCommon):
 
         return rom_list
 
-    def run_rom_selection(self,game_system) :
+    def run_rom_selection(self,game_system : GameSystem) :
         self.game_system = game_system
-        self._run_rom_selection(game_system)
+        self._run_rom_selection(game_system.display_name)
