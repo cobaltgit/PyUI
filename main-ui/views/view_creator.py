@@ -89,7 +89,7 @@ class ViewCreator():
                     selected_index=selected_index,
                     show_icons=ImageListView.DONT_SHOW_ICONS,
                     image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
-                    selected_bg=None
+                    selected_bg=self.theme.get_popup_menu_selected_bg()
                 )
             case ViewType.GRID_VIEW:
                 return GridView(
