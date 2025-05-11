@@ -15,7 +15,7 @@ class TextListView(NonDescriptiveListView):
     DONT_SHOW_ICONS = False
 
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text,
-                 options: List[GridOrListEntry], img_offset_x : int, img_offset_y : int, img_width : int, img_height: int,
+                 options: List[GridOrListEntry], 
                  selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None):
         super().__init__(display=display,
                          controller=controller,
@@ -27,11 +27,6 @@ class TextListView(NonDescriptiveListView):
                          show_icons=show_icons,
                          image_render_mode=image_render_mode,
                          selected_bg=selected_bg)
-
-        self.img_offset_x = img_offset_x
-        self.img_offset_y = img_offset_y
-        self.img_width = img_width
-        self.img_height = img_height
     
 
     def _render_text(self, visible_options):
