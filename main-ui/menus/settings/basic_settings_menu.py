@@ -119,7 +119,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
             )
         option_list.append(
                 GridOrListEntry(
-                        primary_text="Lumination",
+                        primary_text="Backlight",
                         value_text="<    " + str(self.device.lumination) + "    >",
                         image_path=None,
                         image_path_selected=None,
