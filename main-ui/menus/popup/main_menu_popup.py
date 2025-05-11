@@ -85,15 +85,13 @@ class MainMenuPopup:
             options=popup_options,
             top_bar_text="Main Menu Sub Options",
             selected_index=0,
-            cols=4,
-            rows=1)
+            cols=self.theme.popup_menu_cols,
+            rows=self.theme.popup_menu_rows)
         
         while (popup_selection := popup_view.get_selection()):
             if(popup_selection.get_input() is not None):
                 break
         
-        print(f"popup_selection={popup_selection}")
-
         if(popup_selection.get_input() is not None):
             popup_view.view_finished()
 

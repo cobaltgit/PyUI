@@ -395,3 +395,11 @@ class Theme():
     @property
     def pop_menu_text_padding(self):
         return getattr(self, "popupMenuTextPad", 20)
+
+    @property
+    def popup_menu_cols(self):
+        return getattr(self, "popupMenuCols", 4)
+
+    @property
+    def popup_menu_rows(self):
+        return getattr(self, "popupMenuRows", 1)
