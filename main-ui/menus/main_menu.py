@@ -7,6 +7,7 @@ from display.render_mode import RenderMode
 from menus.app.app_menu import AppMenu
 from menus.games.favorites_menu import FavoritesMenu
 from menus.games.game_system_select_menu import GameSystemSelectMenu
+from menus.settings.basic_settings_menu import BasicSettingsMenu
 from views.pop_text_list_view import PopupTextListView
 from menus.games.recents_menu import RecentsMenu
 from menus.games.searched_roms_menu import SearchedRomsMenu
@@ -30,7 +31,7 @@ class MainMenu:
         self.app_menu = AppMenu(display,controller,device,theme)
         self.favorites_menu = FavoritesMenu(display,controller,device,theme)
         self.recents_menu = RecentsMenu(display,controller,device,theme)
-        self.settings_menu = SettingsMenu(display,controller,device,theme, config)
+        self.settings_menu = BasicSettingsMenu(display,controller,device,theme, config)
         self.view_creator = ViewCreator(display,controller,device,theme)
 
     def run_popup_menu_selection(self):
