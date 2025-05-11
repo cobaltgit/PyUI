@@ -31,13 +31,19 @@ class PopupTextListView(TextListView):
         self.clear_display_each_render_cycle = False
         self.include_index_text = False
 
-        self.starting_x_offset = device.screen_width//4 + 20 #TODO get 20 from somewhere
-        self.base_y_offset = device.screen_height//4
-        self.device.screen_width//4
-        self.display.render_box(
-            color=(0,0,0), 
-            x=device.screen_width//4, 
-            y=device.screen_height//4, 
-            w=device.screen_width//4 * 2, 
-            h=device.screen_height//4 * 2)
+        print(f"theme.pop_menu_x_offset = {theme.pop_menu_x_offset}, device.screen_width = {device.screen_width}")
+        x = int(theme.pop_menu_x_offset * device.screen_width)
+        y = int(theme.pop_menu_y_offset * device.screen_height)
 
+        w = int(theme.pop_menu_width * device.screen_width)
+        h = int(theme.pop_menu_height * device.screen_height)
+
+        self.starting_x_offset = x + self.theme.pop_menu_text_padding
+        self.base_y_offset = y
+        self.device.screen_width//4
+        self.display.render_image(
+            image_path=self.theme.menu_popup_bg_large,
+            x=x,
+            y=y,
+            render_mode=RenderMode.TOP_LEFT_ALIGNED
+        )

@@ -376,3 +376,23 @@ class Theme():
     
     def get_game_system_select_row_count(self):
         return getattr(self, "gameSystemSelectRowCount", 2)
+    
+    @property
+    def pop_menu_x_offset(self):
+        return getattr(self, "popupMenuXOffsetPercent", 25)/100
+    
+    @property
+    def pop_menu_y_offset(self):
+        return getattr(self, "popupMenuYOffsetPercent", 25)/100
+    
+    @property
+    def pop_menu_width(self):
+        return getattr(self, "popupMenuWidthPercent", 50)/100
+    
+    @property
+    def pop_menu_height(self):
+        return getattr(self, "popupMenuHeightPercent", 50)/100
+    
+    @property
+    def pop_menu_text_padding(self):
+        return getattr(self, "popupMenuTextPad", 20)
