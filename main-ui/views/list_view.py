@@ -23,6 +23,10 @@ class ListView(ABC):
         else:
             return None
 
+    def selection_made(self):
+        #Override as needed
+        pass
+
     def get_selection(self, select_controller_inputs = [ControllerInput.A]):
         self._render_common()
         
@@ -32,12 +36,14 @@ class ListView(ABC):
             elif self.controller.last_input() == ControllerInput.DPAD_DOWN:
                 self.adjust_selected(1)
             elif self.controller.last_input() in select_controller_inputs: #requested inputs have priority over the rest
+                self.selection_made()
                 return Selection(self.get_selected_option(),self.controller.last_input(), self.selected)
             elif self.controller.last_input() == ControllerInput.L1:
                 self.adjust_selected(-1*self.max_rows+1)
             elif self.controller.last_input() == ControllerInput.R1:
                 self.adjust_selected(self.max_rows-1)
             elif self.controller.last_input() == ControllerInput.B:
+                self.selection_made()
                 return Selection(self.get_selected_option(),self.controller.last_input(), self.selected)
 
             self._render_common()
@@ -46,8 +52,8 @@ class ListView(ABC):
         return Selection(self.get_selected_option(), None, self.selected)
     
     def _render_common(self):
-        if(self.clear_display_each_render_cycle):
-            self.display.clear(self.top_bar_text)
+        #if(self.clear_display_each_render_cycle):
+        self.display.clear(self.top_bar_text)
         
         self.adjust_selected_top_bottom_for_overflow()
 

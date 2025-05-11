@@ -74,9 +74,11 @@ class MainMenu:
                 break
         
         print(f"popup_selection={popup_selection}")
+
         if(ControllerInput.A == popup_selection.get_input()): 
             if("Rom Search" == popup_selection.get_selection().get_primary_text()):
                 SearchedRomsMenu(self.display,self.controller,self.device,self.theme).run_rom_selection()
+
 
     def run_main_menu_selection(self):
         selected = Selection(None,None,0)

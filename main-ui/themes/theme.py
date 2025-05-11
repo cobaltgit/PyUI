@@ -384,15 +384,7 @@ class Theme():
     @property
     def pop_menu_y_offset(self):
         return getattr(self, "popupMenuYOffsetPercent", 25)/100
-    
-    @property
-    def pop_menu_width(self):
-        return getattr(self, "popupMenuWidthPercent", 50)/100
-    
-    @property
-    def pop_menu_height(self):
-        return getattr(self, "popupMenuHeightPercent", 50)/100
-    
+        
     @property
     def pop_menu_text_padding(self):
         return getattr(self, "popupMenuTextPad", 20)

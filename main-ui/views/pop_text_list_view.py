@@ -1,4 +1,5 @@
 
+import time
 from typing import List
 from controller.controller import Controller
 from devices.device import Device
@@ -31,12 +32,9 @@ class PopupTextListView(TextListView):
         self.clear_display_each_render_cycle = False
         self.include_index_text = False
 
-        print(f"theme.pop_menu_x_offset = {theme.pop_menu_x_offset}, device.screen_width = {device.screen_width}")
+
         x = int(theme.pop_menu_x_offset * device.screen_width)
         y = int(theme.pop_menu_y_offset * device.screen_height)
-
-        w = int(theme.pop_menu_width * device.screen_width)
-        h = int(theme.pop_menu_height * device.screen_height)
 
         self.starting_x_offset = x + self.theme.pop_menu_text_padding
         self.base_y_offset = y
@@ -47,3 +45,12 @@ class PopupTextListView(TextListView):
             y=y,
             render_mode=RenderMode.TOP_LEFT_ALIGNED
         )
+        self.display.present()
+        self.display.lock_current_image_as_bg()
+
+    def selection_made(self):
+        #TODO this can be handled better. Currently we are assuming
+        #The popup menu will close on selection (which maybe is okay?)
+        #Otherwise we will need to move it external to PopupTextListView
+        #to clear the backup bg. Which maybe is better?
+        self.display.unlock_current_image_as_bg()
