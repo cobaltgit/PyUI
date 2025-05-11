@@ -61,6 +61,38 @@ class MainMenu:
             icon=self.theme.settings,
             value="Future Option 3"
         ))
+        popup_options.append(GridOrListEntry(
+            primary_text="Future Option 4",
+            image_path=self.theme.settings,
+            image_path_selected=self.theme.settings_selected,
+            description="",
+            icon=self.theme.settings,
+            value="Future Option 3"
+        ))
+        popup_options.append(GridOrListEntry(
+            primary_text="Future Option 5",
+            image_path=self.theme.settings,
+            image_path_selected=self.theme.settings_selected,
+            description="",
+            icon=self.theme.settings,
+            value="Future Option 3"
+        ))
+        popup_options.append(GridOrListEntry(
+            primary_text="Future Option 6",
+            image_path=self.theme.settings,
+            image_path_selected=self.theme.settings_selected,
+            description="",
+            icon=self.theme.settings,
+            value="Future Option 3"
+        ))
+        popup_options.append(GridOrListEntry(
+            primary_text="Future Option 7",
+            image_path=self.theme.settings,
+            image_path_selected=self.theme.settings_selected,
+            description="",
+            icon=self.theme.settings,
+            value="Future Option 3"
+        ))
         popup_view = self.view_creator.create_view(
             view_type=ViewType.POPUP_TEXT_LIST_VIEW,
             options=popup_options,

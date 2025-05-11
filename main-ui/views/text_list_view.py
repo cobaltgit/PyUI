@@ -16,7 +16,7 @@ class TextListView(NonDescriptiveListView):
 
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text,
                  options: List[GridOrListEntry], 
-                 selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None):
+                 selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None, usable_height = None):
         super().__init__(display=display,
                          controller=controller,
                          device=device,
@@ -26,7 +26,8 @@ class TextListView(NonDescriptiveListView):
                          selected_index=selected_index,
                          show_icons=show_icons,
                          image_render_mode=image_render_mode,
-                         selected_bg=selected_bg)
+                         selected_bg=selected_bg,
+                         usable_height=usable_height)
         self.starting_x_offset = 20  #TODO get this from somewhere
         self.view_x = 0
         self.view_y = 0

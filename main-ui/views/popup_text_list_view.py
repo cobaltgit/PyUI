@@ -23,7 +23,8 @@ class PopupTextListView(TextListView):
                          selected_index=selected_index,
                          show_icons=show_icons,
                          image_render_mode=image_render_mode,
-                         selected_bg=selected_bg)
+                         selected_bg=selected_bg,
+                         usable_height=int(display.get_image_dimensions(theme.menu_popup_bg_large)[1]))
 
         self.display : Display= display
         self.controller : Controller = controller
