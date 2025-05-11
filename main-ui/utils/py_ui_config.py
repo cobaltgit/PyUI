@@ -54,8 +54,8 @@ class PyUiConfig:
     def clear(self):
         self._data.clear()
 
-    def get_hold_delay_ms(self):
-        return self._data.get("holdDelayMs", 120)/1000
+    def get_turbo_delay_ms(self):
+        return self._data.get("turboDelayMs", 120)/1000
 
-    def set_hold_delay_ms(self, delay):
-        self._data["holdDelayMs"] = delay
+    def set_turbo_delay_ms(self, delay):
+        self._data["turboDelayMs"] = delay

@@ -18,7 +18,7 @@ class Controller:
         self.device = device
         self.last_input_time = 0
         self.config = config
-        self.hold_delay = config.get_hold_delay_ms()
+        self.hold_delay = config.get_turbo_delay_ms()
 
     def _init_controller(self):
         #Force new connection to be processed byt SDL by polling it off the queue
@@ -71,7 +71,7 @@ class Controller:
             time.sleep(0.005)  # Prevent tight CPU loop
 
         if not self.still_held_down():
-            self.hold_delay = self.config.get_hold_delay_ms()
+            self.hold_delay = self.config.get_turbo_delay_ms()
             self._last_event().type = 0  # Clear last event
             reached_timeout = False
 

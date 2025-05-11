@@ -55,7 +55,7 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
         print(self.on_screen_keyboard.get_input("On Screen Keyboard Test"))
 
     def change_hold_delay(self, input):
-        current_delay = self.config.get_hold_delay_ms() * 1000
+        current_delay = self.config.get_turbo_delay_ms() * 1000
 
         if(ControllerInput.DPAD_LEFT == input):
             if(current_delay > 0):
@@ -70,7 +70,7 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
             if(current_delay < 1000):
                 current_delay+=100
 
-        self.config.set_hold_delay_ms(current_delay)
+        self.config.set_turbo_delay_ms(current_delay)
         self.config.save()
 
 
@@ -113,8 +113,8 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
 
         option_list.append(
                 GridOrListEntry(
-                        primary_text="Hold Delay (mS)",
-                        value_text="<    " + str(int(self.config.get_hold_delay_ms()*1000)) + "    >",
+                        primary_text="Menu Turbo Delay (mS)",
+                        value_text="<    " + str(int(self.config.get_turbo_delay_ms()*1000)) + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
@@ -122,7 +122,7 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
                         value=self.change_hold_delay
                     )
         )
-        
+
         option_list.append(
                 GridOrListEntry(
                         primary_text="On Screen Keyboard",
