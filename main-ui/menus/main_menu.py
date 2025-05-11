@@ -8,7 +8,7 @@ from menus.app.app_menu import AppMenu
 from menus.games.favorites_menu import FavoritesMenu
 from menus.games.game_system_select_menu import GameSystemSelectMenu
 from menus.settings.basic_settings_menu import BasicSettingsMenu
-from views.pop_text_list_view import PopupTextListView
+from views.popup_text_list_view import PopupTextListView
 from menus.games.recents_menu import RecentsMenu
 from menus.games.searched_roms_menu import SearchedRomsMenu
 from menus.settings.settings_menu import SettingsMenu
@@ -74,6 +74,9 @@ class MainMenu:
                 break
         
         print(f"popup_selection={popup_selection}")
+
+        if(popup_selection.get_input() is not None):
+            popup_view.view_finished()
 
         if(ControllerInput.A == popup_selection.get_input()): 
             if("Rom Search" == popup_selection.get_selection().get_primary_text()):

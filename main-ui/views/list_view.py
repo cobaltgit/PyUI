@@ -3,10 +3,12 @@ from abc import ABC, abstractmethod
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from views.selection import Selection
+from views.view import View
 
 
-class ListView(ABC):
+class ListView(View):
     def __init__(self, controller: Controller):
+        super().__init__()
         self.controller = controller
         self.current_top = 0
         self.current_bottom = 0

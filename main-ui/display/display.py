@@ -334,3 +334,6 @@ class Display:
             self.theme.text_color(FontPurpose.LIST_INDEX), 
             FontPurpose.LIST_INDEX, 
             RenderMode.BOTTOM_RIGHT_ALIGNED)
+
+    def get_current_top_bar_title(self):
+        return self.top_bar.get_current_title()

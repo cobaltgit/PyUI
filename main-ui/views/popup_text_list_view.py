@@ -18,7 +18,7 @@ class PopupTextListView(TextListView):
                         controller=controller,
                          device=device,
                          theme=theme,
-                         top_bar_text="",
+                         top_bar_text=display.get_current_top_bar_title(),
                          options=options,
                          selected_index=selected_index,
                          show_icons=show_icons,
@@ -48,9 +48,5 @@ class PopupTextListView(TextListView):
         self.display.present()
         self.display.lock_current_image_as_bg()
 
-    def selection_made(self):
-        #TODO this can be handled better. Currently we are assuming
-        #The popup menu will close on selection (which maybe is okay?)
-        #Otherwise we will need to move it external to PopupTextListView
-        #to clear the backup bg. Which maybe is better?
+    def view_finished(self):
         self.display.unlock_current_image_as_bg()
