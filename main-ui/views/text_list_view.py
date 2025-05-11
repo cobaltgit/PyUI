@@ -27,13 +27,14 @@ class TextListView(NonDescriptiveListView):
                          show_icons=show_icons,
                          image_render_mode=image_render_mode,
                          selected_bg=selected_bg)
+        self.starting_x_offset = 20  #TODO get this from somewhere
     
 
     def _render_text(self, visible_options):
         for visible_index, (imageTextPair) in enumerate(visible_options):
             actual_index = self.current_top + visible_index
            
-            x_value = 20 #TODO get this from somewhere
+            x_value = self.starting_x_offset
             y_value = self.base_y_offset + visible_index * self.line_height
 
             if actual_index == self.selected:

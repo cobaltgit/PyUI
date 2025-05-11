@@ -230,6 +230,14 @@ class Display:
     def render_image_centered(self, image_path: str, x: int, y: int, target_width=None, target_height=None):
         return self.render_image(image_path,x,y,RenderMode.TOP_CENTER_ALIGNED, target_width, target_height)
 
+    def render_box(self, color, x, y, w, h):
+        # RGB (0,0,0) for black, Alpha 255 (fully opaque)
+        sdl2.SDL_SetRenderDrawColor(self.renderer.renderer, color[0], color[1], color[2], 255)  
+        # Define the rectangle's position and size (320x240 at position 160x120)
+        rect = sdl2.SDL_Rect(x, y, w, h)
+        # Draw the filled rectangle
+        sdl2.SDL_RenderFillRect(self.renderer.renderer, rect)
+
     def get_line_height(self, purpose : FontPurpose):
         return self.fonts[purpose].line_height
         
