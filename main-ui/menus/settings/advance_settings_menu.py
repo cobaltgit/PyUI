@@ -54,6 +54,25 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
     def show_on_screen_keyboard(self, input):
         print(self.on_screen_keyboard.get_input("On Screen Keyboard Test"))
 
+    def change_hold_delay(self, input):
+        current_delay = self.config.get_hold_delay_ms() * 1000
+
+        if(ControllerInput.DPAD_LEFT == input):
+            if(current_delay > 0):
+                current_delay-=1
+        elif(ControllerInput.DPAD_RIGHT == input):
+            if(current_delay < 1000):
+                current_delay+=1
+        if(ControllerInput.L1 == input):
+            if(current_delay > 0):
+                current_delay-=100
+        elif(ControllerInput.R1 == input):
+            if(current_delay < 1000):
+                current_delay+=100
+
+        self.config.set_hold_delay_ms(current_delay)
+        self.config.save()
+
 
     def build_options_list(self):
         option_list = []
@@ -91,6 +110,19 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
                         value=self.saturation_adjust
                     )
             )
+
+        option_list.append(
+                GridOrListEntry(
+                        primary_text="Hold Delay (mS)",
+                        value_text="<    " + str(int(self.config.get_hold_delay_ms()*1000)) + "    >",
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.change_hold_delay
+                    )
+        )
+        
         option_list.append(
                 GridOrListEntry(
                         primary_text="On Screen Keyboard",
@@ -102,6 +134,7 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
                         value=self.show_on_screen_keyboard
                     )
             )
+        
         option_list.append(
                 GridOrListEntry(
                         primary_text="Reboot",
@@ -112,5 +145,7 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
                         value=self.reboot
                 )
         )
+
+            
         
         return option_list

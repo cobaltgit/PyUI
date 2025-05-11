@@ -7,6 +7,7 @@ class PyUiConfig:
 
     def save(self):
         self._write_to_file("/mnt/SDCARD/App/PyUI/main-ui/config.json")
+        self.load()
 
     def load(self):
         self._read_from_file("/mnt/SDCARD/App/PyUI/main-ui/config.json")
@@ -55,3 +56,6 @@ class PyUiConfig:
 
     def get_hold_delay_ms(self):
         return self._data.get("holdDelayMs", 120)/1000
+
+    def set_hold_delay_ms(self, delay):
+        self._data["holdDelayMs"] = delay

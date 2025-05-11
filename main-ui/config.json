@@ -1,4 +1,5 @@
 {
     "theme": "SPRUCE",
-    "theme_dir": "/mnt/SDCARD/Themes/"
+    "theme_dir": "/mnt/SDCARD/Themes/",
+    "holdDelayMs": 300
 }
