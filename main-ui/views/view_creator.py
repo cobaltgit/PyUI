@@ -147,6 +147,6 @@ class ViewCreator():
                     selected_index=selected_index
                 )
             case _:
-                print(f"Error: unrecognized view_type {view_type}")
+                PyUiLogger.get_logger().error(f"Error: unrecognized view_type {view_type}")
 
                 pass

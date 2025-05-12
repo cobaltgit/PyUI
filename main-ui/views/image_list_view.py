@@ -42,7 +42,6 @@ class ImageListView(NonDescriptiveListView):
         for visible_index, (imageTextPair) in enumerate(visible_options):
             offset_text_for_image = False
             actual_index = self.current_top + visible_index
-            print(f"self.text_to_image_relationship = {self.text_to_image_relationship}")
             if(TextToImageRelationship.LEFT_OF_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
                 y_value = self.base_y_offset + self.line_height//2

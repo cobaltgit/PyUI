@@ -5,6 +5,7 @@ from devices.charge.charge_status import ChargeStatus
 from devices.wifi.wifi_status import WifiStatus
 from display.font_purpose import FontPurpose
 from display.render_mode import RenderMode
+from utils.logger import PyUiLogger
 from views.view_type import ViewType
 
 class Theme():
@@ -32,7 +33,7 @@ class Theme():
             setattr(self, key, value)
 
         description = getattr(self, "description", "UNKNOWN")
-        print(f"Loaded Theme : {description}")
+        PyUiLogger.get_logger().info(f"Loaded Theme : {description}")
      
 
     @property
@@ -224,7 +225,7 @@ class Theme():
             else:
                 return "/mnt/SDCARD/Themes/SPRUCE/nunwen.ttf"
         except Exception as e:
-            print(f"get_font error occurred: {e}")
+            PyUiLogger.get_logger().error(f"get_font error occurred: {e}")
             return "/mnt/SDCARD/Themes/SPRUCE/nunwen.ttf"
 
     
@@ -256,7 +257,7 @@ class Theme():
                 case _:
                     return self.list["font"]
         except Exception as e:
-            print(f"get_font_size error occurred: {e}")
+            PyUiLogger.get_logger().error(f"get_font_size error occurred: {e}")
             return 20
 
     def text_color(self, font_purpose : FontPurpose):
@@ -287,7 +288,7 @@ class Theme():
                 case _:
                     return self.hex_to_color(self.grid["color"])
         except Exception as e:
-            print(f"text_color error occurred: {e}")
+            PyUiLogger.get_logger().error(f"text_color error occurred: {e}")
             return self.hex_to_color("#808080")
       
     def text_color_selected(self, font_purpose : FontPurpose):
@@ -314,7 +315,7 @@ class Theme():
                 case _:
                     return self.hex_to_color(self.grid["selectedcolor"])
         except Exception as e:
-            print(f"text_color error occurred: {e}")
+            PyUiLogger.get_logger().error(f"text_color error occurred: {e}")
             return self.text_color(font_purpose)
 
     def hex_to_color(self,hex_string):
