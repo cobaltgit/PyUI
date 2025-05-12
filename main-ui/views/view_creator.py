@@ -11,6 +11,7 @@ from views.grid_view import GridView
 from views.image_list_view import ImageListView
 from views.popup_text_list_view import PopupTextListView
 from views.text_list_view import TextListView
+from views.text_to_image_relationship import TextToImageRelationship
 from views.view_type import ViewType
 
 
@@ -48,8 +49,35 @@ class ViewCreator():
                     selected_bg=selected_bg
                 )
             case ViewType.TEXT_AND_IMAGE_LIST_VIEW:
-                img_offset_x = self.device.screen_width - 10
-                img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
+                text_and_image_list_view_mode = self.theme.text_and_image_list_view_mode
+                
+                if("TEXT_LEFT_IMAGE_RIGHT" == text_and_image_list_view_mode):
+                    img_offset_x = self.device.screen_width - 10
+                    img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
+                    image_render = RenderMode.MIDDLE_RIGHT_ALIGNED
+                    text_to_image_relationship = TextToImageRelationship.LEFT_OF_IMAGE
+                elif("TEXT_RIGHT_IMAGE_LEFT" == text_and_image_list_view_mode):
+                    img_offset_x = 10
+                    img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
+                    image_render = RenderMode.MIDDLE_LEFT_ALIGNED
+                    text_to_image_relationship = TextToImageRelationship.RIGHT_OF_IMAGE
+                elif("TEXT_BELOW_IMAGE" == text_and_image_list_view_mode):
+                    img_offset_x = 10
+                    img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
+                    image_render = RenderMode.TOP_CENTER_ALIGNED
+                    text_to_image_relationship = TextToImageRelationship.BELOW_IMAGE
+                elif("TEXT_ABOVE_IMAGE" == text_and_image_list_view_mode):
+                    img_offset_x = 10
+                    img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
+                    image_render = RenderMode.BOTTOM_CENTER_ALIGNED
+                    text_to_image_relationship = TextToImageRelationship.ABOVE_IMAGE
+                elif("TEXT_AROUND_IMAGE" == text_and_image_list_view_mode):
+                    img_offset_x = 10
+                    img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
+                    image_render = RenderMode.MIDDLE_CENTER_ALIGNED
+                    text_to_image_relationship = TextToImageRelationship.TEXT_AROUND_IMAGE
+
+                    
                 return ImageListView(
                     display=self.display, 
                     controller=self.controller, 
@@ -63,7 +91,8 @@ class ViewCreator():
                     img_height=self.theme.rom_image_height,
                     selected_index=selected_index,
                     show_icons=ImageListView.SHOW_ICONS,
-                    image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
+                    image_render_mode=image_render,
+                    text_to_image_relationship=text_to_image_relationship,
                     selected_bg=self.theme.get_list_small_selected_bg()
                 )            
             case ViewType.TEXT_LIST_VIEW:

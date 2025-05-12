@@ -4,6 +4,7 @@ import os
 from devices.charge.charge_status import ChargeStatus
 from devices.wifi.wifi_status import WifiStatus
 from display.font_purpose import FontPurpose
+from display.render_mode import RenderMode
 from views.view_type import ViewType
 
 class Theme():
@@ -403,3 +404,7 @@ class Theme():
     @property
     def popup_menu_rows(self):
         return getattr(self, "popupMenuRows", 1)
+    
+    @property
+    def text_and_image_list_view_mode(self):
+        return getattr(self, "textAndImageListViewMode", "TEXT_RIGHT_IMAGE_LEFT")
