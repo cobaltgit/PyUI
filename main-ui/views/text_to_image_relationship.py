@@ -5,4 +5,3 @@ class TextToImageRelationship(Enum):
     RIGHT_OF_IMAGE = auto()
     ABOVE_IMAGE = auto()
     BELOW_IMAGE = auto()
-    TEXT_AROUND_IMAGE = auto()

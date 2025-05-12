@@ -43,10 +43,19 @@ class ImageListView(NonDescriptiveListView):
             print(f"self.text_to_image_relationship = {self.text_to_image_relationship}")
             if(TextToImageRelationship.LEFT_OF_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
-                y_value = (self.base_y_offset + visible_index * self.line_height)  + self.line_height//2
+                y_value = self.base_y_offset + self.line_height//2
             elif(TextToImageRelationship.RIGHT_OF_IMAGE == self.text_to_image_relationship):
                 x_value = self.img_width + self.img_offset_x
-                y_value = (self.base_y_offset + visible_index * self.line_height)  + self.line_height//2
+                y_value = self.base_y_offset + self.line_height//2
+            elif(TextToImageRelationship.BELOW_IMAGE == self.text_to_image_relationship):
+                x_value = 0 
+                y_pad = 20 #TODO get from somewhere
+                y_value = (self.display.get_top_bar_height() + y_pad*2 + self.img_height)  + self.line_height//2
+            elif(TextToImageRelationship.ABOVE_IMAGE == self.text_to_image_relationship):
+                x_value = 0 
+                y_value = self.base_y_offset + self.line_height//2
+
+            y_value += visible_index * self.line_height
 
             text_pad = 20  #TODO get this from somewhere
             text_x_value = x_value + text_pad

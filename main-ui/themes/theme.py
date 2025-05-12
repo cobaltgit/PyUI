@@ -407,4 +407,4 @@ class Theme():
     
     @property
     def text_and_image_list_view_mode(self):
-        return getattr(self, "textAndImageListViewMode", "TEXT_RIGHT_IMAGE_LEFT")
+        return getattr(self, "textAndImageListViewMode", "TEXT_LEFT_IMAGE_RIGHT")
