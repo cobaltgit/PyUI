@@ -43,13 +43,18 @@ class ImageListView(NonDescriptiveListView):
         self.prev_index = -1
         self.scroll_text_amount = 0
         self.selected_same_entry_time = time.time()
-        self.char_width, self.char_height = self.display.get_text_dimensions(FontPurpose.LIST)
+        self.space_width, self.char_height = self.display.get_text_dimensions(FontPurpose.LIST," ")
 
     def scroll_string(self,text, amt, text_available_width):
         if(self.theme.scroll_rom_selection_text):
             if not text:
                 return text
-            spaces_to_add = (text_available_width // self.char_width) - len(text)
+            text_width, char_height = self.display.get_text_dimensions(FontPurpose.LIST,text)
+            print(f"text_available_width = {text_available_width}")
+            print(f"text_width = {text_width}")
+            print(f"space_width = {self.space_width}")
+            spaces_to_add = ((text_available_width - text_width) // self.space_width)
+            print(f"spaces_to_add = {spaces_to_add}")
             spaces_to_add = max(spaces_to_add, 8)
             text = text + ' ' * spaces_to_add
             amt = amt % len(text)  # Ensure n is within the string length
@@ -59,7 +64,6 @@ class ImageListView(NonDescriptiveListView):
     
     def _render_text(self, visible_options):
         for visible_index, (imageTextPair) in enumerate(visible_options):
-            offset_text_for_image = False
             actual_index = self.current_top + visible_index
             text_available_width = None #just take up as much space as needed
             text_pad = 20  #TODO get this from somewhere
@@ -68,9 +72,9 @@ class ImageListView(NonDescriptiveListView):
                 y_value = self.base_y_offset + self.line_height//2
                 text_available_width = self.get_img_x_starting() - text_pad*2
             elif(TextToImageRelationship.RIGHT_OF_IMAGE == self.text_to_image_relationship):
-                x_value = self.img_width + self.img_offset_x
+                x_value = self.img_width//2 + self.img_offset_x
                 y_value = self.base_y_offset + self.line_height//2
-                text_available_width = self.device.screen_width - self.img_width - self.img_offset_x*2
+                text_available_width = self.device.screen_width - self.img_width - text_pad*2
             elif(TextToImageRelationship.BELOW_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
                 y_pad = 20 #TODO get from somewhere
@@ -81,16 +85,22 @@ class ImageListView(NonDescriptiveListView):
                 y_value = self.base_y_offset + self.line_height//2
                 text_available_width = self.device.screen_width - text_pad * 2
             elif(TextToImageRelationship.TEXT_AROUND_LEFT_IMAGE == self.text_to_image_relationship):
-                offset_text_for_image = True
+                x_value = 0
+                y_value = self.base_y_offset + self.line_height//2
+                text_available_width = self.device.screen_width - text_pad*2
+            elif(TextToImageRelationship.TEXT_AROUND_RIGHT_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
                 y_value = self.base_y_offset + self.line_height//2
-                text_available_width = self.device.screen_width - text_pad * 2
+                text_available_width = self.get_img_x_starting() - text_pad*2
 
             y_value += visible_index * self.line_height
 
-            if(offset_text_for_image and self.is_y_coord_in_img_box(y_value)):
-                x_value += self.img_width + self.img_offset_x
-                text_available_width = text_available_width - self.img_width - self.img_offset_x*2
+            if(TextToImageRelationship.TEXT_AROUND_LEFT_IMAGE == self.text_to_image_relationship and self.is_y_coord_in_img_box(y_value)):
+                x_value += self.img_width//2 + self.img_offset_x
+                text_available_width = self.device.screen_width - self.img_width - text_pad*2
+            elif(TextToImageRelationship.TEXT_AROUND_RIGHT_IMAGE == self.text_to_image_relationship and self.is_y_coord_in_img_box(y_value)):
+                text_available_width = self.device.screen_width - self.img_width - text_pad*2
+
             text_x_value = x_value + text_pad
 
             render_mode=RenderMode.MIDDLE_LEFT_ALIGNED

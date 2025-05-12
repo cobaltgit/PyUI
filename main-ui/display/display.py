@@ -319,8 +319,8 @@ class Display:
         sdl2.SDL_FreeSurface(surface)
         return width, height
     
-    def get_text_dimensions(self, purpose):
-        text = "A"        
+    def get_text_dimensions(self, purpose, text = "A"):
+              
         sdl_color = sdl2.SDL_Color(0,0,0)
         surface = sdl2.sdlttf.TTF_RenderUTF8_Blended(self.fonts[purpose].font, text.encode('utf-8'), sdl_color)
         if not surface:
