@@ -25,7 +25,9 @@ class GameSystemSelectMenuPopup:
 
     def execute_game_search(self, game_system, input_value):
         SearchGamesForSystemMenu(self.display,self.controller,self.device,self.theme, game_system).run_rom_selection()
-
+    
+    def all_system_game_search(self, input_value):
+        SearchedRomsMenu(self.display,self.controller,self.device,self.theme).run_rom_selection()
 
     def run_popup_menu_selection(self, game_system : GameSystem):
         popup_options = []
@@ -36,6 +38,14 @@ class GameSystemSelectMenuPopup:
             description="",
             icon=self.theme.settings,
             value=lambda input_value, game_system=game_system: self.execute_game_search(game_system, input_value)
+        ))
+        popup_options.append(GridOrListEntry(
+            primary_text="All System Game Search",
+            image_path=self.theme.settings,
+            image_path_selected=self.theme.settings_selected,
+            description="",
+            icon=self.theme.settings,
+            value=self.all_system_game_search
         ))
 
         popup_view = self.view_creator.create_view(
