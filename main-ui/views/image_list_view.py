@@ -4,6 +4,7 @@ from controller.controller_inputs import ControllerInput
 from display.display import Display
 from display.font_purpose import FontPurpose
 from display.render_mode import RenderMode
+from display.x_render_option import XRenderOption
 from display.y_render_option import YRenderOption
 import sdl2
 from devices.device import Device
@@ -43,7 +44,7 @@ class ImageListView(NonDescriptiveListView):
         self.scroll_text_amount = 0
         self.selected_same_entry_time = time.time()
 
-    def rotate_string(self,text, amt):
+    def scroll_string(self,text, amt):
         if(self.theme.scroll_rom_selection_text):
             if not text:
                 return text
@@ -57,31 +58,36 @@ class ImageListView(NonDescriptiveListView):
         for visible_index, (imageTextPair) in enumerate(visible_options):
             offset_text_for_image = False
             actual_index = self.current_top + visible_index
-            
+            text_available_width = None #just take up as much space as needed
+            text_pad = 20  #TODO get this from somewhere
             if(TextToImageRelationship.LEFT_OF_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
                 y_value = self.base_y_offset + self.line_height//2
+                text_available_width = self.get_img_x_starting() - text_pad*2
             elif(TextToImageRelationship.RIGHT_OF_IMAGE == self.text_to_image_relationship):
                 x_value = self.img_width + self.img_offset_x
                 y_value = self.base_y_offset + self.line_height//2
+                text_available_width = self.device.screen_width - self.img_width - self.img_offset_x*2
             elif(TextToImageRelationship.BELOW_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
                 y_pad = 20 #TODO get from somewhere
                 y_value = (self.display.get_top_bar_height() + y_pad*2 + self.img_height)  + self.line_height//2
+                text_available_width = self.device.screen_width - text_pad * 2
             elif(TextToImageRelationship.ABOVE_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
                 y_value = self.base_y_offset + self.line_height//2
+                text_available_width = self.device.screen_width - text_pad * 2
             elif(TextToImageRelationship.TEXT_AROUND_LEFT_IMAGE == self.text_to_image_relationship):
                 offset_text_for_image = True
                 x_value = 0 
                 y_value = self.base_y_offset + self.line_height//2
+                text_available_width = self.device.screen_width - text_pad * 2
 
             y_value += visible_index * self.line_height
 
             if(offset_text_for_image and self.is_y_coord_in_img_box(y_value)):
                 x_value += self.img_width + self.img_offset_x
-
-            text_pad = 20  #TODO get this from somewhere
+                text_available_width = text_available_width - self.img_width - self.img_offset_x*2
             text_x_value = x_value + text_pad
 
             render_mode=RenderMode.MIDDLE_LEFT_ALIGNED
@@ -105,10 +111,21 @@ class ImageListView(NonDescriptiveListView):
                 icon_width, icon_height = self.display.render_image(imageTextPair.get_icon(),text_x_value, y_value, render_mode)
                 text_x_value += icon_width
 
-
-            self.display.render_text(self.rotate_string(imageTextPair.get_primary_text(),scroll_amt), text_x_value, y_value, color, FontPurpose.LIST,
-                                    render_mode)
+            self.display.render_text(self.scroll_string(imageTextPair.get_primary_text(),scroll_amt), text_x_value, y_value, color, FontPurpose.LIST,
+                                    render_mode, crop_w=text_available_width, crop_h=None)
         self.prev_index = self.selected
+
+    def get_img_x_starting(self):
+        if(XRenderOption.LEFT ==self.image_render_mode.x_mode):
+            return self.img_offset_x
+        elif(XRenderOption.CENTER ==self.image_render_mode.x_mode):
+            return self.img_offset_x - self.img_width // 2
+        elif(XRenderOption.RIGHT ==self.image_render_mode.x_mode):
+            return self.img_offset_x - self.img_width 
+        else:
+            #Assume left as default?
+            return self.img_offset_x
+
 
     def is_y_coord_in_img_box(self, y):
         img_y_min = self.img_offset_y

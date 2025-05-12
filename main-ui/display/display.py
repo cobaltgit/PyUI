@@ -173,9 +173,10 @@ class Display:
         if(self.debug):
             PyUiLogger.get_logger().info(msg)
 
-    def _render_surface_texture(self, x, y, texture, surface, render_mode : RenderMode, target_width=None, target_height=None, debug=""):
+    def _render_surface_texture(self, x, y, texture, surface, render_mode : RenderMode, scale_width=None, scale_height=None, debug="",
+                                crop_w=None, crop_h=None):
         scale_factor = self.device.get_scale_factor()
-        render_w, render_h = self._calculate_scaled_width_and_height(surface.contents.w, surface.contents.h, target_width, target_height, 1.0)
+        render_w, render_h = self._calculate_scaled_width_and_height(surface.contents.w, surface.contents.h, scale_width, scale_height, scale_factor)
 
         # Adjust position based on render mode
         adj_x = x
@@ -195,11 +196,30 @@ class Display:
         adj_y = int(adj_y * scale_factor)
 
         # Create destination rect with adjusted position and scaled size
-        rect = sdl2.SDL_Rect(adj_x, adj_y, render_w, render_h)
-        self._log(f"Rendered {debug} at {adj_x}, {adj_y} with dimenons {render_w}x{render_h}")
+        if(crop_w is None and crop_h is None):            
+            rect = sdl2.SDL_Rect(adj_x, adj_y, render_w, render_h)
+            self._log(f"Rendered {debug} at {adj_x}, {adj_y} with dimenons {render_w}x{render_h}")
+            # Copy the texture to the renderer
+            sdl2.SDL_RenderCopy(self.renderer.renderer, texture, None, rect)
+        else:
+            if crop_w is None or crop_w > surface.contents.w:
+                crop_w = surface.contents.w
+            if crop_h is None or crop_h > surface.contents.h:
+                crop_h = surface.contents.h
 
-        # Copy the texture to the renderer
-        sdl2.SDL_RenderCopy(self.renderer.renderer, texture, None, rect)
+            # Source rectangle: crop from top-left of texture (unscaled)
+            src_rect = sdl2.SDL_Rect(0, 0, crop_w, crop_h)
+
+            # Destination rectangle: where to draw on screen, scaled
+            dst_rect = sdl2.SDL_Rect(
+                adj_x,
+                adj_y,
+                int(crop_w),
+                int(crop_h)
+            )
+
+            # Draw the cropped and scaled texture
+            sdl2.SDL_RenderCopy(self.renderer.renderer, texture, src_rect, dst_rect)
 
         # Clean up
         sdl2.SDL_DestroyTexture(texture)
@@ -207,7 +227,8 @@ class Display:
 
         return render_w, render_h
     
-    def render_text(self,text, x, y, color, purpose : FontPurpose, render_mode = RenderMode.TOP_LEFT_ALIGNED):
+    def render_text(self,text, x, y, color, purpose : FontPurpose, render_mode = RenderMode.TOP_LEFT_ALIGNED,
+                    crop_w=None, crop_h=None):
         # Create an SDL_Color
         sdl_color = sdl2.SDL_Color(color[0], color[1], color[2])
         
@@ -224,7 +245,7 @@ class Display:
             PyUiLogger.get_logger().error(f"Failed to create texture from surface {text}: {sdl2.sdlttf.TTF_GetError().decode('utf-8')}")
             return 0,0
 
-        return self._render_surface_texture(x, y, texture, surface, render_mode, debug=text)
+        return self._render_surface_texture(x, y, texture, surface, render_mode, debug=text, crop_w=crop_w, crop_h=crop_h)
 
     def render_text_centered(self,text, x, y, color, purpose : FontPurpose):
         self.render_text(text, x, y, color, purpose, RenderMode.TOP_CENTER_ALIGNED)
