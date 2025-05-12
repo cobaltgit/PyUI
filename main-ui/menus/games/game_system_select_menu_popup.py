@@ -4,6 +4,7 @@ from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
+from display.on_screen_keyboard import OnScreenKeyboard
 from games.utils.game_system import GameSystem
 from menus.games.search_games_for_system_menu import SearchGamesForSystemMenu
 from menus.games.searched_roms_menu import SearchedRomsMenu
@@ -24,10 +25,14 @@ class GameSystemSelectMenuPopup:
         self.view_creator = ViewCreator(display,controller,device,theme)
 
     def execute_game_search(self, game_system, input_value):
-        SearchGamesForSystemMenu(self.display,self.controller,self.device,self.theme, game_system).run_rom_selection()
+        search_txt = OnScreenKeyboard(self.display,self.controller,self.device,self.theme).get_input("Game Search:")
+        if(search_txt is not None):
+            SearchGamesForSystemMenu(self.display,self.controller,self.device,self.theme, game_system, search_txt.upper()).run_rom_selection()
     
     def all_system_game_search(self, input_value):
-        SearchedRomsMenu(self.display,self.controller,self.device,self.theme).run_rom_selection()
+        search_txt = OnScreenKeyboard(self.display,self.controller,self.device,self.theme).get_input("Game Search:")
+        if(search_txt is not None):
+            SearchedRomsMenu(self.display,self.controller,self.device,self.theme, search_txt.upper()).run_rom_selection()
 
     def run_popup_menu_selection(self, game_system : GameSystem):
         popup_options = []
