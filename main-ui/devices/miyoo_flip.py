@@ -194,7 +194,7 @@ class MiyooFlip(Device):
     
     def _set_lumination_to_config(self):
         with open("/sys/class/backlight/backlight/brightness", "w") as f:
-            f.write(str(self._map_miyoo_scale_to_system_lumination(self.system_config.lumination)))
+            f.write(str(self._map_miyoo_scale_to_system_lumination(self.system_config.backlight)))
     
     def _set_contrast_to_config(self):
         ProcessRunner.run(["modetest", "-M", "rockchip", "-a", "-w", 
@@ -212,21 +212,21 @@ class MiyooFlip(Device):
 
     def lower_lumination(self):
         self.system_config.reload_config()
-        if(self.system_config.lumination > 0):
-            self.system_config.set_lumination(self.system_config.lumination - 1)
+        if(self.system_config.backlight > 0):
+            self.system_config.set_backlight(self.system_config.backlight - 1)
             self.system_config.save_config()
             self._set_lumination_to_config()
 
     def raise_lumination(self):
         self.system_config.reload_config()
-        if(self.system_config.lumination < 10):
-            self.system_config.set_lumination(self.system_config.lumination + 1)
+        if(self.system_config.backlight < 10):
+            self.system_config.set_backlight(self.system_config.backlight + 1)
             self.system_config.save_config()
             self._set_lumination_to_config()
 
     @property
     def lumination(self):
-        return self.system_config.lumination
+        return self.system_config.backlight
 
     def lower_contrast(self):
         self.system_config.reload_config()
