@@ -43,12 +43,15 @@ class ImageListView(NonDescriptiveListView):
         self.prev_index = -1
         self.scroll_text_amount = 0
         self.selected_same_entry_time = time.time()
+        self.char_width, self.char_height = self.display.get_text_dimensions(FontPurpose.LIST)
 
-    def scroll_string(self,text, amt):
+    def scroll_string(self,text, amt, text_available_width):
         if(self.theme.scroll_rom_selection_text):
             if not text:
                 return text
-            text = text + " " # space so it doesnt look weird
+            spaces_to_add = (text_available_width // self.char_width) - len(text)
+            spaces_to_add = max(spaces_to_add, 8)
+            text = text + ' ' * spaces_to_add
             amt = amt % len(text)  # Ensure n is within the string length
             return text[amt:] + text[:amt]
         else:
@@ -111,7 +114,7 @@ class ImageListView(NonDescriptiveListView):
                 icon_width, icon_height = self.display.render_image(imageTextPair.get_icon(),text_x_value, y_value, render_mode)
                 text_x_value += icon_width
 
-            self.display.render_text(self.scroll_string(imageTextPair.get_primary_text(),scroll_amt), text_x_value, y_value, color, FontPurpose.LIST,
+            self.display.render_text(self.scroll_string(imageTextPair.get_primary_text(),scroll_amt, text_available_width), text_x_value, y_value, color, FontPurpose.LIST,
                                     render_mode, crop_w=text_available_width, crop_h=None)
         self.prev_index = self.selected
 
