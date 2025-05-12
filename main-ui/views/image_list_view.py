@@ -3,6 +3,7 @@ from controller.controller_inputs import ControllerInput
 from display.display import Display
 from display.font_purpose import FontPurpose
 from display.render_mode import RenderMode
+from display.y_render_option import YRenderOption
 import sdl2
 from devices.device import Device
 from controller.controller import Controller
@@ -39,6 +40,7 @@ class ImageListView(NonDescriptiveListView):
 
     def _render_text(self, visible_options):
         for visible_index, (imageTextPair) in enumerate(visible_options):
+            offset_text_for_image = False
             actual_index = self.current_top + visible_index
             print(f"self.text_to_image_relationship = {self.text_to_image_relationship}")
             if(TextToImageRelationship.LEFT_OF_IMAGE == self.text_to_image_relationship):
@@ -54,13 +56,21 @@ class ImageListView(NonDescriptiveListView):
             elif(TextToImageRelationship.ABOVE_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
                 y_value = self.base_y_offset + self.line_height//2
+            elif(TextToImageRelationship.TEXT_AROUND_LEFT_IMAGE == self.text_to_image_relationship):
+                offset_text_for_image = True
+                x_value = 0 
+                y_value = self.base_y_offset + self.line_height//2
 
             y_value += visible_index * self.line_height
+
+            if(offset_text_for_image and self.is_y_coord_in_img_box(y_value)):
+                x_value += self.img_width + self.img_offset_x
 
             text_pad = 20  #TODO get this from somewhere
             text_x_value = x_value + text_pad
 
             render_mode=RenderMode.MIDDLE_LEFT_ALIGNED
+
             if actual_index == self.selected:
                 color = self.theme.text_color_selected(FontPurpose.LIST)
                 if(self.selected_bg is not None):
@@ -73,10 +83,24 @@ class ImageListView(NonDescriptiveListView):
                 text_x_value += icon_width
             else:
                 pass
-
             self.display.render_text(imageTextPair.get_primary_text(), text_x_value, y_value, color, FontPurpose.LIST,
                                     render_mode)
 
+    def is_y_coord_in_img_box(self, y):
+        img_y_min = self.img_offset_y
+        img_y_max = self.img_offset_y
+        
+        if(YRenderOption.TOP ==self.image_render_mode.y_mode):
+            img_y_min = self.img_offset_y
+            img_y_max = self.img_offset_y + self.img_width
+        if(YRenderOption.CENTER ==self.image_render_mode.y_mode):
+            img_y_min = self.img_offset_y - self.img_width//2 
+            img_y_max = self.img_offset_y + self.img_width//2
+        if(YRenderOption.BOTTOM ==self.image_render_mode.y_mode):
+            img_y_min = self.img_offset_y + self.img_width 
+            img_y_max = self.img_offset_y + self.img_width*2
+
+        return img_y_min <= y <= img_y_max
 
     def _render_image(self, visible_options):
         for visible_index, (imageTextPair) in enumerate(visible_options):

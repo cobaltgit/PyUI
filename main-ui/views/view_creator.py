@@ -82,13 +82,13 @@ class ViewCreator():
                     image_render = RenderMode.BOTTOM_CENTER_ALIGNED
                     text_to_image_relationship = TextToImageRelationship.ABOVE_IMAGE
                     usable_height = self.get_usable_height_for_text_above_or_below_image(img_height, y_pad)
-                elif("TEXT_AROUND_IMAGE" == text_and_image_list_view_mode):
+                elif("TEXT_AROUND_LEFT_IMAGE" == text_and_image_list_view_mode):
                     img_offset_x = 10
                     img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
-                    image_render = RenderMode.MIDDLE_CENTER_ALIGNED
-                    text_to_image_relationship = TextToImageRelationship.TEXT_AROUND_IMAGE
-                    usable_height = None
-                
+                    image_render = RenderMode.MIDDLE_LEFT_ALIGNED
+                    text_to_image_relationship = TextToImageRelationship.TEXT_AROUND_LEFT_IMAGE
+                    usable_height = None  # auto-determine
+
                     
                 return ImageListView(
                     display=self.display, 

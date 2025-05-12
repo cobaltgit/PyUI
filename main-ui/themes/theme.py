@@ -72,18 +72,6 @@ class Theme():
         return os.path.join(self.path,"skin","ic-setting-f.png")
 
     @property
-    def rom_image_width(self):
-        return 294 #TODO make percentage of device
-    
-    @property
-    def rom_image_height(self):
-        if(self.show_bottom_bar) :
-           return 300  #TODO make percentage of device
-        else:
-            return 340  #TODO make percentage of device
-
-
-    @property
     def get_title_bar_bg(self):
         return os.path.join(self.path,"skin","bg-title.png")
 
@@ -406,5 +394,16 @@ class Theme():
         return getattr(self, "popupMenuRows", 1)
     
     @property
+    def rom_image_width(self):
+        return 294 #TODO make percentage of device
+
+    @property
+    def rom_image_height(self):
+        if(self.show_bottom_bar) :
+           return 300  #TODO make percentage of device
+        else:
+            return 340  #TODO make percentage of device
+
+    @property
     def text_and_image_list_view_mode(self):
-        return getattr(self, "textAndImageListViewMode", "TEXT_LEFT_IMAGE_RIGHT")
+        return getattr(self, "textAndImageListViewMode", "TEXT_RIGHT_IMAGE_LEFT")
