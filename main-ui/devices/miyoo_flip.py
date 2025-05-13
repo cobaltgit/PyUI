@@ -72,7 +72,7 @@ class MiyooFlip(Device):
             PyUiLogger.get_logger().info("wpa_supplicant.conf already exists.")
 
     #Untested
-    @throttle.limit_refresh(10)
+    @throttle.limit_refresh(5)
     def is_hdmi_connected(self):
         try:
             # Read the HDMI status from the file
@@ -92,6 +92,9 @@ class MiyooFlip(Device):
             PyUiLogger.get_logger().error(f"An error occurred: {e}")
             return False
 
+    def should_scale_screen(self):
+        return self.is_hdmi_connected()
+
     @property
     def screen_width(self):
         return 640
@@ -99,6 +102,21 @@ class MiyooFlip(Device):
     @property
     def screen_height(self):
         return 480
+    
+    
+    @property
+    def output_screen_width(self):
+        if(self.should_scale_screen()):
+            return 1920
+        else:
+            return 640
+        
+    @property
+    def output_screen_height(self):
+        if(self.should_scale_screen()):
+            return 1080
+        else:
+            return 480
 
     def get_scale_factor(self):
         if(self.is_hdmi_connected()):
