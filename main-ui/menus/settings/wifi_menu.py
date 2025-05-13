@@ -57,7 +57,7 @@ network={{
         PyUiLogger.get_logger().info(f"Selected {net.ssid}!")
         if(net.requires_password):
             password = self.on_screen_keyboard.get_input("WiFi Password")
-            if(password is not None):
+            if(password is not None and 8 <= len(password) <= 63):
                 self.write_wpa_supplicant_conf(net.ssid, "psk=\""+password+"\"")
         else:   
             self.write_wpa_supplicant_conf(net.ssid, "key_mgmt=NONE")
