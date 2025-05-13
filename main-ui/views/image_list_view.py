@@ -50,11 +50,7 @@ class ImageListView(NonDescriptiveListView):
             if not text:
                 return text
             text_width, char_height = self.display.get_text_dimensions(FontPurpose.LIST,text)
-            print(f"text_available_width = {text_available_width}")
-            print(f"text_width = {text_width}")
-            print(f"space_width = {self.space_width}")
             spaces_to_add = ((text_available_width - text_width) // self.space_width)
-            print(f"spaces_to_add = {spaces_to_add}")
             spaces_to_add = max(spaces_to_add, 8)
             text = text + ' ' * spaces_to_add
             amt = amt % len(text)  # Ensure n is within the string length
