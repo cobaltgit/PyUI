@@ -42,6 +42,11 @@ class Display:
             for purpose in FontPurpose
         }        
 
+    def are_headphones_plugged_in(self):
+        with open("/sys/class/gpio/gpio150/value", "r") as f:
+            value = f.read().strip()
+            return 0 == value
+        return False
 
     def _init_display(self):
         sdl2.ext.init(controller=True)

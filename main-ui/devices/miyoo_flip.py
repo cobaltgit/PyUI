@@ -9,6 +9,7 @@ from controller.controller_inputs import ControllerInput
 from devices.charge.charge_status import ChargeStatus
 from devices.device import Device
 import os
+from devices.miyoo.flip.miyoo_flip_poller import MiyooFlipPoller
 from devices.miyoo.miyoo_games_file_parser import MiyooGamesFileParser
 from devices.miyoo.system_config import SystemConfig
 from devices.utils.process_runner import ProcessRunner
@@ -54,7 +55,23 @@ class MiyooFlip(Device):
         self._set_saturation_to_config()
         self._set_brightness_to_config()
         self.ensure_wpa_supplicant_conf()
+        self.init_gpio()
         threading.Thread(target=self.monitor_wifi, daemon=True).start()
+        self.hardware_poller = MiyooFlipPoller(self)
+        threading.Thread(target=self.hardware_poller.continuously_monitor, daemon=True).start()
+
+    def init_gpio(self):
+        if not os.path.exists("/sys/class/gpio150"):
+            with open("/sys/class/gpio/export", "w") as f:
+                f.write("150")
+
+    def are_headphones_plugged_in(self):
+        try:
+            with open("/sys/class/gpio/gpio150/value", "r") as f:
+                value = f.read().strip()
+                return "0" == value 
+        except (FileNotFoundError, IOError) as e:
+            return False
 
     def ensure_wpa_supplicant_conf(self):
         conf_path = Path("/userdata/cfg/wpa_supplicant.conf")
