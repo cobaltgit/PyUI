@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import subprocess
 
 from games.utils.game_entry import GameEntry
 
@@ -117,7 +118,7 @@ class Device(ABC):
         pass
 
     @abstractmethod
-    def run_game(self, path):
+    def run_game(self, path) -> subprocess.Popen:
         pass
 
     @abstractmethod

@@ -1,12 +1,14 @@
 
 import os
 from pathlib import Path
+import subprocess
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
 from display.render_mode import RenderMode
 from menus.games.game_config_menu import GameConfigMenu
+from menus.games.in_game_menu_listener import InGameMenuListener
 from menus.games.utils.rom_select_options_builder import RomSelectOptionsBuilder
 from themes.theme import Theme
 from utils.logger import PyUiLogger
@@ -27,6 +29,7 @@ class RomsMenuCommon(ABC):
         self.theme : Theme= theme
         self.view_creator = ViewCreator(display,controller,device,theme)
         self.rom_select_options_builder = RomSelectOptionsBuilder(device, theme)
+        self.in_game_menu_listener = InGameMenuListener(display,controller,device,theme)
 
     def _remove_extension(self,file_name):
         return os.path.splitext(file_name)[0]
@@ -67,7 +70,8 @@ class RomsMenuCommon(ABC):
             if(selected is not None):
                 if(ControllerInput.A == selected.get_input()):
                     self.display.deinit_display()
-                    self.device.run_game(selected.get_selection().get_value())
+                    game_thread : subprocess.Popen = self.device.run_game(selected.get_selection().get_value())
+                    self.in_game_menu_listener.game_launched(game_thread)
                     self.controller.clear_input_queue()
                     self.display.reinitialize()
                 elif(ControllerInput.X == selected.get_input()):

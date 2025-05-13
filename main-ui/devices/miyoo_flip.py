@@ -377,7 +377,7 @@ class MiyooFlip(Device):
         ProcessRunner.run(["amixer", "cset","numid=5", str(proper_volume*5)])
 
 
-    def run_game(self, file_path):
+    def run_game(self, file_path) -> subprocess.Popen:
         #file_path = /mnt/SDCARD/Roms/FAKE08/Alpine Alpaca.p8
         #miyoo maps it to /media/sdcard0/Emu/FAKE08/../../Roms/FAKE08/Alpine Alpaca.p8
         miyoo_app_path = self.convert_game_path_to_miyoo_path(file_path)
@@ -385,9 +385,9 @@ class MiyooFlip(Device):
 
         self.fix_sleep_sound_bug()
         PyUiLogger.get_logger().debug(f"About to launch /mnt/SDCARD/Emu/.emu_setup/standard_launch.sh {file_path} | {miyoo_app_path}")
-        subprocess.run(["/mnt/SDCARD/Emu/.emu_setup/standard_launch.sh",file_path])
+        return subprocess.Popen(["/mnt/SDCARD/Emu/.emu_setup/standard_launch.sh",file_path])
 
-        self.delete_cmd_to_run()
+        #self.delete_cmd_to_run()
 
     def run_app(self, args, dir = None):
         PyUiLogger.get_logger().debug(f"About to launch app {args}")
