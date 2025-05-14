@@ -635,10 +635,18 @@ class TrimUIBrick(Device):
 
     @throttle.limit_refresh(5)
     def get_charge_status(self):
-        return ChargeStatus.DISCONNECTED
+        with open("/sys/class/power_supply/axp2202-usb/online", "r") as f:
+            ac_online = int(f.read().strip())
+            
+        if(ac_online):
+           return ChargeStatus.CHARGING
+        else:
+            return ChargeStatus.DISCONNECTED
     
     @throttle.limit_refresh(15)
     def get_battery_percent(self):
+        with open("/sys/class/power_supply/axp2202-battery/capacity", "r") as f:
+            return int(f.read().strip()) 
         return 0
         
     def get_app_finder(self):
