@@ -94,7 +94,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
             if(selected_index == len(theme_folders)):
                 selected_index = 0
 
-        self.theme.set_theme_path(os.path.join(self.config["themeDir"], theme_folders[selected_index]))
+        self.theme.set_theme_path(os.path.join(self.config["themeDir"], theme_folders[selected_index]), self.device.screen_width, self.device.screen_height)
         self.display.init_fonts()   
         self.config["theme"] = theme_folders[selected_index]
         self.config.save()      

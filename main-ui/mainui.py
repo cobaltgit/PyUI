@@ -28,12 +28,13 @@ selected_theme = os.path.join(config["themeDir"],config["theme"])
                               
 PyUiLogger.get_logger().info(f"{selected_theme}")
 
-theme = Theme(os.path.join(config["themeDir"],config["theme"]))
 
 if os.path.exists("/userdata/system.json"):
     device = MiyooFlip()
 elif os.path.exists("/mnt/UDISK/system.json"):
     device = TrimUIBrick()
+
+theme = Theme(os.path.join(config["themeDir"],config["theme"]), device.screen_width, device.screen_height)
 
 display = Display(theme, device)
 controller = Controller(device, config)
