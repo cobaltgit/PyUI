@@ -6,6 +6,7 @@ import threading
 import time
 from apps.miyoo.miyoo_app_finder import MiyooAppFinder
 from controller.controller_inputs import ControllerInput
+from devices.bluetooth.bluetooth_scanner import BluetoothScanner
 from devices.charge.charge_status import ChargeStatus
 from devices.device import Device
 import os
@@ -692,3 +693,6 @@ class MiyooFlip(Device):
             
     def perform_startup_tasks(self):
         pass
+
+    def get_bluetooth_scanner(self):
+        return BluetoothScanner()
