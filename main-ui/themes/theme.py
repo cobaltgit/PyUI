@@ -409,16 +409,14 @@ class Theme():
     def popup_menu_rows(self):
         return getattr(self, "popupMenuRows", 1)
     
-    @property
-    def rom_image_width(self):
-        return 294 #TODO make percentage of device
+    def rom_image_width(self, device_width):
+        return int(device_width * 294/640)
 
-    @property
-    def rom_image_height(self):
+    def rom_image_height(self, device_height):
         if(self.show_bottom_bar) :
-           return 300  #TODO make percentage of device
+            return int(device_height * 300/640)
         else:
-            return 340  #TODO make percentage of device
+            return int(device_height * 340/640)
 
     @property
     def text_and_image_list_view_mode(self):
