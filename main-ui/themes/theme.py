@@ -17,7 +17,16 @@ class Theme():
         self.__dict__.clear()
         self.path = path
         self.load_defaults_for_values_not_in_miyoo_theme()
-        self.load_from_file(os.path.join(path,"config.json"))
+        
+        resolution_specific_config = f"config_{width}x{height}.json"
+        resolution_specific_config_path = os.path.join(self.path, resolution_specific_config)
+        if(os.path.exists(resolution_specific_config_path)):
+            self.load_from_file(resolution_specific_config_path)
+            PyUiLogger.get_logger().info(f"Resolution specific config found, using {resolution_specific_config}")
+        else:
+            self.load_from_file(os.path.join(path,"config.json"))
+            PyUiLogger.get_logger().info(f"No resolution specific config {resolution_specific_config_path} found, using config.json")
+
         #Reload path incase a theme tried to set it
         self.path = path
         self.skin_folder = self.get_asset_folder("skin",width,height)
@@ -33,7 +42,7 @@ class Theme():
             PyUiLogger.get_logger().info(f"Resolution specific assets found, using  {resolution_specific_folder}")
             return resolution_specific_folder
         else:
-            PyUiLogger.get_logger().info(f"No resolution specific assets found, using  {base_folder}")
+            PyUiLogger.get_logger().info(f"No resolution specific assets {resolution_specific_folder} found, using  {base_folder}")
             return base_folder
 
     def load_defaults_for_values_not_in_miyoo_theme(self):
