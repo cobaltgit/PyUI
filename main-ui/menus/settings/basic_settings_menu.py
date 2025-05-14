@@ -150,17 +150,19 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
                         value=self.show_wifi_menu
                     )
             )
-        option_list.append(
-                GridOrListEntry(
-                        primary_text="Bluetooth",
-                        value_text="<    " + ("On" if self.device.is_bluetooth_enabled() else "Off") + "    >",
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.show_bt_menu
-                    )
-            )
+        
+        if(self.device.get_bluetooth_scanner() is not None):
+            option_list.append(
+                    GridOrListEntry(
+                            primary_text="Bluetooth",
+                            value_text="<    " + ("On" if self.device.is_bluetooth_enabled() else "Off") + "    >",
+                            image_path=None,
+                            image_path_selected=None,
+                            description=None,
+                            icon=None,
+                            value=self.show_bt_menu
+                        )
+                )
             
         option_list.append(
                 GridOrListEntry(

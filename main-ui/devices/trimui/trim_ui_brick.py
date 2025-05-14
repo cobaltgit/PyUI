@@ -205,6 +205,7 @@ class TrimUIBrick(Device):
             print("Permission denied: try running as root.")
         except Exception as e:
             print(f"Error setting brightness: {e}")
+
     def _set_contrast_to_config(self):
         pass
     
@@ -213,8 +214,6 @@ class TrimUIBrick(Device):
 
     def _set_brightness_to_config(self):
         pass
-
-
 
     def lower_lumination(self):
         self.system_config.reload_config()
@@ -236,58 +235,60 @@ class TrimUIBrick(Device):
 
     def lower_contrast(self):
         self.system_config.reload_config()
-        if(self.system_config.contrast > 1): # don't allow 0 contrast
-            self.system_config.set_contrast(self.system_config.contrast - 1)
+        if(self.system_config.get("colorcontrast") > 1):
+            self.system_config.set("colorcontrast",self.system_config.get("colorcontrast") - 1)
             self.system_config.save_config()
             self._set_contrast_to_config()
 
     def raise_contrast(self):
         self.system_config.reload_config()
-        if(self.system_config.contrast < 20):
-            self.system_config.set_contrast(self.system_config.contrast + 1)
+        if(self.system_config.get("colorcontrast") < 10): 
+            self.system_config.set("colorcontrast",self.system_config.get("colorcontrast") + 1)
             self.system_config.save_config()
             self._set_contrast_to_config()
 
     @property
     def contrast(self):
-        return self.system_config.get_contrast()
+        return self.system_config.get("colorcontrast")
     
+
     def lower_brightness(self):
         self.system_config.reload_config()
-        if(self.system_config.brightness > 0): 
-            self.system_config.set_brightness(self.system_config.brightness - 1)
+        if(self.system_config.get("colorbrightness") > 1):
+            self.system_config.set("colorbrightness",self.system_config.get("colorbrightness") - 1)
             self.system_config.save_config()
             self._set_brightness_to_config()
 
     def raise_brightness(self):
         self.system_config.reload_config()
-        if(self.system_config.brightness < 20):
-            self.system_config.set_brightness(self.system_config.brightness + 1)
+        if(self.system_config.get("colorbrightness") < 10): 
+            self.system_config.set("colorbrightness",self.system_config.get("colorbrightness") + 1)
             self.system_config.save_config()
             self._set_brightness_to_config()
 
+
     @property
     def brightness(self):
-        return self.system_config.get_brightness()
+        return self.system_config.get("colorbrightness")
 
 
     def lower_saturation(self):
         self.system_config.reload_config()
-        if(self.system_config.saturation > 0):
-            self.system_config.set_saturation(self.system_config.saturation - 1)
+        if(self.system_config.get("colorsaturation") > 1): 
+            self.system_config.set("colorsaturation",self.system_config.get("colorsaturation") - 1)
             self.system_config.save_config()
             self._set_saturation_to_config()
 
     def raise_saturation(self):
         self.system_config.reload_config()
-        if(self.system_config.saturation < 20):
-            self.system_config.set_saturation(self.system_config.saturation + 1)
+        if(self.system_config.get("colorsaturation") < 10): 
+            self.system_config.set("colorsaturation",self.system_config.get("colorsaturation") + 1)
             self.system_config.save_config()
-            self._set_saturation_to_config()
+            self._set_brightness_to_config()
 
     @property
     def saturation(self):
-        return self.system_config.get_saturation()
+        return self.system_config.get("colorsaturation")
 
     def _set_volume(self, volume):
         if(volume < 0):
@@ -635,6 +636,7 @@ class TrimUIBrick(Device):
 
     @throttle.limit_refresh(5)
     def get_charge_status(self):
+        #Probably need to find the power and not just usb
         with open("/sys/class/power_supply/axp2202-usb/online", "r") as f:
             ac_online = int(f.read().strip())
             
@@ -661,29 +663,18 @@ class TrimUIBrick(Device):
     def get_rom_utils(self):
         return RomUtils("/mnt/SDCARD/Roms/")
     
-    
     def is_bluetooth_enabled(self):
-        try:
-            # Run 'ps' to check for bluetoothd process
-            result = self.get_running_processes()
-            # Check if bluetoothd is in the process list
-            return 'bluetoothd' in result.stdout
-        except Exception as e:
-            PyUiLogger.get_logger().error(f"Error checking bluetoothd status: {e}")
-            return False
+        return False
     
     
     def disable_bluetooth(self):
-        ProcessRunner.run(["killall","-15","bluetoothd"])
-        time.sleep(0.1)  
-        ProcessRunner.run(["killall","-9","bluetoothd"])
+        pass
 
     def enable_bluetooth(self):
-        if(not self.is_bluetooth_enabled()):
-            subprocess.Popen(['./bluetoothd',"-f","/etc/bluetooth/main.conf"],
-                            cwd='/usr/libexec/bluetooth/',
-                            stdout=subprocess.DEVNULL,
-                            stderr=subprocess.DEVNULL)
-            
+        pass
+
     def perform_startup_tasks(self):
         pass
+
+    def get_bluetooth_scanner(self):
+        return None
