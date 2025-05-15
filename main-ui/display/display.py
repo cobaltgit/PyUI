@@ -117,7 +117,6 @@ class Display:
             raise RuntimeError("Failed to initialize SDL_ttf")
 
         # Load the TTF font
-        # font_path = "/mnt/SDCARD/spruce/Font Files/Noto.ttf"
         font_path = self.theme.get_font(font_purpose)
         font_size = self.theme.get_font_size(font_purpose)
         
@@ -255,7 +254,7 @@ class Display:
         self.render_text(text, x, y, color, purpose, RenderMode.TOP_CENTER_ALIGNED)
 
     def render_image(self, image_path: str, x: int, y: int, render_mode = RenderMode.TOP_LEFT_ALIGNED, target_width=None, target_height=None):
-        # Load the image into an SDL_Surface
+        # Load the image into an SDL_Surface       
         surface = sdl2.sdlimage.IMG_Load(image_path.encode('utf-8'))
         if not surface:
             PyUiLogger.get_logger().error(f"Failed to load image: {image_path}")
