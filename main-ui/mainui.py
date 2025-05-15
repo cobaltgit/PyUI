@@ -23,6 +23,7 @@ print("Script name:", sys.argv[0])
 parser = argparse.ArgumentParser()
 
 parser.add_argument('-logDir', type=str, default='/mnt/SDCARD/pyui/logs/', help='Directory to store logs')
+parser.add_argument('-pyUiConfig', type=str, default='/mnt/SDCARD/Saves/pyui-config.json', help='Location of PyUI config')
 
 args = parser.parse_args()
 
@@ -37,7 +38,7 @@ for i in range(num):
     sdl2.SDL_GetRenderDriverInfo(i, info)
     print(f"Found Renderer {i}: {info.name.decode()}")
 
-config = PyUiConfig()
+config = PyUiConfig(args.pyUiConfig)
 config.load()
 
 selected_theme = os.path.join(config["themeDir"],config["theme"])

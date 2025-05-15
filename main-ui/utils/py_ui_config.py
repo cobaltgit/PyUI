@@ -4,15 +4,16 @@ import os
 from utils.logger import PyUiLogger
 
 class PyUiConfig:
-    def __init__(self, initial_data=None):
+    def __init__(self, config_path, initial_data=None):
+        self.config_path = config_path
         self._data = initial_data or {}
 
     def save(self):
-        self._write_to_file("/mnt/SDCARD/App/PyUI/main-ui/config.json")
+        self._write_to_file(self.config_path)
         self.load()
 
     def load(self):
-        self._read_from_file("/mnt/SDCARD/App/PyUI/main-ui/config.json")
+        self._read_from_file(self.config_path)
 
     def _write_to_file(self, filepath):
         try:
