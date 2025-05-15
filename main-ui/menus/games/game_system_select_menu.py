@@ -32,6 +32,49 @@ class GameSystemSelectMenu:
     def get_system_name_for_icon(self, sys_config):        
         return os.path.splitext(os.path.basename(sys_config.get_icon()))[0]
 
+    def choose_existing_file(self, primary_path, fallback_path, fallback_dir):
+
+        try:
+            if os.path.exists(primary_path):
+                return primary_path
+        except Exception:
+            pass
+
+        try:
+            if os.path.exists(fallback_path):
+                return fallback_path
+        except Exception:
+            pass
+                    
+        fallback_full_path = os.path.join(fallback_dir,fallback_path)
+        try:
+            if os.path.exists(fallback_full_path):
+                return fallback_full_path
+        except Exception:
+            pass
+
+        return None
+    
+    def get_images(self, sys_config):
+        icon_system_name = self.get_system_name_for_icon(sys_config)
+        image_path = self.choose_existing_file(
+                    self.theme.get_system_icon(icon_system_name),
+                    sys_config.get_icon(), 
+                    sys_config.get_emu_folder())
+        
+        try:
+            if(sys_config.get_icon_selected() is not None and sys_config.get_icon_selected() != ''):
+                image_path_selected = self.choose_existing_file(self.theme.get_system_icon_selected(icon_system_name),
+                                                                sys_config.get_icon_selected(), 
+                                                                sys_config.get_emu_folder())
+            else:
+                image_path_selected = image_path
+
+        except Exception as e:
+            image_path_selected = image_path
+
+        return image_path, image_path_selected
+
     def run_system_selection(self) :
         selected = Selection(None,None,0)
         systems_list = []
@@ -50,14 +93,15 @@ class GameSystemSelectMenu:
                     ) 
                 )
             else:
-                icon_system_name = self.get_system_name_for_icon(sys_config)
+                image_path, image_path_selected = self.get_images(sys_config)
+                icon = image_path_selected
                 systems_list.append(
                     GridOrListEntry(
                         primary_text=game_system.display_name,
-                        image_path=self.theme.get_system_icon(icon_system_name),
-                        image_path_selected=self.theme.get_system_icon_selected(icon_system_name),
+                        image_path=image_path,
+                        image_path_selected=image_path_selected,
                         description="Game System",
-                        icon=self.theme.get_system_icon_selected(game_system.folder_name),
+                        icon=icon,
                         value=game_system
                     )                
                 )
