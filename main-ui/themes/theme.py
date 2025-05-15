@@ -247,10 +247,10 @@ class Theme():
             if os.path.exists(font):
                 return font 
             else:
-                return "/mnt/SDCARD/Themes/SPRUCE/nunwen.ttf"
+                return "/mnt/SDCARD/Themes/STOCK/nunwen.ttf"
         except Exception as e:
             PyUiLogger.get_logger().error(f"get_font error occurred: {e}")
-            return "/mnt/SDCARD/Themes/SPRUCE/nunwen.ttf"
+            return "/mnt/SDCARD/Themes/STOCK/nunwen.ttf"
 
     
     def get_font_size(self, font_purpose : FontPurpose):
