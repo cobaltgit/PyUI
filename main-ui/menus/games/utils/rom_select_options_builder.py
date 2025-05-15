@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Callable
 from devices.device import Device
 from games.utils.rom_utils import RomUtils
+from menus.games.utils.rom_info import RomInfo
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 
@@ -62,7 +63,7 @@ class RomSelectOptionsBuilder:
                         image_path_selected=img_path,
                         description=game_system.folder_name, 
                         icon=icon,
-                        value=rom_file_path)
+                        value=RomInfo(game_system,rom_file_path))
                 )
 
         return rom_list

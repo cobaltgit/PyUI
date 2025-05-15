@@ -2,6 +2,7 @@
 
 import os
 from games.utils.game_system import GameSystem 
+from games.utils.rom_utils import RomUtils
 from menus.games.game_system_config import GameSystemConfig
 from utils.logger import PyUiLogger
 
@@ -9,7 +10,8 @@ class GameSystemUtils:
     def __init__(self):
         self.roms_path = "/mnt/SDCARD/Roms/"
         self.emu_path = "/mnt/SDCARD/Emu/"
-
+        self.rom_utils = RomUtils(self.roms_path)
+    
     def get_active_systems(self) -> list[GameSystem]:
         active_systems : list[GameSystem]= []
         
@@ -30,7 +32,8 @@ class GameSystemUtils:
 
             if(game_system_config is not None):
                 display_name = game_system_config.get_label()
-                active_systems.append(GameSystem(folder,display_name, game_system_config))
+                if(self.rom_utils.has_roms(folder)):
+                    active_systems.append(GameSystem(folder,display_name, game_system_config))
 
         # Step 4: Sort the list alphabetically
         active_systems.sort(key=lambda system: system.display_name)

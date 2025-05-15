@@ -1,5 +1,6 @@
 
 import os
+import subprocess
 from controller.controller import Controller
 from devices.device import Device
 from display.display import Display
@@ -31,3 +32,6 @@ class FavoritesMenu(RomsMenuCommon):
 
     def run_rom_selection(self) :
         self._run_rom_selection("Favorites")
+
+    def _run_game(self, selected_entry) -> subprocess.Popen:
+        return self.device.run_game(selected_entry)

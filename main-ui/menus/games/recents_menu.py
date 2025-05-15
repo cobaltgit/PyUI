@@ -33,3 +33,6 @@ class RecentsMenu(RomsMenuCommon):
 
     def run_rom_selection(self) :
         self._run_rom_selection("Recents")
+
+    def _run_game(self, selected_entry) -> subprocess.Popen:
+        return self.device.run_game(selected_entry)

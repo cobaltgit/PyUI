@@ -52,6 +52,11 @@ class RomsMenuCommon(ABC):
     def _get_rom_list(self) -> list[GridOrListEntry]:
         pass
 
+    
+    @abstractmethod
+    def _run_game(self, selected_entry) -> subprocess.Popen:
+        pass
+
     def _run_rom_selection(self, page_name) :
         selected = Selection(None,None,0)
         view = None
@@ -69,10 +74,14 @@ class RomsMenuCommon(ABC):
             selected = view.get_selection([ControllerInput.A, ControllerInput.X])
             if(selected is not None):
                 if(ControllerInput.A == selected.get_input()):
+        
                     self.display.deinit_display()
                     game_thread : subprocess.Popen = self.device.run_game(selected.get_selection().get_value())
-                    self.in_game_menu_listener.game_launched(game_thread)
-                    self.controller.clear_input_queue()
+        
+                    if(game_thread is not None):
+                        self.in_game_menu_listener.game_launched(game_thread)
+                        self.controller.clear_input_queue()
+        
                     self.display.reinitialize()
                 elif(ControllerInput.X == selected.get_input()):
                     GameConfigMenu(self.display, self.controller, self.device, self.theme, 
