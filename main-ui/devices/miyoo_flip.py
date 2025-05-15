@@ -63,9 +63,12 @@ class MiyooFlip(Device):
         threading.Thread(target=self.hardware_poller.continuously_monitor, daemon=True).start()
 
     def init_gpio(self):
-        if not os.path.exists("/sys/class/gpio150"):
-            with open("/sys/class/gpio/export", "w") as f:
-                f.write("150")
+        try:
+            if not os.path.exists("/sys/class/gpio150"):
+                with open("/sys/class/gpio/export", "w") as f:
+                    f.write("150")
+        except Exception as e:
+            PyUiLogger.get_logger().error(f"Error exportiing gpio150 {e}")
 
     def are_headphones_plugged_in(self):
         try:
