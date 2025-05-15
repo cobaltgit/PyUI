@@ -14,6 +14,13 @@ Still a WIP but works on the Miyoo Flip and partial compatibility on the TrimUI 
 | Miyoo Flip | 865f7a3 | Work in progress |
 | TrimUI Brick | 865f7a3 | Work in progress |
 
+## Thanks
+- Spruce team w/ special thanks to
+   -  Ry - Ryan Sartor 
+   -  SundownerSport
+- Shaun Inman - Development on MinUI making it easier to learn how to interact with the hardware
+- Rest of the community that has helped document how these handhelds work
+
 ## License
 
 BSD 3-Clause License (Non-Commercial Use with Commercial Use by Permission)
