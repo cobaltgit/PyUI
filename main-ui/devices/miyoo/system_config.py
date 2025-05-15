@@ -1,23 +1,27 @@
 import json
+import threading
 
 class SystemConfig:
     def __init__(self, filepath):
+        self._lock = threading.Lock()
         self.filepath = filepath
         self.reload_config()
         
     def reload_config(self):
-        try:
-            with open(self.filepath, 'r') as f:
-                self.config = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError) as e:
-            raise RuntimeError(f"Failed to load config: {e}")
+        with self._lock:
+            try:
+                with open(self.filepath, 'r') as f:
+                    self.config = json.load(f)
+            except (FileNotFoundError, json.JSONDecodeError) as e:
+                raise RuntimeError(f"Failed to load config: {e}")
 
     def save_config(self):
-        try:
-            with open(self.filepath, 'w') as f:
-                json.dump(self.config, f, indent=8)
-        except Exception as e:
-            raise RuntimeError(f"Failed to save config: {e}")
+        with self._lock:
+            try:
+                with open(self.filepath, 'w') as f:
+                    json.dump(self.config, f, indent=8)
+            except Exception as e:
+                raise RuntimeError(f"Failed to save config: {e}")
         
     def get_volume(self):
         return self.config.get("vol")

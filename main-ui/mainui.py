@@ -3,6 +3,7 @@ from multiprocessing import get_logger
 import os
 import sys
 import threading
+from controller.key_watcher import KeyWatcher
 from devices.trimui.trim_ui_brick import TrimUIBrick
 import sdl2
 import sdl2.ext
@@ -61,4 +62,10 @@ main_menu = MainMenu(display, controller, device, theme, config)
 startup_thread = threading.Thread(target=device.perform_startup_tasks())
 startup_thread.start()
 
+key_watcher = KeyWatcher(device)
+key_polling_thread = threading.Thread(target=key_watcher.poll_keyboard, daemon=True)
+key_polling_thread.start()
+
+
 main_menu.run_main_menu_selection()
+os._exit(0)

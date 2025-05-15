@@ -10,13 +10,13 @@ class MiyooFlipPoller:
         
     def check_audio(self):
         new_headphone_status = self.device.are_headphones_plugged_in()
-
         if(new_headphone_status != self.headphone_status):
             self.headphone_status = new_headphone_status
             if(self.headphone_status):
                 ProcessRunner.run(["amixer","sset","Playback Path","HP"])
             else:
                 ProcessRunner.run(["amixer","sset","Playback Path","SPK"])
+
 
     def continuously_monitor(self):
         while(True):
