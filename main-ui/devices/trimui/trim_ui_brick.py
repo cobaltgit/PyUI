@@ -408,12 +408,17 @@ class TrimUIBrick(Device):
                 return ControllerInput.RIGHT_STICK_DOWN
         return None
     
-    def map_input(self, sdl_input):
+    def map_digital_input(self, sdl_input):
         mapping = self.sdl_button_to_input.get(sdl_input, ControllerInput.UNKNOWN)
         if(ControllerInput.UNKNOWN == mapping):
             PyUiLogger.get_logger().error(f"Unknown input {sdl_input}")
         return mapping
-
+    
+    def key_down(self, key_code):
+        PyUiLogger.get_logger().error(f"Received key_down key_code = {key_code}")
+    
+    def map_analog_input(self, sdl_axis, sdl_value):
+        PyUiLogger.get_logger().error(f"Received analog input axis = {sdl_axis}, value = {sdl_value}")
 
     def get_wifi_connection_quality_info(self) -> WiFiConnectionQualityInfo:
         try:

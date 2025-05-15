@@ -85,15 +85,20 @@ class Controller:
                 ms_remaining = int(remaining_time * 1000)
                 event_available = sdl2.SDL_WaitEventTimeout(byref(self.event), ms_remaining)
 
-                if event_available and self._last_event().type == sdl2.SDL_CONTROLLERBUTTONDOWN:
+                if event_available and self.last_input() is not None:
                     break
                 elif(event_available and self._last_event().type == sdl2.SDL_CONTROLLERDEVICEADDED):
                     PyUiLogger.get_logger().info("New controller detected")
                     self._init_controller()
+                #else:
+                #    PyUiLogger.get_logger().debug(f"JOY BUTTON: {self.event.type}")
+                #    pass
+
         else:
             self.hold_delay = 0.0
 
         self.last_input_time = time.time()
+
         return self.last_event_was_controller() 
 
     def clear_input_queue(self):
@@ -109,10 +114,14 @@ class Controller:
                 count=0
 
     def last_event_was_controller(self):
-        return self._last_event().type == sdl2.SDL_CONTROLLERBUTTONDOWN
+        return self._last_event().type == sdl2.SDL_CONTROLLERBUTTONDOWN or self._last_event().type == sdl2.SDL_CONTROLLERAXISMOTION
 
     def _last_event(self):
         return self.event
         
     def last_input(self):
-        return self.device.map_input(self.event.cbutton.button)
+        if(self._last_event().type == sdl2.SDL_CONTROLLERBUTTONDOWN):
+            return self.device.map_digital_input(self.event.cbutton.button)
+        elif(self._last_event().type == sdl2.SDL_CONTROLLERAXISMOTION):
+            return self.device.map_analog_input(self.event.caxis.axis, self.event.caxis.value)
+        return None

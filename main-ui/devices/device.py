@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import subprocess
 
 from games.utils.game_entry import GameEntry
+from utils.logger import PyUiLogger
 
 class Device(ABC):
  
@@ -126,7 +127,15 @@ class Device(ABC):
         pass
 
     @abstractmethod
-    def map_input(self, sdl_input):
+    def map_digital_input(self, sdl_input):
+        pass
+
+    @abstractmethod
+    def map_analog_input(self, sdl_axis, sdl_value):
+        pass
+
+    @abstractmethod
+    def key_down(self, key_code):   
         pass
 
     @abstractmethod

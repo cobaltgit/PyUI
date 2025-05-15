@@ -18,6 +18,7 @@ from devices.wifi.wifi_connection_quality_info import WiFiConnectionQualityInfo
 from devices.wifi.wifi_status import WifiStatus
 from games.utils.game_entry import GameEntry
 from games.utils.rom_utils import RomUtils
+from menus.games.utils.rom_info import RomInfo
 import sdl2
 from utils import throttle
 from utils.logger import PyUiLogger
@@ -331,10 +332,19 @@ class MiyooFlip(Device):
 
         try:
             
-            ProcessRunner.run(
-                ["amixer", "cset", f"name='SPK Volume'", str(volume)],
-                check=True
-            )
+            if(0 == volume):
+                ProcessRunner.run(["amixer","sset","Playback Path","SPK"])
+            else:
+                if(self.are_headphones_plugged_in):
+                    ProcessRunner.run(["amixer","sset","Playback Path","HP"])
+                else:
+                    ProcessRunner.run(["amixer","sset","Playback Path","SPK"])
+
+                ProcessRunner.run(
+                    ["amixer", "cset", f"name='SPK Volume'", str(volume)],
+                    check=True
+                )
+            
         except subprocess.CalledProcessError as e:
             PyUiLogger.get_logger().error(f"Failed to set volume: {e}")
 
@@ -399,16 +409,23 @@ class MiyooFlip(Device):
         ProcessRunner.run(["amixer", "cset","numid=5", str(proper_volume*5)])
 
 
-    def run_game(self, file_path) -> subprocess.Popen:
+    def run_game(self, rom_info: RomInfo) -> subprocess.Popen:
+        
+        launch_path = os.path.join(rom_info.game_system.game_system_config.get_emu_folder(),rom_info.game_system.game_system_config.get_launch())
+        
         #file_path = /mnt/SDCARD/Roms/FAKE08/Alpine Alpaca.p8
         #miyoo maps it to /media/sdcard0/Emu/FAKE08/../../Roms/FAKE08/Alpine Alpaca.p8
-        miyoo_app_path = self.convert_game_path_to_miyoo_path(file_path)
-        self.write_cmd_to_run(f'''chmod a+x "/media/sdcard0/Emu/FC/../.emu_setup/standard_launch.sh";"/media/sdcard0/Emu/FC/../.emu_setup/standard_launch.sh" "{miyoo_app_path}"''')
+        miyoo_app_path = self.convert_game_path_to_miyoo_path(rom_info.rom_file_path)
+        self.write_cmd_to_run(f'''chmod a+x "{launch_path}";"{launch_path}" "{miyoo_app_path}"''')
 
         self.fix_sleep_sound_bug()
-        PyUiLogger.get_logger().debug(f"About to launch /mnt/SDCARD/Emu/.emu_setup/standard_launch.sh {file_path} | {miyoo_app_path}")
-        return subprocess.Popen(["/mnt/SDCARD/Emu/.emu_setup/standard_launch.sh",file_path])
-
+        PyUiLogger.get_logger().debug(f"About to launch {launch_path} {rom_info.rom_file_path} | {miyoo_app_path}")
+        try:
+            return subprocess.Popen([launch_path,rom_info.rom_file_path], stdin=subprocess.DEVNULL,
+                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception as e:
+            PyUiLogger.get_logger().error(f"Failed to launch game {rom_info.rom_file_path}: {e}")
+            return None
         #self.delete_cmd_to_run()
 
     def run_app(self, args, dir = None):
@@ -443,11 +460,32 @@ class MiyooFlip(Device):
                 return ControllerInput.RIGHT_STICK_DOWN
         return None
     
-    def map_input(self, sdl_input):
+    def map_digital_input(self, sdl_input):
         mapping = self.sdl_button_to_input.get(sdl_input, ControllerInput.UNKNOWN)
         if(ControllerInput.UNKNOWN == mapping):
             PyUiLogger.get_logger().error(f"Unknown input {sdl_input}")
         return mapping
+
+    def map_analog_input(self, sdl_axis, sdl_value):
+        if(5 == sdl_axis and 32767 == sdl_value):
+            return ControllerInput.R2
+        elif(4 == sdl_axis and 32767 == sdl_value):
+            return ControllerInput.L2
+        else:
+            #PyUiLogger.get_logger().error(f"Received analog input axis = {sdl_axis}, value = {sdl_value}")
+            return None
+
+    def key_down(self, key_code):
+        PyUiLogger.get_logger().debug(f"key_down {key_code}")
+        if(115 == key_code):
+            self.change_volume(10)
+            return ControllerInput.VOLUME_UP
+        elif(114 == key_code):
+            self.change_volume(-10)
+            return ControllerInput.VOLUME_DOWN
+        else:
+            PyUiLogger.get_logger().debug(f"Unrecognized keycode key_code")
+
 
     def get_wifi_connection_quality_info(self) -> WiFiConnectionQualityInfo:
         try:
