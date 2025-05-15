@@ -21,7 +21,7 @@ Redistribution and use in source and binary forms, with or without modification,
 
 5. **Commercial Use**: Commercial use of this software is prohibited without explicit, prior written permission from the copyright holder. This includes, but is not limited to:
    - Using the Software or derivative works in products or services for which payment, subscription, or compensation is requested.
-   - Offering the Software or services derived from it in exchange for **donations**, **pay-what-you-want models**, or **any other form of voluntary or suggested payment**, regardless of whether payment is mandatory.
+   - Offering the Software or services derived from it in exchange for **donations**, **pay-what-you-want models**, or **any other form of voluntary or suggested payment**, , if payment is mandatory for access.
 
 6. **Notification Requirement**: Use of this Software under the non-commercial terms, including redistribution or creation of derivative works, requires notification to the original author. This notification must include a brief description of the intended use and a means of contact, and must be sent to:
 
