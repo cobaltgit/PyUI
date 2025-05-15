@@ -194,3 +194,7 @@ class Device(ABC):
     @abstractmethod
     def perform_startup_tasks(self):
         pass
+
+    @abstractmethod
+    def get_bluetooth_scanner(self):
+        pass
