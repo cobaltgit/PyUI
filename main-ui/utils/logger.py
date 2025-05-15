@@ -24,11 +24,11 @@ class PyUiLogger:
     _logger = None  # Class-level cache for the logger
 
     @classmethod
-    def init(cls, file_path, logger_name):
+    def init(cls, log_dir, logger_name):
         if cls._logger is not None:
             return cls._logger
 
-        cls.rotate_logs()  # Ensure logs are rotated before initializing logger
+        cls.rotate_logs(log_dir)  # Ensure logs are rotated before initializing logger
 
         logger = logging.getLogger(logger_name)
         logger.setLevel(logging.DEBUG)
@@ -44,7 +44,7 @@ class PyUiLogger:
             console_handler.setFormatter(formatter)
 
             # File handler
-            file_handler = RotatingFileHandler(file_path,
+            file_handler = RotatingFileHandler(os.path.join(log_dir,"pyui.log"),
                 maxBytes=10 * 1024,  # 1MB file size limit
                 backupCount=5               # Keep up to 5 backup files)
             )
@@ -62,10 +62,10 @@ class PyUiLogger:
         return cls._logger
     
     @staticmethod
-    def rotate_logs():
+    def rotate_logs(log_dir):
         # Perform log rotation before initializing the logger
-        log_path = "/mnt/SDCARD/Saves/spruce/pyui.log"
-        backup_path = "/mnt/SDCARD/Saves/spruce/pyui.log.5"
+        log_path = os.path.join(log_dir,"pyui.log")
+        backup_path = os.path.join(log_dir,"pyui.log.5")
 
         # Rotate logs manually before starting
         if os.path.exists(backup_path):

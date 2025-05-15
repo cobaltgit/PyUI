@@ -1,5 +1,7 @@
+import argparse
 from multiprocessing import get_logger
 import os
+import sys
 import threading
 from devices.trimui.trim_ui_brick import TrimUIBrick
 import sdl2
@@ -13,13 +15,27 @@ from devices.miyoo_flip import MiyooFlip
 from utils.logger import PyUiLogger
 from utils.py_ui_config import PyUiConfig
 
+
+
+print("Arguments:", sys.argv)
+print("Script name:", sys.argv[0])
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('-logDir', type=str, default='/mnt/SDCARD/pyui/logs/', help='Directory to store logs')
+
+args = parser.parse_args()
+
+print("logDir:", args.logDir)
+
+    
+PyUiLogger.init(args.logDir, "PyUI")
+
 num = sdl2.SDL_GetNumRenderDrivers()
 for i in range(num):
     info = sdl2.SDL_RendererInfo()
     sdl2.SDL_GetRenderDriverInfo(i, info)
-    print(f"Renderer {i}: {info.name.decode()}")
-    
-PyUiLogger.init("/mnt/SDCARD/Saves/spruce/pyui.log", "PyUI")
+    print(f"Found Renderer {i}: {info.name.decode()}")
 
 config = PyUiConfig()
 config.load()
