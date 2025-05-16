@@ -9,6 +9,7 @@ from views.grid_or_list_entry import GridOrListEntry
 from views.view_creator import ViewCreator
 from views.view_type import ViewType
 
+CONTINUE_RUNNING = True
 
 class InGameMenuPopup:
     def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
@@ -21,7 +22,7 @@ class InGameMenuPopup:
     def exit_game(self, input):
         return False
 
-    def run_popup_menu_selection(self):
+    def run_in_game_menu(self):
         popup_options = []
         popup_options.append(GridOrListEntry(
             primary_text="Exit Game",
@@ -46,3 +47,5 @@ class InGameMenuPopup:
         
         if(ControllerInput.A == popup_selection.get_input()): 
             return popup_selection.get_selection().get_value()(popup_selection.get_input())
+
+        return True

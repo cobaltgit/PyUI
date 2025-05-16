@@ -30,7 +30,9 @@ class InGameMenuListener:
             # Send SIGTERM to all children
             children = ps_proc.children(recursive=True)
             for child in children:
+                PyUiLogger.get_logger().debug(f"Sending signal {sig} to child PID {child.pid}")
                 child.send_signal(sig)
+                PyUiLogger.get_logger().debug(f"Sending signal {sig} to parent PID {ps_proc.pid}")
             ps_proc.send_signal(sig)
 
             if(signal.SIGTERM == sig):
@@ -44,14 +46,14 @@ class InGameMenuListener:
                 # If still running, force kill
                 for child in children:
                     if child.is_running():
-                        print(f"force killing child {child}")
+                        PyUiLogger.get_logger().debug(f"For exitting child PID {child.pid}")
                         child.kill()
                 if ps_proc.is_running():
-                    print(f"force killing ps_proc {ps_proc}")
+                    PyUiLogger.get_logger().debug(f"For exitting PID {child.pid}")
                     ps_proc.kill()
 
         except Exception as e:
-            print(f"Error in close_game: {e}")
+            PyUiLogger.get_logger().error(f"Error in send_signal: {e}")
 
 
     def game_launched(self, game_process: subprocess.Popen):
@@ -60,12 +62,16 @@ class InGameMenuListener:
                 if ControllerInput.MENU == self.controller.last_input():
                     self.send_signal(game_process, signal.SIGSTOP)
                     self.display.reinitialize()
-                    continue_running = self.popup_menu.run_popup_menu_selection()
+                    
+                    PyUiLogger.get_logger().debug(f"In game menu opened")
+                    continue_running = self.popup_menu.run_in_game_menu()
+                    PyUiLogger.get_logger().debug(f"In game menu opened closed. Continue Running ? {continue_running}")
+
                     self.display.deinit_display()
+                    
                     if(continue_running):
-                        game_process.send_signal(signal.SIGCONT)
+                        self.send_signal(game_process, signal.SIGCONT)
                     else:
-                        print(f"exit")
                         self.send_signal(game_process, signal.SIGCONT)
                         time.sleep(0.1)
                         self.send_signal(game_process, signal.SIGTERM)
