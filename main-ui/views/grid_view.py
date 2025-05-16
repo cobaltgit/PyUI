@@ -8,6 +8,7 @@ import sdl2
 from devices.device import Device
 from controller.controller import Controller
 from themes.theme import Theme
+from utils.logger import PyUiLogger
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
 from views.view import View
@@ -24,6 +25,10 @@ class GridView(View):
         self.theme : Theme = theme
         self.top_bar_text = top_bar_text
         self.options : List[GridOrListEntry] = options 
+
+        self.max_icon_height = 0
+        for option in options:           
+            self.max_icon_height = max(self.max_icon_height, display.get_image_dimensions(option.get_image_path())[1])
 
         self.selected = selected_index
         self.toggles = [False] * len(options)
@@ -95,9 +100,9 @@ class GridView(View):
                 y_index = int(visible_index / self.cols) 
                 row_spacing = self.display.get_usable_screen_height() / self.rows
                 row_start_y = y_index * row_spacing
-                row_mid_y = row_start_y + row_spacing /2
+                row_mid_y = row_start_y
                 y_icon_offset = int(row_mid_y + self.display.get_top_bar_height())
-                render_mode = RenderMode.MIDDLE_CENTER_ALIGNED
+                render_mode = RenderMode.TOP_CENTER_ALIGNED
 
             if(self.selected_bg is not None):
                 if(actual_index == self.selected):
@@ -115,8 +120,9 @@ class GridView(View):
             if(self.rows == 1) : 
                 real_y_text_offset = int(self.device.screen_height * 325/480)
             else:
-                real_y_text_offset = y_icon_offset + actual_width//2 + self.theme.get_grid_multirow_text_offset_y()
+                real_y_text_offset = y_icon_offset + self.max_icon_height + self.theme.get_grid_multirow_text_offset_y()
 
+            PyUiLogger.get_logger().debug(f"{imageTextPair.get_primary_text()} : real_y_text_offset = {real_y_text_offset}")
             self.display.render_text_centered(imageTextPair.get_primary_text(), 
                                     x_offset,
                                     real_y_text_offset, color,
