@@ -118,7 +118,7 @@ class ImageListView(NonDescriptiveListView):
 
             if(self.show_icons and imageTextPair.get_icon() is not None):
                 icon_width, icon_height = self.display.render_image(imageTextPair.get_icon(),text_x_value, y_value, render_mode)
-                text_x_value += icon_width
+                text_x_value += icon_width + 5 #TODO get 5 from somewhere
 
             self.display.render_text(self.scroll_string(imageTextPair.get_primary_text(),scroll_amt, text_available_width), text_x_value, y_value, color, FontPurpose.LIST,
                                     render_mode, crop_w=text_available_width, crop_h=None)
