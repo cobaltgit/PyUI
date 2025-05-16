@@ -23,14 +23,18 @@ class RomsListManager():
         self.game_system_utils = GameSystemUtils()
         self.favorite_rom_info_list = self.load_favorites_as_rom_info()
 
-    def add_favorite(self, rom_info: RomInfo):
+    def add_game(self, rom_info: RomInfo):
         new_favorite = RomsListEntry(rom_info.rom_file_path, rom_info.game_system.folder_name)
-        if not any(existing.rom_file_path == new_favorite.rom_file_path and existing.game_system_name == new_favorite.game_system_name for existing in self._favorites):
-            self._favorites.append(new_favorite)
+        if any(existing.rom_file_path == new_favorite.rom_file_path and existing.game_system_name == new_favorite.game_system_name for existing in self._favorites):
+            self.remove_game(rom_info)
+            self._favorites.insert(0, new_favorite)
+        else:
+            self._favorites.insert(0, new_favorite)
+
         self.save_to_file()
         self.favorite_rom_info_list = self.load_favorites_as_rom_info()
 
-    def remove_favorite(self, rom_info: RomInfo):
+    def remove_game(self, rom_info: RomInfo):
         to_remove_favorite = RomsListEntry(rom_info.rom_file_path, rom_info.game_system.folder_name)
         self._favorites = [
             existing for existing in self._favorites
@@ -58,10 +62,10 @@ class RomsListManager():
         except Exception as e:
             PyUiLogger.get_logger().error(f"Failed to load favorites: {e}")
 
-    def get_favorites(self) -> List[RomInfo]:
+    def get_games(self) -> List[RomInfo]:
         return self.favorite_rom_info_list
     
-    def is_favorite(self,rom_info):
+    def is_on_list(self,rom_info):
         return any(existing.rom_file_path == rom_info.rom_file_path and existing.game_system_name == rom_info.game_system.folder_name for existing in self._favorites)
 
     def load_favorites_as_rom_info(self) -> List[RomInfo]:

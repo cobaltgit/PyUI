@@ -19,6 +19,7 @@ from devices.wifi.wifi_connection_quality_info import WiFiConnectionQualityInfo
 from devices.wifi.wifi_status import WifiStatus
 from games.utils.game_entry import GameEntry
 from games.utils.rom_utils import RomUtils
+from menus.games.utils.recents_manager import RecentsManager
 import sdl2
 from utils import throttle
 from utils.logger import PyUiLogger
@@ -364,17 +365,23 @@ class TrimUIBrick(Device):
         pass
 
 
-    def run_game(self, file_path):
+    def run_game(self, rom_info):
+        RecentsManager.add_game(rom_info)
+        launch_path = os.path.join(rom_info.game_system.game_system_config.get_emu_folder(),rom_info.game_system.game_system_config.get_launch())
+        
         #file_path = /mnt/SDCARD/Roms/FAKE08/Alpine Alpaca.p8
         #miyoo maps it to /media/sdcard0/Emu/FAKE08/../../Roms/FAKE08/Alpine Alpaca.p8
-        miyoo_app_path = self.convert_game_path_to_miyoo_path(file_path)
-        self.write_cmd_to_run(f'''chmod a+x "/media/sdcard0/Emu/FC/../.emu_setup/standard_launch.sh";"/media/sdcard0/Emu/FC/../.emu_setup/standard_launch.sh" "{miyoo_app_path}"''')
+        miyoo_app_path = self.convert_game_path_to_miyoo_path(rom_info.rom_file_path)
+        self.write_cmd_to_run(f'''chmod a+x "{launch_path}";"{launch_path}" "{miyoo_app_path}"''')
 
         self.fix_sleep_sound_bug()
-        PyUiLogger.get_logger().debug(f"About to launch /mnt/SDCARD/Emu/.emu_setup/standard_launch.sh {file_path} | {miyoo_app_path}")
-        subprocess.run(["/mnt/SDCARD/Emu/.emu_setup/standard_launch.sh",file_path])
-
-        self.delete_cmd_to_run()
+        PyUiLogger.get_logger().debug(f"About to launch {launch_path} {rom_info.rom_file_path} | {miyoo_app_path}")
+        try:
+            return subprocess.Popen([launch_path,rom_info.rom_file_path], stdin=subprocess.DEVNULL,
+                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception as e:
+            PyUiLogger.get_logger().error(f"Failed to launch game {rom_info.rom_file_path}: {e}")
+            return None
 
     def run_app(self, args, dir = None):
         PyUiLogger.get_logger().debug(f"About to launch app {args}")
@@ -686,3 +693,6 @@ class TrimUIBrick(Device):
 
     def get_favorites_path(self):
         return "/mnt/SDCARD/Saves/pyui-favorites.json"
+        
+    def get_recents_path(self):
+        return "/mnt/SDCARD/Saves/pyui-recents.json"

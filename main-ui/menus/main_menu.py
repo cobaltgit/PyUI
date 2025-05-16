@@ -40,7 +40,8 @@ class MainMenu:
         expected_inputs = [ControllerInput.A, ControllerInput.MENU]
         while(selected.get_input() != ControllerInput.B):        
             #TODO make this user config driven
-            first_entry = "Favorite"
+            #first_entry = "Favorite"
+            first_entry = "Recent"
 
             image_text_list = [
                 GridOrListEntry(

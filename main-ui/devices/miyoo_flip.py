@@ -18,6 +18,7 @@ from devices.wifi.wifi_connection_quality_info import WiFiConnectionQualityInfo
 from devices.wifi.wifi_status import WifiStatus
 from games.utils.game_entry import GameEntry
 from games.utils.rom_utils import RomUtils
+from menus.games.utils.recents_manager import RecentsManager
 from menus.games.utils.rom_info import RomInfo
 import sdl2
 from utils import throttle
@@ -413,7 +414,7 @@ class MiyooFlip(Device):
 
 
     def run_game(self, rom_info: RomInfo) -> subprocess.Popen:
-        
+        RecentsManager.add_game(rom_info)
         launch_path = os.path.join(rom_info.game_system.game_system_config.get_emu_folder(),rom_info.game_system.game_system_config.get_launch())
         
         #file_path = /mnt/SDCARD/Roms/FAKE08/Alpine Alpaca.p8
@@ -760,3 +761,6 @@ class MiyooFlip(Device):
 
     def get_favorites_path(self):
         return "/mnt/SDCARD/Saves/pyui-favorites.json"
+    
+    def get_recents_path(self):
+        return "/mnt/SDCARD/Saves/pyui-recents.json"

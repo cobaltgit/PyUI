@@ -6,6 +6,7 @@ import threading
 from controller.key_watcher import KeyWatcher
 from devices.trimui.trim_ui_brick import TrimUIBrick
 from menus.games.utils.favorites_manager import FavoritesManager
+from menus.games.utils.recents_manager import RecentsManager
 import sdl2
 import sdl2.ext
 
@@ -60,6 +61,7 @@ controller = Controller(device, config)
 
 #TODO thread
 FavoritesManager.initialize(device.get_favorites_path())
+RecentsManager.initialize(device.get_recents_path())
 
 main_menu = MainMenu(display, controller, device, theme, config)
 
