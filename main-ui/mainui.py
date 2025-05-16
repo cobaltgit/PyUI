@@ -20,58 +20,71 @@ from utils.py_ui_config import PyUiConfig
 
 
 
-print("Arguments:", sys.argv)
-print("Script name:", sys.argv[0])
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-logDir', type=str, default='/mnt/SDCARD/pyui/logs/', help='Directory to store logs')
+    parser.add_argument('-pyUiConfig', type=str, default='/mnt/SDCARD/Saves/pyui-config.json', help='Location of PyUI config')
+    return parser.parse_args()
 
-parser = argparse.ArgumentParser()
+def log_renderer_info():
+    num = sdl2.SDL_GetNumRenderDrivers()
+    for i in range(num):
+        info = sdl2.SDL_RendererInfo()
+        sdl2.SDL_GetRenderDriverInfo(i, info)
+        print(f"Found Renderer {i}: {info.name.decode()}")
 
-parser.add_argument('-logDir', type=str, default='/mnt/SDCARD/pyui/logs/', help='Directory to store logs')
-parser.add_argument('-pyUiConfig', type=str, default='/mnt/SDCARD/Saves/pyui-config.json', help='Location of PyUI config')
-
-args = parser.parse_args()
-
-print("logDir:", args.logDir)
-
-    
-PyUiLogger.init(args.logDir, "PyUI")
-
-num = sdl2.SDL_GetNumRenderDrivers()
-for i in range(num):
-    info = sdl2.SDL_RendererInfo()
-    sdl2.SDL_GetRenderDriverInfo(i, info)
-    print(f"Found Renderer {i}: {info.name.decode()}")
-
-config = PyUiConfig(args.pyUiConfig)
-config.load()
-
-selected_theme = os.path.join(config["themeDir"],config["theme"])
-                              
-PyUiLogger.get_logger().info(f"{selected_theme}")
+def initialize_device():
+    if os.path.exists("/userdata/system.json"):
+        return MiyooFlip()
+    elif os.path.exists("/mnt/UDISK/system.json"):
+        return TrimUIBrick()
+    else:
+        raise RuntimeError("No supported device config found")
 
 
-if os.path.exists("/userdata/system.json"):
-    device = MiyooFlip()
-elif os.path.exists("/mnt/UDISK/system.json"):
-    device = TrimUIBrick()
+def background_startup(device):
+    FavoritesManager.initialize(device.get_favorites_path())
+    RecentsManager.initialize(device.get_recents_path())
 
-theme = Theme(os.path.join(config["themeDir"],config["theme"]), device.screen_width, device.screen_height)
+def start_background_threads(device):
+    startup_thread = threading.Thread(target=device.perform_startup_tasks)
+    startup_thread.start()
 
-display = Display(theme, device)
-controller = Controller(device, config)
+    key_watcher = KeyWatcher(device)
+    key_polling_thread = threading.Thread(target=key_watcher.poll_keyboard, daemon=True)
+    key_polling_thread.start()
 
-#TODO thread
-FavoritesManager.initialize(device.get_favorites_path())
-RecentsManager.initialize(device.get_recents_path())
+    # Background favorites/recents init thread
+    background_thread = threading.Thread(target=background_startup, args=(device,))
+    background_thread.start()
 
-main_menu = MainMenu(display, controller, device, theme, config)
+def main():
+    args = parse_arguments()
 
-startup_thread = threading.Thread(target=device.perform_startup_tasks())
-startup_thread.start()
+    print("Arguments:", sys.argv)
+    print("logDir:", args.logDir)
 
-key_watcher = KeyWatcher(device)
-key_polling_thread = threading.Thread(target=key_watcher.poll_keyboard, daemon=True)
-key_polling_thread.start()
+    PyUiLogger.init(args.logDir, "PyUI")
 
+    log_renderer_info()
 
-main_menu.run_main_menu_selection()
-os._exit(0)
+    config = PyUiConfig(args.pyUiConfig)
+    config.load()
+
+    selected_theme = os.path.join(config["themeDir"], config["theme"])
+    PyUiLogger.get_logger().info(f"{selected_theme}")
+
+    device = initialize_device()
+
+    theme = Theme(selected_theme, device.screen_width, device.screen_height)
+    display = Display(theme, device)
+    controller = Controller(device, config)
+    main_menu = MainMenu(display, controller, device, theme, config)
+
+    start_background_threads(device)
+
+    main_menu.run_main_menu_selection()
+
+if __name__ == "__main__":
+    main()
+    os._exit(0)
