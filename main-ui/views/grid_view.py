@@ -50,14 +50,23 @@ class GridView(View):
         self.selected = max(0, self.selected)
 
         self.selected = self.selected % (len(self.options))
-        
+
         while(self.selected < self.current_left):
-            self.current_left -= (self.cols*self.rows)
-            self.current_right -= (self.cols*self.rows)
+            if(self.rows > 1):
+                self.current_left -= (self.cols*self.rows)
+                self.current_right -= (self.cols*self.rows)
+            else:
+                self.current_left -=1
+                self.current_right -=1
 
         while(self.selected >= self.current_right):
-            self.current_left += (self.cols*self.rows)
-            self.current_right += (self.cols*self.rows)
+            if(self.rows > 1):
+                self.current_left += (self.cols*self.rows)
+                self.current_right += (self.cols*self.rows)
+            else:
+                self.current_left +=1
+                self.current_right +=1
+
 
     def _render(self):
         self.display.clear(self.top_bar_text)
