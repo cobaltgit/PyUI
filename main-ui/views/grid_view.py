@@ -122,7 +122,6 @@ class GridView(View):
             else:
                 real_y_text_offset = y_icon_offset + self.max_icon_height + self.theme.get_grid_multirow_text_offset_y()
 
-            PyUiLogger.get_logger().debug(f"{imageTextPair.get_primary_text()} : real_y_text_offset = {real_y_text_offset}")
             self.display.render_text_centered(imageTextPair.get_primary_text(), 
                                     x_offset,
                                     real_y_text_offset, color,
