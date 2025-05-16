@@ -15,9 +15,9 @@ from views.grid_or_list_entry import GridOrListEntry
 
 
 class SearchGamesForSystemMenu(RomsMenuCommon):
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, game_system : GameSystem, search_str):
-        super().__init__(display,controller,device,theme)
-        self.rom_select_options_builder = RomSelectOptionsBuilder(device, theme)
+    def __init__(self, display: Display, controller: Controller, device: Device, game_system : GameSystem, search_str):
+        super().__init__(display,controller,device)
+        self.rom_select_options_builder = RomSelectOptionsBuilder(device)
         self.game_system = game_system
         self.search_str = search_str
 

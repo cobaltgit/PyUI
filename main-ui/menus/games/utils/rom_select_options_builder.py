@@ -12,9 +12,8 @@ from views.grid_or_list_entry import GridOrListEntry
 
 
 class RomSelectOptionsBuilder:
-    def __init__(self, device: Device, theme: Theme):
+    def __init__(self, device: Device):
         self.device = device
-        self.theme = theme
         self.roms_path = "/mnt/SDCARD/Roms/"
         self.rom_utils : RomUtils= RomUtils(self.roms_path)
         
@@ -54,7 +53,7 @@ class RomSelectOptionsBuilder:
                 rom_file_name = os.path.basename(rom_file_path)
                 img_path = self.get_image_path(rom_file_path)
                 rom_info = RomInfo(game_system,rom_file_path)
-                icon=self.theme.favorite_icon if FavoritesManager.is_favorite(rom_info) else None
+                icon=Theme.favorite_icon() if FavoritesManager.is_favorite(rom_info) else None
 
                 rom_list.append(
                     GridOrListEntry(

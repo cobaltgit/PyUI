@@ -17,11 +17,10 @@ from views.view_type import ViewType
 
 class ViewCreator():
 
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
+    def __init__(self, display: Display, controller: Controller, device: Device):
         self.display = display
         self.controller = controller
         self.device = device
-        self.theme = theme
 
     def get_usable_height_for_text_above_or_below_image(self, img_height, y_pad):
         return self.display.get_usable_screen_height() - y_pad - img_height
@@ -35,26 +34,25 @@ class ViewCreator():
                     rows=None):
         match view_type:
             case ViewType.DESCRIPTIVE_LIST_VIEW:
-                selected_bg = self.theme.get_list_small_selected_bg()
+                selected_bg = Theme.get_list_small_selected_bg()
                 for option in options:
                     icon = option.get_icon()
                     if icon is not None:
-                        selected_bg = self.theme.get_list_large_selected_bg()
+                        selected_bg = Theme.get_list_large_selected_bg()
 
                 return DescriptiveListView(
                     display=self.display, 
                     controller=self.controller, 
                     device=self.device, 
-                    theme=self.theme, 
                     top_bar_text=top_bar_text,
                     options=options,
                     selected=selected_index,
                     selected_bg=selected_bg
                 )
             case ViewType.TEXT_AND_IMAGE_LIST_VIEW:
-                text_and_image_list_view_mode = self.theme.text_and_image_list_view_mode
-                img_width = self.theme.rom_image_width(self.device.screen_width)
-                img_height = self.theme.rom_image_height(self.device.screen_height)
+                text_and_image_list_view_mode = Theme.text_and_image_list_view_mode()
+                img_width = Theme.rom_image_width(self.device.screen_width)
+                img_height = Theme.rom_image_height(self.device.screen_height)
 
                 if("TEXT_LEFT_IMAGE_RIGHT" == text_and_image_list_view_mode):
                     img_offset_x = self.device.screen_width - 10 - img_width//2
@@ -99,7 +97,6 @@ class ViewCreator():
                     display=self.display, 
                     controller=self.controller, 
                     device=self.device, 
-                    theme=self.theme,
                     top_bar_text=top_bar_text,
                     options=options,
                     img_offset_x=img_offset_x,
@@ -110,7 +107,7 @@ class ViewCreator():
                     show_icons=ImageListView.SHOW_ICONS,
                     image_render_mode=image_render,
                     text_to_image_relationship=text_to_image_relationship,
-                    selected_bg=self.theme.get_list_small_selected_bg(),
+                    selected_bg=Theme.get_list_small_selected_bg(),
                     usable_height=usable_height
                 )            
             case ViewType.TEXT_LIST_VIEW:
@@ -118,37 +115,34 @@ class ViewCreator():
                     display=self.display, 
                     controller=self.controller, 
                     device=self.device, 
-                    theme=self.theme,
                     top_bar_text=top_bar_text,
                     options=options,
                     selected_index=selected_index,
                     show_icons=ImageListView.DONT_SHOW_ICONS,
                     image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
-                    selected_bg=self.theme.get_list_small_selected_bg()
+                    selected_bg=Theme.get_list_small_selected_bg()
                 )   
             case ViewType.POPUP_TEXT_LIST_VIEW:
                 return PopupTextListView(
                     display=self.display, 
                     controller=self.controller, 
                     device=self.device, 
-                    theme=self.theme,
                     options=options,
                     selected_index=selected_index,
                     show_icons=ImageListView.DONT_SHOW_ICONS,
                     image_render_mode=RenderMode.MIDDLE_RIGHT_ALIGNED,
-                    selected_bg=self.theme.get_popup_menu_selected_bg()
+                    selected_bg=Theme.get_popup_menu_selected_bg()
                 )
             case ViewType.GRID_VIEW:
                 return GridView(
                     display=self.display, 
                     controller=self.controller, 
                     device=self.device, 
-                    theme=self.theme,
                     top_bar_text=top_bar_text,
                     options=options,
                     cols=cols,
                     rows=rows,
-                    selected_bg=self.theme.get_grid_bg(rows,cols),
+                    selected_bg=Theme.get_grid_bg(rows,cols),
                     selected_index=selected_index
                 )
             case _:

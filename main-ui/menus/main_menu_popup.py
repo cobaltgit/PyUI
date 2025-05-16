@@ -14,71 +14,70 @@ from views.view_type import ViewType
 
 
 class MainMenuPopup:
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
+    def __init__(self, display: Display, controller: Controller, device: Device):
         self.display : Display= display
         self.controller : Controller = controller
         self.device : Device= device
-        self.theme : Theme= theme
-        self.view_creator = ViewCreator(display,controller,device,theme)
+        self.view_creator = ViewCreator(display,controller,device)
 
 
     def run_popup_menu_selection(self):
         popup_options = []
         popup_options.append(GridOrListEntry(
             primary_text="Rom Search",
-            image_path=self.theme.settings,
-            image_path_selected=self.theme.settings_selected,
+            image_path=Theme.settings(),
+            image_path_selected=Theme.settings_selected(),
             description="",
-            icon=self.theme.settings,
+            icon=Theme.settings(),
             value="Rom Search"
         ))
 
         popup_options.append(GridOrListEntry(
             primary_text="Future Option 2",
-            image_path=self.theme.settings,
-            image_path_selected=self.theme.settings_selected,
+            image_path=Theme.settings(),
+            image_path_selected=Theme.settings_selected(),
             description="",
-            icon=self.theme.settings,
+            icon=Theme.settings(),
             value="Future Option 2"
         ))
         popup_options.append(GridOrListEntry(
             primary_text="Future Option 3",
-            image_path=self.theme.settings,
-            image_path_selected=self.theme.settings_selected,
+            image_path=Theme.settings(),
+            image_path_selected=Theme.settings_selected(),
             description="",
-            icon=self.theme.settings,
+            icon=Theme.settings(),
             value="Future Option 3"
         ))
         popup_options.append(GridOrListEntry(
             primary_text="Future Option 4",
-            image_path=self.theme.settings,
-            image_path_selected=self.theme.settings_selected,
+            image_path=Theme.settings(),
+            image_path_selected=Theme.settings_selected(),
             description="",
-            icon=self.theme.settings,
+            icon=Theme.settings(),
             value="Future Option 3"
         ))
         popup_options.append(GridOrListEntry(
             primary_text="Future Option 5",
-            image_path=self.theme.settings,
-            image_path_selected=self.theme.settings_selected,
+            image_path=Theme.settings(),
+            image_path_selected=Theme.settings_selected(),
             description="",
-            icon=self.theme.settings,
+            icon=Theme.settings(),
             value="Future Option 3"
         ))
         popup_options.append(GridOrListEntry(
             primary_text="Future Option 6",
-            image_path=self.theme.settings,
-            image_path_selected=self.theme.settings_selected,
+            image_path=Theme.settings(),
+            image_path_selected=Theme.settings_selected(),
             description="",
-            icon=self.theme.settings,
+            icon=Theme.settings(),
             value="Future Option 3"
         ))
         popup_options.append(GridOrListEntry(
             primary_text="Future Option 7",
-            image_path=self.theme.settings,
-            image_path_selected=self.theme.settings_selected,
+            image_path=Theme.settings(),
+            image_path_selected=Theme.settings_selected(),
             description="",
-            icon=self.theme.settings,
+            icon=Theme.settings(),
             value="Future Option 3"
         ))
         popup_view = self.view_creator.create_view(
@@ -86,8 +85,8 @@ class MainMenuPopup:
             options=popup_options,
             top_bar_text="Main Menu Sub Options",
             selected_index=0,
-            cols=self.theme.popup_menu_cols,
-            rows=self.theme.popup_menu_rows)
+            cols=Theme.popup_menu_cols(),
+            rows=Theme.popup_menu_rows)
         
         while (popup_selection := popup_view.get_selection()):
             if(popup_selection.get_input() is not None):
@@ -98,6 +97,6 @@ class MainMenuPopup:
 
         if(ControllerInput.A == popup_selection.get_input()): 
             if("Rom Search" == popup_selection.get_selection().get_primary_text()):
-                search_txt = OnScreenKeyboard(self.display,self.controller,self.device,self.theme).get_input("Game Search:")
+                search_txt = OnScreenKeyboard(self.display,self.controller,self.device,Theme).get_input("Game Search:")
                 if(search_txt is not None):
-                    SearchedRomsMenu(self.display,self.controller,self.device,self.theme, search_txt.upper()).run_rom_selection()
+                    SearchedRomsMenu(self.display,self.controller,self.device,Theme, search_txt.upper()).run_rom_selection()

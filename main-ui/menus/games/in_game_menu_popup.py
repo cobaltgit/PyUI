@@ -12,12 +12,11 @@ from views.view_type import ViewType
 CONTINUE_RUNNING = True
 
 class InGameMenuPopup:
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
+    def __init__(self, display: Display, controller: Controller, device: Device):
         self.display : Display= display
         self.controller : Controller = controller
         self.device : Device= device
-        self.theme : Theme= theme
-        self.view_creator = ViewCreator(display,controller,device,theme)
+        self.view_creator = ViewCreator(display,controller,device)
 
     def exit_game(self, input):
         return False
@@ -26,10 +25,10 @@ class InGameMenuPopup:
         popup_options = []
         popup_options.append(GridOrListEntry(
             primary_text="Exit Game",
-            image_path=self.theme.settings,
-            image_path_selected=self.theme.settings_selected,
+            image_path=Theme.settings(),
+            image_path_selected=Theme.settings_selected(),
             description="",
-            icon=self.theme.settings,
+            icon=Theme.settings(),
             value=self.exit_game
         ))
 
@@ -38,8 +37,8 @@ class InGameMenuPopup:
             options=popup_options,
             top_bar_text="Main Menu Sub Options",
             selected_index=0,
-            cols=self.theme.popup_menu_cols,
-            rows=self.theme.popup_menu_rows)
+            cols=Theme.popup_menu_cols(),
+            rows=Theme.popup_menu_rows())
         
         while (popup_selection := popup_view.get_selection()):
             if(popup_selection.get_input() is not None):

@@ -14,9 +14,8 @@ from devices.device import Device
 from utils.logger import PyUiLogger
 
 class Display:
-    def __init__(self, theme: Theme, device: Device):
+    def __init__(self, device: Device):
         self.debug = False
-        self.theme = theme
         self.device = device
         self._init_display()
         self.init_fonts()
@@ -30,8 +29,8 @@ class Display:
         PyUiLogger.get_logger().info(f"sdl2.SDL_GetError() : {sdl2.SDL_GetError()}")
         self.bg_path = ""
         self._check_for_bg_change()
-        self.top_bar = TopBar(self,device,theme)
-        self.bottom_bar = BottomBar(self,device,theme)
+        self.top_bar = TopBar(self,device)
+        self.bottom_bar = BottomBar(self,device)
         self.clear("init")
         self.present()
 
@@ -97,7 +96,7 @@ class Display:
             PyUiLogger.get_logger().debug("Destroying bg texture")
 
     def _load_bg_texture(self):
-        self.bg_path = self.theme.background
+        self.bg_path = Theme.background()
         # Load the image into an SDL_Surface
         surface = sdl2.sdlimage.IMG_Load(self.bg_path.encode('utf-8'))
         if not surface:
@@ -108,7 +107,7 @@ class Display:
             PyUiLogger.get_logger().error(f"Failed to create texture from surface")
 
     def _check_for_bg_change(self):
-        if self.bg_path != self.theme.background:
+        if self.bg_path != Theme.background():
             self._unload_bg_texture()
             self._load_bg_texture()
 
@@ -117,8 +116,8 @@ class Display:
             raise RuntimeError("Failed to initialize SDL_ttf")
 
         # Load the TTF font
-        font_path = self.theme.get_font(font_purpose)
-        font_size = self.theme.get_font_size(font_purpose)
+        font_path = Theme.get_font(font_purpose)
+        font_size = Theme.get_font_size(font_purpose)
         
         font = sdl2.sdlttf.TTF_OpenFont(font_path.encode('utf-8'), font_size)
         if not font:
@@ -149,7 +148,7 @@ class Display:
         elif(self.background_texture is not None):
             sdl2.SDL_RenderCopy(self.renderer.sdlrenderer, self.background_texture, None, None)
 
-        if(not self.theme.render_top_and_bottom_bar_last()):
+        if(not Theme.render_top_and_bottom_bar_last()):
             self.top_bar.render_top_bar(self.screen)
             self.bottom_bar.render_bottom_bar()
 
@@ -345,7 +344,7 @@ class Display:
 
         
     def present(self):
-        if(self.theme.render_top_and_bottom_bar_last()):
+        if(Theme.render_top_and_bottom_bar_last()):
             self.top_bar.render_top_bar(self.screen)
             self.bottom_bar.render_bottom_bar()
 
@@ -363,13 +362,13 @@ class Display:
         self.renderer.present()
 
     def get_top_bar_height(self):
-        if(self.theme.ignore_top_and_bottom_bar_for_layout()):
+        if(Theme.ignore_top_and_bottom_bar_for_layout()):
             return 0
         else:
             return self.top_bar.get_top_bar_height()
     
     def get_bottom_bar_height(self):
-        if(self.theme.ignore_top_and_bottom_bar_for_layout()):
+        if(Theme.ignore_top_and_bottom_bar_for_layout()):
             return 0
         else:
             return self.bottom_bar.get_bottom_bar_height()
@@ -414,7 +413,7 @@ class Display:
             str(total),
             total_text_x,
             y_value, 
-            self.theme.text_color(FontPurpose.LIST_TOTAL), 
+            Theme.text_color(FontPurpose.LIST_TOTAL), 
             FontPurpose.LIST_TOTAL, 
             RenderMode.BOTTOM_RIGHT_ALIGNED)
 
@@ -423,7 +422,7 @@ class Display:
             str(index)+"/",
             index_text_x,
             y_value, 
-            self.theme.text_color(FontPurpose.LIST_INDEX), 
+            Theme.text_color(FontPurpose.LIST_INDEX), 
             FontPurpose.LIST_INDEX, 
             RenderMode.BOTTOM_RIGHT_ALIGNED)
 

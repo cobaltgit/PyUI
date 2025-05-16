@@ -12,12 +12,11 @@ from views.list_view import ListView
 
 class DescriptiveListView(ListView):
 
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text,
+    def __init__(self, display: Display, controller: Controller, device: Device, top_bar_text,
                  options: List[GridOrListEntry], selected_bg, selected : int = 0):
         super().__init__(controller)
         self.display = display
         self.device = device
-        self.theme = theme
         self.top_bar_text = top_bar_text
         self.options : List[GridOrListEntry] = options
 
@@ -35,7 +34,7 @@ class DescriptiveListView(ListView):
     def _render(self):
         visible_options: List[GridOrListEntry] = self.options[self.current_top:self.current_bottom]
 
-        row_offset_x = self.theme.get_descriptive_list_icon_offset_x()
+        row_offset_x = Theme.get_descriptive_list_icon_offset_x()
         #TODO get padding from theme
         row_offset_y = self.display.get_top_bar_height() + 5
         
@@ -54,32 +53,32 @@ class DescriptiveListView(ListView):
             if(iconPath is not None):
                 icon_w, icon_h = self.display.render_image(iconPath, 
                                     row_offset_x, 
-                                    row_offset_y + self.theme.get_descriptive_list_icon_offset_y())
+                                    row_offset_y + Theme.get_descriptive_list_icon_offset_y())
 
-            color = self.theme.text_color_selected(FontPurpose.DESCRIPTIVE_LIST_TITLE) if actual_index == self.selected else self.theme.text_color(FontPurpose.DESCRIPTIVE_LIST_TITLE)
+            color = Theme.text_color_selected(FontPurpose.DESCRIPTIVE_LIST_TITLE) if actual_index == self.selected else Theme.text_color(FontPurpose.DESCRIPTIVE_LIST_TITLE)
             title_w, title_h = self.display.render_text(
                 gridOrListEntry.get_primary_text(), 
-                row_offset_x + icon_w + self.theme.get_descriptive_list_text_from_icon_offset(), 
-                row_offset_y + self.theme.get_descriptive_list_text_offset_y(), 
+                row_offset_x + icon_w + Theme.get_descriptive_list_text_from_icon_offset(), 
+                row_offset_y + Theme.get_descriptive_list_text_offset_y(), 
                 color, 
                 FontPurpose.DESCRIPTIVE_LIST_TITLE)
 
             if(gridOrListEntry.get_value_text() is not None):
                 self.display.render_text(
                     gridOrListEntry.get_value_text(), 
-                    self.device.screen_width - self.theme.get_descriptive_list_text_from_icon_offset(), 
-                    row_offset_y + self.theme.get_descriptive_list_text_offset_y(), 
+                    self.device.screen_width - Theme.get_descriptive_list_text_from_icon_offset(), 
+                    row_offset_y + Theme.get_descriptive_list_text_offset_y(), 
                     color, 
                     FontPurpose.DESCRIPTIVE_LIST_TITLE,
                     RenderMode.TOP_RIGHT_ALIGNED)
 
-            color = self.theme.text_color_selected(FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION) if actual_index == self.selected else self.theme.text_color(FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION)
+            color = Theme.text_color_selected(FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION) if actual_index == self.selected else Theme.text_color(FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION)
             
             if(gridOrListEntry.get_description() is not None):
                 text_w, text_h = self.display.render_text(
                     gridOrListEntry.get_description(), 
-                    row_offset_x + icon_w + self.theme.get_descriptive_list_text_from_icon_offset(), 
-                    row_offset_y + + self.theme.get_descriptive_list_text_offset_y() + title_h, 
+                    row_offset_x + icon_w + Theme.get_descriptive_list_text_from_icon_offset(), 
+                    row_offset_y + + Theme.get_descriptive_list_text_offset_y() + title_h, 
                     color, 
                     FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION)
 

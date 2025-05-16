@@ -22,18 +22,17 @@ from views.view_type import ViewType
 
 
 class MainMenu:
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, config: PyUiConfig):
+    def __init__(self, display: Display, controller: Controller, device: Device, config: PyUiConfig):
         self.display : Display= display
         self.controller : Controller = controller
         self.device : Device= device
-        self.theme : Theme= theme
-        self.system_select_menu = GameSystemSelectMenu(display,controller,device,theme)
-        self.app_menu = AppMenu(display,controller,device,theme)
-        self.favorites_menu = FavoritesMenu(display,controller,device,theme)
-        self.recents_menu = RecentsMenu(display,controller,device,theme)
-        self.settings_menu = BasicSettingsMenu(display,controller,device,theme, config)
-        self.view_creator = ViewCreator(display,controller,device,theme)
-        self.popup_menu = MainMenuPopup(display,controller,device,theme)
+        self.system_select_menu = GameSystemSelectMenu(display,controller,device)
+        self.app_menu = AppMenu(display,controller,device)
+        self.favorites_menu = FavoritesMenu(display,controller,device)
+        self.recents_menu = RecentsMenu(display,controller,device)
+        self.settings_menu = BasicSettingsMenu(display,controller,device, config)
+        self.view_creator = ViewCreator(display,controller,device)
+        self.popup_menu = MainMenuPopup(display,controller,device)
 
     def build_options(self):
         #TODO make this user config driven
@@ -46,8 +45,8 @@ class MainMenu:
             image_text_list.append(
                 GridOrListEntry(
                     primary_text="Recent",
-                    image_path=self.theme.recent,
-                    image_path_selected=self.theme.recent_selected,
+                    image_path=Theme.recent(),
+                    image_path_selected=Theme.recent_selected(),
                     description="Recent",
                     icon=None,
                     value="Recent"
@@ -58,8 +57,8 @@ class MainMenu:
              image_text_list.append(
                 GridOrListEntry(
                     primary_text="Favorite",
-                    image_path=self.theme.favorite,
-                    image_path_selected=self.theme.favorite_selected,
+                    image_path=Theme.favorite(),
+                    image_path_selected=Theme.favorite_selected(),
                     description="Favorite",
                     icon=None,
                     value="Favorite"
@@ -69,8 +68,8 @@ class MainMenu:
         image_text_list.append(
             GridOrListEntry(
                 primary_text="Game",
-                image_path=self.theme.game,
-                image_path_selected=self.theme.game_selected,
+                image_path=Theme.game(),
+                image_path_selected=Theme.game_selected(),
                 description="Your games",
                 icon=None,
                 value="Game"
@@ -79,8 +78,8 @@ class MainMenu:
         image_text_list.append(
              GridOrListEntry(
                  primary_text="App",
-                image_path=self.theme.app,
-                image_path_selected=self.theme.app_selected,
+                image_path=Theme.app(),
+                image_path_selected=Theme.app_selected(),
                 description="Your Apps",
                 icon=None,
                 value="App"
@@ -89,8 +88,8 @@ class MainMenu:
         image_text_list.append(
              GridOrListEntry(
                 primary_text="Setting",
-                image_path=self.theme.settings,
-                image_path_selected=self.theme.settings_selected,
+                image_path=Theme.settings(),
+                image_path_selected=Theme.settings_selected(),
                 description="Your Apps",
                 icon=None,
                 value="Setting"
@@ -100,10 +99,10 @@ class MainMenu:
 
     def build_main_menu_view(self, options, selected):
         return self.view_creator.create_view(
-            view_type=self.theme.get_view_type_for_main_menu(),
+            view_type=Theme.get_view_type_for_main_menu(),
             top_bar_text="PyUI", 
             options=options, 
-            cols=self.theme.get_main_menu_column_count(), 
+            cols=Theme.get_main_menu_column_count(), 
             rows=1,
             selected_index=selected.get_index())
 

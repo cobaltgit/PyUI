@@ -12,37 +12,36 @@ from views.view_type import ViewType, get_next_view_type
 
 
 class ThemeSettingsMenu():
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
+    def __init__(self, display: Display, controller: Controller, device: Device):
         self.display = display
         self.controller = controller
         self.device = device
-        self.theme = theme
-        self.view_creator = ViewCreator(display,controller,device,theme)
+        self.view_creator = ViewCreator(display,controller,device)
 
     def change_main_menu_type(self, input):
         if(ControllerInput.DPAD_LEFT == input):
-            next_view_type = get_next_view_type(self.theme.get_view_type_for_main_menu(),-1)
+            next_view_type = get_next_view_type(Theme.get_view_type_for_main_menu(),-1)
         elif(ControllerInput.DPAD_RIGHT == input):
-            next_view_type = get_next_view_type(self.theme.get_view_type_for_main_menu(),+1)
+            next_view_type = get_next_view_type(Theme.get_view_type_for_main_menu(),+1)
 
-        self.theme.set_view_type_for_main_menu(next_view_type)
+        Theme.set_view_type_for_main_menu(next_view_type)
 
     def change_main_menu_column_count(self, input):
-        column_count = self.theme.get_main_menu_column_count()
+        column_count = Theme.get_main_menu_column_count()
 
         if(ControllerInput.DPAD_LEFT == input):
             column_count = max(1, column_count-1)
         elif(ControllerInput.DPAD_RIGHT == input):
             column_count +=1 #Should we limit?
 
-        self.theme.set_main_menu_column_count(column_count)
+        Theme.set_main_menu_column_count(column_count)
 
     def build_options_list(self):
         option_list = []
         option_list.append(
                 GridOrListEntry(
                         primary_text="Main Menu Type",
-                        value_text="<    " + self.theme.get_view_type_for_main_menu().name + "    >",
+                        value_text="<    " + Theme.get_view_type_for_main_menu().name + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
@@ -53,7 +52,7 @@ class ThemeSettingsMenu():
         option_list.append(
                 GridOrListEntry(
                         primary_text="Main Menu Columns",
-                        value_text="<    " + str(self.theme.get_main_menu_column_count()) + "    >",
+                        value_text="<    " + str(Theme.get_main_menu_column_count()) + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,

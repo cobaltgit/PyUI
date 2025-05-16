@@ -76,10 +76,10 @@ def main():
 
     device = initialize_device()
 
-    theme = Theme(selected_theme, device.screen_width, device.screen_height)
-    display = Display(theme, device)
+    Theme.init(selected_theme, device.screen_width, device.screen_height)
+    display = Display(device)
     controller = Controller(device, config)
-    main_menu = MainMenu(display, controller, device, theme, config)
+    main_menu = MainMenu(display, controller, device, config)
 
     start_background_threads(device)
 

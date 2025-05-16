@@ -17,39 +17,38 @@ from views.view_type import ViewType
 
 
 class GameSystemSelectMenuPopup:
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
+    def __init__(self, display: Display, controller: Controller, device: Device):
         self.display : Display= display
         self.controller : Controller = controller
         self.device : Device= device
-        self.theme : Theme= theme
-        self.view_creator = ViewCreator(display,controller,device,theme)
+        self.view_creator = ViewCreator(display,controller,device)
 
     def execute_game_search(self, game_system, input_value):
-        search_txt = OnScreenKeyboard(self.display,self.controller,self.device,self.theme).get_input("Game Search:")
+        search_txt = OnScreenKeyboard(self.display,self.controller,self.device).get_input("Game Search:")
         if(search_txt is not None):
-            SearchGamesForSystemMenu(self.display,self.controller,self.device,self.theme, game_system, search_txt.upper()).run_rom_selection()
+            SearchGamesForSystemMenu(self.display,self.controller,self.device, game_system, search_txt.upper()).run_rom_selection()
     
     def all_system_game_search(self, input_value):
-        search_txt = OnScreenKeyboard(self.display,self.controller,self.device,self.theme).get_input("Game Search:")
+        search_txt = OnScreenKeyboard(self.display,self.controller,self.device).get_input("Game Search:")
         if(search_txt is not None):
-            SearchedRomsMenu(self.display,self.controller,self.device,self.theme, search_txt.upper()).run_rom_selection()
+            SearchedRomsMenu(self.display,self.controller,self.device, search_txt.upper()).run_rom_selection()
 
     def run_popup_menu_selection(self, game_system : GameSystem):
         popup_options = []
         popup_options.append(GridOrListEntry(
             primary_text=f"{game_system.display_name} Game Search",
-            image_path=self.theme.settings,
-            image_path_selected=self.theme.settings_selected,
+            image_path=Theme.settings(),
+            image_path_selected=Theme.settings_selected(),
             description="",
-            icon=self.theme.settings,
+            icon=Theme.settings(),
             value=lambda input_value, game_system=game_system: self.execute_game_search(game_system, input_value)
         ))
         popup_options.append(GridOrListEntry(
             primary_text="All System Game Search",
-            image_path=self.theme.settings,
-            image_path_selected=self.theme.settings_selected,
+            image_path=Theme.settings(),
+            image_path_selected=Theme.settings_selected(),
             description="",
-            icon=self.theme.settings,
+            icon=Theme.settings(),
             value=self.all_system_game_search
         ))
 
@@ -58,8 +57,8 @@ class GameSystemSelectMenuPopup:
             options=popup_options,
             top_bar_text=f"{game_system} Menu Sub Options",
             selected_index=0,
-            cols=self.theme.popup_menu_cols,
-            rows=self.theme.popup_menu_rows)
+            cols=Theme.popup_menu_cols(),
+            rows=Theme.popup_menu_rows())
                         
 
         while (popup_selection := popup_view.get_selection()):

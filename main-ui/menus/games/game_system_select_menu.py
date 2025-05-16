@@ -19,16 +19,15 @@ from views.view_type import ViewType
 
 
 class GameSystemSelectMenu:
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
+    def __init__(self, display: Display, controller: Controller, device: Device):
         self.display : Display= display
         self.controller : Controller = controller
         self.device : Device= device
-        self.theme : Theme= theme
         self.game_utils : GameSystemUtils = GameSystemUtils()
-        self.rom_select_menu : GameSelectMenu = GameSelectMenu(display,controller,device,theme)
+        self.rom_select_menu : GameSelectMenu = GameSelectMenu(display,controller,device)
         self.use_emu_cfg = False
-        self.view_creator = ViewCreator(display,controller,device,theme)
-        self.game_system_select_menu_popup = GameSystemSelectMenuPopup(display,controller,device,theme)
+        self.view_creator = ViewCreator(display,controller,device)
+        self.game_system_select_menu_popup = GameSystemSelectMenuPopup(display,controller,device)
         self.common_icon_mappings = {
             "PPSSPP": "psp",
             "FFPLAY":"ffplay",
@@ -54,22 +53,22 @@ class GameSystemSelectMenu:
     def get_images(self, game_system : GameSystem):
         icon_system_name = self.get_system_name_for_icon(game_system.game_system_config)
         icon_system_name_priority = []
-        icon_system_name_priority.append(self.theme.get_system_icon(icon_system_name))
-        icon_system_name_priority.append(self.theme.get_system_icon(game_system.folder_name.lower()))
-        icon_system_name_priority.append(self.theme.get_system_icon(game_system.display_name.lower()))
+        icon_system_name_priority.append(Theme.get_system_icon(icon_system_name))
+        icon_system_name_priority.append(Theme.get_system_icon(game_system.folder_name.lower()))
+        icon_system_name_priority.append(Theme.get_system_icon(game_system.display_name.lower()))
         if game_system.folder_name in self.common_icon_mappings:
-            icon_system_name_priority.append(self.theme.get_system_icon(self.common_icon_mappings[game_system.folder_name]))
+            icon_system_name_priority.append(Theme.get_system_icon(self.common_icon_mappings[game_system.folder_name]))
         icon_system_name_priority.append(game_system.game_system_config.get_icon())
 
         if(game_system.game_system_config.get_icon() is not None):
             icon_system_name_priority.append(os.path.join(game_system.game_system_config.get_emu_folder(),game_system.game_system_config.get_icon()))
 
         selected_icon_system_name_priority = []
-        selected_icon_system_name_priority.append(self.theme.get_system_icon_selected(icon_system_name))
-        selected_icon_system_name_priority.append(self.theme.get_system_icon_selected(game_system.folder_name.lower()))
-        selected_icon_system_name_priority.append(self.theme.get_system_icon_selected(game_system.display_name.lower()))
+        selected_icon_system_name_priority.append(Theme.get_system_icon_selected(icon_system_name))
+        selected_icon_system_name_priority.append(Theme.get_system_icon_selected(game_system.folder_name.lower()))
+        selected_icon_system_name_priority.append(Theme.get_system_icon_selected(game_system.display_name.lower()))
         if game_system.folder_name in self.common_icon_mappings:
-            selected_icon_system_name_priority.append(self.theme.get_system_icon_selected(self.common_icon_mappings[game_system.folder_name]))
+            selected_icon_system_name_priority.append(Theme.get_system_icon_selected(self.common_icon_mappings[game_system.folder_name]))
         selected_icon_system_name_priority.append(game_system.game_system_config.get_icon_selected())
         
         if(game_system.game_system_config.get_icon_selected() is not None):
@@ -101,11 +100,11 @@ class GameSystemSelectMenu:
             )
         if(view is None):
             view = self.view_creator.create_view(
-                view_type=self.theme.get_view_type_for_system_select_menu(),
+                view_type=Theme.get_view_type_for_system_select_menu(),
                 top_bar_text="Game", 
                 options=systems_list, 
-                cols=self.theme.get_game_system_select_col_count(), 
-                rows=self.theme.get_game_system_select_row_count(),
+                cols=Theme.get_game_system_select_col_count(), 
+                rows=Theme.get_game_system_select_row_count(),
                 selected_index=selected.get_index())
         else:
             view.set_options(systems_list)

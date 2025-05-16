@@ -15,13 +15,12 @@ class NonDescriptiveListView(ListView):
     SHOW_ICONS = True
     DONT_SHOW_ICONS = False
 
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text,
+    def __init__(self, display: Display, controller: Controller, device: Device, top_bar_text,
                  options: List[GridOrListEntry],
                  selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None, usable_height = None):
         super().__init__(controller)
         self.display = display
         self.device = device
-        self.theme = theme
         self.top_bar_text = top_bar_text
         self.options = options
         self.selected = selected_index

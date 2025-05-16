@@ -17,13 +17,12 @@ from abc import ABC, abstractmethod
 
 
 class SettingsMenu(ABC):
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, config: PyUiConfig):
+    def __init__(self, display: Display, controller: Controller, device: Device, config: PyUiConfig):
         self.display = display
         self.controller = controller
         self.device = device
-        self.theme = theme
         self.config : PyUiConfig = config 
-        self.view_creator = ViewCreator(display,controller,device,theme)
+        self.view_creator = ViewCreator(display,controller,device)
 
     @abstractmethod
     def build_options_list(self):

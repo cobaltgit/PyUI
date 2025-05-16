@@ -17,14 +17,13 @@ from views.view_type import ViewType
 # Would like this to be generic in the future but this is so Miyoo specific right now 
 # Due to the oddities in how its handled
 class GameConfigMenu:
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, game_system: GameSystem, game : str):
+    def __init__(self, display: Display, controller: Controller, device: Device, game_system: GameSystem, game : str):
         self.display = display
         self.controller = controller
         self.device = device
-        self.theme = theme
         self.game_system = game_system
         self.game = game
-        self.view_creator = ViewCreator(display,controller,device,theme)
+        self.view_creator = ViewCreator(display,controller,device)
 
     def show_config(self) :
         selected = Selection(None, None, 0)

@@ -15,14 +15,13 @@ from views.view import View
 
 class GridView(View):
 
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme,
+    def __init__(self, display: Display, controller: Controller, device: Device, 
                   top_bar_text, options: List[GridOrListEntry], cols : int, rows: int,selected_bg : str = None,
                   selected_index=0):
         super().__init__()
         self.display : Display = display
         self.controller : Controller = controller
         self.device : Device = device
-        self.theme : Theme = theme
         self.top_bar_text = top_bar_text
         self.options : List[GridOrListEntry] = options 
 
@@ -111,16 +110,16 @@ class GridView(View):
                                             y_icon_offset,
                                             render_mode)
 
-            actual_height, actual_width = self.display.render_image(image_path, 
+            self.display.render_image(image_path, 
                                      x_offset, 
                                      y_icon_offset,
                                      render_mode)
-            color = self.theme.text_color_selected(self.font_purpose) if actual_index == self.selected else self.theme.text_color(self.font_purpose)
+            color = Theme.text_color_selected(self.font_purpose) if actual_index == self.selected else Theme.text_color(self.font_purpose)
 
             if(self.rows == 1) : 
                 real_y_text_offset = int(self.device.screen_height * 325/480)
             else:
-                real_y_text_offset = y_icon_offset + self.max_icon_height + self.theme.get_grid_multirow_text_offset_y()
+                real_y_text_offset = y_icon_offset + self.max_icon_height + Theme.get_grid_multirow_text_offset_y()
 
             self.display.render_text_centered(imageTextPair.get_primary_text(), 
                                     x_offset,

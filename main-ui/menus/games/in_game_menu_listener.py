@@ -15,13 +15,12 @@ import psutil
 import signal
 
 class InGameMenuListener:
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
+    def __init__(self, display: Display, controller: Controller, device: Device):
         self.display : Display= display
         self.controller : Controller = controller
         self.device : Device= device
-        self.theme : Theme= theme
-        self.view_creator = ViewCreator(display,controller,device,theme)
-        self.popup_menu = InGameMenuPopup(display,controller,device,theme)
+        self.view_creator = ViewCreator(display,controller,device)
+        self.popup_menu = InGameMenuPopup(display,controller,device)
             
     def send_signal(self, proc: subprocess.Popen, sig, timeout: float = 3.0):
         try:

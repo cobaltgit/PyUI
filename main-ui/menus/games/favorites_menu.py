@@ -12,8 +12,8 @@ from views.grid_or_list_entry import GridOrListEntry
 
 
 class FavoritesMenu(RomsMenuCommon):
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
-        super().__init__(display,controller,device,theme)
+    def __init__(self, display: Display, controller: Controller, device: Device):
+        super().__init__(display,controller,device)
 
     def _get_rom_list(self) -> list[GridOrListEntry]:
         rom_list = []

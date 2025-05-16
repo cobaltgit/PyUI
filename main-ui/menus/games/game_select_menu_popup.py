@@ -16,12 +16,11 @@ from views.view_type import ViewType
 
 
 class GameSelectMenuPopup:
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
+    def __init__(self, display: Display, controller: Controller, device: Device):
         self.display : Display= display
         self.controller : Controller = controller
         self.device : Device= device
-        self.theme : Theme= theme
-        self.view_creator = ViewCreator(display,controller,device,theme)
+        self.view_creator = ViewCreator(display,controller,device)
 
     def add_favorite(self, rom_info : RomInfo, input_value):
         FavoritesManager.add_favorite(rom_info)
@@ -31,9 +30,9 @@ class GameSelectMenuPopup:
     
     def execute_game_search(self, game_system, input_value):
         from menus.games.search_games_for_system_menu import SearchGamesForSystemMenu
-        search_txt = OnScreenKeyboard(self.display,self.controller,self.device,self.theme).get_input("Game Search:")
+        search_txt = OnScreenKeyboard(self.display,self.controller,self.device).get_input("Game Search:")
         if(search_txt is not None):
-            SearchGamesForSystemMenu(self.display,self.controller,self.device,self.theme, game_system, search_txt.upper()).run_rom_selection()
+            SearchGamesForSystemMenu(self.display,self.controller,self.device,game_system, search_txt.upper()).run_rom_selection()
 
     def run_game_select_popup_menu(self, rom_info : RomInfo):
         popup_options = []
@@ -42,28 +41,28 @@ class GameSelectMenuPopup:
         if(FavoritesManager.is_favorite(rom_info)):        
             popup_options.append(GridOrListEntry(
                 primary_text="Remove Favorite",
-                image_path=self.theme.settings,
-                image_path_selected=self.theme.settings_selected,
+                image_path=Theme.settings(),
+                image_path_selected=Theme.settings_selected(),
                 description=f"Remove {rom_name} as a favorite",
-                icon=self.theme.settings,
+                icon=Theme.settings(),
                 value=lambda input_value, rom_info=rom_info: self.remove_favorite(rom_info, input_value)
             ))
         else:
             popup_options.append(GridOrListEntry(
                 primary_text="Add Favorite",
-                image_path=self.theme.settings,
-                image_path_selected=self.theme.settings_selected,
+                image_path=Theme.settings(),
+                image_path_selected=Theme.settings_selected(),
                 description=f"Add {rom_name} as a favorite",
-                icon=self.theme.settings,
+                icon=Theme.settings(),
                 value=lambda input_value, rom_info=rom_info: self.add_favorite(rom_info, input_value)
             ))
             
         popup_options.append(GridOrListEntry(
             primary_text=f"{rom_info.game_system.display_name} Game Search",
-            image_path=self.theme.settings,
-            image_path_selected=self.theme.settings_selected,
+            image_path=Theme.settings(),
+            image_path_selected=Theme.settings_selected(),
             description="",
-            icon=self.theme.settings,
+            icon=Theme.settings(),
             value=lambda input_value, game_system=rom_info.game_system: self.execute_game_search(game_system, input_value)
         ))
 
@@ -72,8 +71,8 @@ class GameSelectMenuPopup:
             options=popup_options,
             top_bar_text=f"{rom_info.game_system.display_name} Menu Sub Options",
             selected_index=0,
-            cols=self.theme.popup_menu_cols,
-            rows=self.theme.popup_menu_rows)
+            cols=Theme.popup_menu_cols(),
+            rows=Theme.popup_menu_rows())
                         
 
         while (popup_selection := popup_view.get_selection()):

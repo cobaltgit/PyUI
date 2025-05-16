@@ -14,16 +14,15 @@ from views.view_type import ViewType
 
 
 class AppMenu:
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme):
+    def __init__(self, display: Display, controller: Controller, device: Device):
         self.display : Display= display
         self.controller : Controller = controller
         self.device : Device= device
-        self.theme : Theme= theme
         self.appFinder = device.get_app_finder()
-        self.view_creator = ViewCreator(display,controller,device,theme)
+        self.view_creator = ViewCreator(display,controller,device)
 
     def _convert_to_theme_version_of_icon(self, icon_path):
-        return os.path.join(self.theme.path,"icons","app",os.path.basename(icon_path))
+        return os.path.join(Theme.get_theme_path(),"icons","app",os.path.basename(icon_path))
 
     def run_app_selection(self) :
         selected = Selection(None,None,0)
@@ -43,7 +42,7 @@ class AppMenu:
                 )
         if(view is None):
             view = self.view_creator.create_view(
-                view_type=self.theme.get_view_type_for_app_menu(),
+                view_type=Theme.get_view_type_for_app_menu(),
                 top_bar_text="Apps", 
                 options=app_list,
                 selected_index=selected.get_index())

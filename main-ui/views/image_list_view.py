@@ -19,14 +19,13 @@ class ImageListView(NonDescriptiveListView):
     SHOW_ICONS = True
     DONT_SHOW_ICONS = False
 
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, top_bar_text,
+    def __init__(self, display: Display, controller: Controller, device: Device, top_bar_text,
                  options: List[GridOrListEntry], img_offset_x : int, img_offset_y : int, img_width : int, img_height: int,
                  selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None, usable_height = None,
                  text_to_image_relationship = TextToImageRelationship.LEFT_OF_IMAGE):
         super().__init__(display=display,
                          controller=controller,
                          device=device,
-                         theme=theme,
                          top_bar_text=top_bar_text,
                          options=options,
                          selected_index=selected_index,
@@ -46,7 +45,7 @@ class ImageListView(NonDescriptiveListView):
         self.space_width, self.char_height = self.display.get_text_dimensions(FontPurpose.LIST," ")
 
     def scroll_string(self,text, amt, text_available_width):
-        if(self.theme.scroll_rom_selection_text):
+        if(Theme.scroll_rom_selection_text()):
             if not text:
                 return text
             text_width, char_height = self.display.get_text_dimensions(FontPurpose.LIST,text)
@@ -103,7 +102,7 @@ class ImageListView(NonDescriptiveListView):
             scroll_amt = 0
 
             if actual_index == self.selected:
-                color = self.theme.text_color_selected(FontPurpose.LIST)
+                color = Theme.text_color_selected(FontPurpose.LIST)
                 if(self.selected_bg is not None):
                     self.display.render_image(self.selected_bg,x_value, y_value, render_mode)
                 if(self.prev_index == self.selected):
@@ -114,7 +113,7 @@ class ImageListView(NonDescriptiveListView):
                     self.scroll_text_amount = 0
                     self.selected_same_entry_time = time.time()
             else:
-                color = self.theme.text_color(FontPurpose.LIST)
+                color = Theme.text_color(FontPurpose.LIST)
 
             if(self.show_icons and imageTextPair.get_icon() is not None):
                 icon_width, icon_height = self.display.render_image(imageTextPair.get_icon(),text_x_value, y_value, render_mode)
