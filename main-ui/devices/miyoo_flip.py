@@ -333,16 +333,19 @@ class MiyooFlip(Device):
         try:
             
             if(0 == volume):
-                ProcessRunner.run(["amixer","sset","Playback Path","SPK"])
+                ProcessRunner.run(["amixer","sset","Playback Path","OFF"], print=False)
             else:
-                if(self.are_headphones_plugged_in):
-                    ProcessRunner.run(["amixer","sset","Playback Path","HP"])
+                if(self.are_headphones_plugged_in()):
+                    ProcessRunner.run(["amixer","sset","Playback Path","HP"], print=False)
                 else:
-                    ProcessRunner.run(["amixer","sset","Playback Path","SPK"])
+                    ProcessRunner.run(["amixer","sset","Playback Path","SPK"], print=False)
+
+                PyUiLogger.get_logger().info(f"Setting volume to {volume}")
 
                 ProcessRunner.run(
                     ["amixer", "cset", f"name='SPK Volume'", str(volume)],
-                    check=True
+                    check=True,
+                    print=False
                 )
             
         except subprocess.CalledProcessError as e:
