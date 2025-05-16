@@ -45,8 +45,11 @@ class GridView(View):
         self.options = options
 
     def correct_selected_for_off_list(self):
+        while(self.selected < 0):
+            self.selected = len(self.options) + self.selected
         self.selected = max(0, self.selected)
-        self.selected = min(len(self.options)-1, self.selected)
+
+        self.selected = self.selected % (len(self.options))
         
         while(self.selected < self.current_left):
             self.current_left -= (self.cols*self.rows)
