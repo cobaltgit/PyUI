@@ -49,7 +49,7 @@ class MainMenu:
                     image_path=self.theme.recent,
                     image_path_selected=self.theme.recent_selected,
                     description="Recent",
-                    icon=self.theme.recent,
+                    icon=None,
                     value="Recent"
                 )
             )
@@ -61,7 +61,7 @@ class MainMenu:
                     image_path=self.theme.favorite,
                     image_path_selected=self.theme.favorite_selected,
                     description="Favorite",
-                    icon=self.theme.favorite,
+                    icon=None,
                     value="Favorite"
                 )
             )
@@ -72,7 +72,7 @@ class MainMenu:
                 image_path=self.theme.game,
                 image_path_selected=self.theme.game_selected,
                 description="Your games",
-                icon=self.theme.game,
+                icon=None,
                 value="Game"
             )
         )
@@ -82,7 +82,7 @@ class MainMenu:
                 image_path=self.theme.app,
                 image_path_selected=self.theme.app_selected,
                 description="Your Apps",
-                icon=self.theme.app,
+                icon=None,
                 value="App"
             )
         )
@@ -92,27 +92,31 @@ class MainMenu:
                 image_path=self.theme.settings,
                 image_path_selected=self.theme.settings_selected,
                 description="Your Apps",
-                icon=self.theme.settings,
+                icon=None,
                 value="Setting"
             )
         )
         return image_text_list
 
+    def build_main_menu_view(self, options, selected):
+        return self.view_creator.create_view(
+            view_type=self.theme.get_view_type_for_main_menu(),
+            top_bar_text="PyUI", 
+            options=options, 
+            cols=self.theme.get_main_menu_column_count(), 
+            rows=1,
+            selected_index=selected.get_index())
+
     def run_main_menu_selection(self):
         selected = Selection(None,None,0)
 
         image_text_list = self.build_options()
-        view = self.view_creator.create_view(
-            view_type=self.theme.get_view_type_for_main_menu(),
-            top_bar_text="PyUI", 
-            options=image_text_list, 
-            cols=4, 
-            rows=1,
-            selected_index=selected.get_index())
+        view =  self.build_main_menu_view(image_text_list, selected)        
             
         expected_inputs = [ControllerInput.A, ControllerInput.MENU]
         while(selected.get_input() != ControllerInput.B):      
             view.set_options(self.build_options())  
+
             if((selected := view.get_selection(expected_inputs)) is not None):       
                 if(ControllerInput.A == selected.get_input()): 
                     if("Game" == selected.get_selection().get_primary_text()):
@@ -124,6 +128,9 @@ class MainMenu:
                     elif("Recent" == selected.get_selection().get_primary_text()):
                         self.recents_menu.run_rom_selection()
                     elif("Setting" == selected.get_selection().get_primary_text()):
-                        self.settings_menu.show_menu()
+                        theme_updated = self.settings_menu.show_menu()
+                        if(theme_updated):
+                            view =  self.build_main_menu_view(image_text_list, selected)        
+
                 elif(ControllerInput.MENU == selected.get_input()):
                     self.popup_menu.run_popup_menu_selection()

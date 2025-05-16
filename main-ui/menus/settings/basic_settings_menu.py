@@ -7,6 +7,7 @@ from display.display import Display
 from menus.settings import settings_menu
 from menus.settings.advance_settings_menu import AdvanceSettingsMenu
 from menus.settings.bluetooth_menu import BluetoothMenu
+from menus.settings.theme_settings_menu import ThemeSettingsMenu
 from menus.settings.wifi_menu import WifiMenu
 from themes.theme import Theme
 from utils.py_ui_config import PyUiConfig
@@ -28,6 +29,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         self.wifi_menu = WifiMenu(display,controller,device,theme)
         self.bt_menu = BluetoothMenu(display,controller,device,theme)
         self.advance_settings_menu = AdvanceSettingsMenu(display,controller,device,theme,config)
+        self.anything_theme_related_changed = False
 
     def shutdown(self, input: ControllerInput):
         if(ControllerInput.A == input):
@@ -93,6 +95,8 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
             selected_index+=1
             if(selected_index == len(theme_folders)):
                 selected_index = 0
+        elif(ControllerInput.A == input):
+            ThemeSettingsMenu(self.display, self.controller, self.device, self.theme).show_theme_options_menu()
 
         self.theme.set_theme_path(os.path.join(self.config["themeDir"], theme_folders[selected_index]), self.device.screen_width, self.device.screen_height)
         self.display.init_fonts()   
@@ -195,6 +199,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         selected = Selection(None, None, 0)
         list_view = None
         self.theme_changed = False
+        self.anything_theme_related_changed = True
         while(selected is not None):
             option_list = self.build_options_list()
             
@@ -217,4 +222,6 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
                 selected.get_selection().get_value()(selected.get_input())
             elif(ControllerInput.B == selected.get_input()):
                 selected = None
+        
+        return self.anything_theme_related_changed
 

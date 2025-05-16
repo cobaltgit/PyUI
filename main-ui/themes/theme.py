@@ -49,6 +49,7 @@ class Theme():
         setattr(self, "showBottomBar", True)
 
     def load_from_file(self, file_path):
+        self._loaded_file_path = file_path
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
@@ -59,6 +60,20 @@ class Theme():
         description = getattr(self, "description", "UNKNOWN")
         PyUiLogger.get_logger().info(f"Loaded Theme : {description}")
      
+    def save_changes(self):
+        # Collect all user-defined (non-private) attributes into a dictionary
+        data = {
+            key: value
+            for key, value in self.__dict__.items()
+            if not key.startswith('_') and not callable(value)
+        }
+
+        with open(self._loaded_file_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
+        description = getattr(self, "description", "UNKNOWN")
+        PyUiLogger.get_logger().info(f"Wrote Theme : {description}")
+
 
     @property
     def background(self):
@@ -385,7 +400,11 @@ class Theme():
         view_type_str = getattr(self, "mainMenuViewType", "GRID_VIEW")
         view_type = getattr(ViewType, view_type_str, ViewType.GRID_VIEW)
         return view_type
-            
+
+    def set_view_type_for_main_menu(self, view_type):
+        self.mainMenuViewType = view_type.name
+        self.save_changes()
+    
     def get_view_type_for_system_select_menu(self):
         view_type_str = getattr(self, "systemSelectViewType", "GRID_VIEW")
         view_type = getattr(ViewType, view_type_str, ViewType.GRID_VIEW)
@@ -442,3 +461,10 @@ class Theme():
     @property
     def scroll_rom_selection_text(self):
         return getattr(self, "scrollRomSelectionText", True)
+
+    def get_main_menu_column_count(self):
+        return getattr(self, "mainMenuColCount", 4)
+    
+    def set_main_menu_column_count(self, count):
+        self.mainMenuColCount = count
+        self.save_changes()
