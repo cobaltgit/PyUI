@@ -41,42 +41,63 @@ class MainMenu:
         while(selected.get_input() != ControllerInput.B):        
             #TODO make this user config driven
             #first_entry = "Favorite"
-            first_entry = "Recent"
+            show_favorite = True
+            show_recents = True
+            
+            image_text_list = []
+            if(show_recents):
+                image_text_list.append(
+                    GridOrListEntry(
+                        primary_text="Recent",
+                        image_path=self.theme.recent,
+                        image_path_selected=self.theme.recent_selected,
+                        description="Recent",
+                        icon=self.theme.recent,
+                        value="Recent"
+                    )
+                )
+            if(show_favorite):
+                image_text_list.append(
+                    GridOrListEntry(
+                        primary_text="Favorite",
+                        image_path=self.theme.favorite,
+                        image_path_selected=self.theme.favorite_selected,
+                        description="Favorite",
+                        icon=self.theme.favorite,
+                        value="Favorite"
+                    )
+                )
+            image_text_list.append(
+                GridOrListEntry(
+                    primary_text="Game",
+                    image_path=self.theme.game,
+                    image_path_selected=self.theme.game_selected,
+                    description="Your games",
+                    icon=self.theme.game,
+                    value="Game"
+                )
+            )
+            image_text_list.append(
+                GridOrListEntry(
+                    primary_text="App",
+                    image_path=self.theme.app,
+                    image_path_selected=self.theme.app_selected,
+                    description="Your Apps",
+                    icon=self.theme.app,
+                    value="App"
+                )
+            )
+            image_text_list.append(
+                GridOrListEntry(
+                    primary_text="Setting",
+                    image_path=self.theme.settings,
+                    image_path_selected=self.theme.settings_selected,
+                    description="Your Apps",
+                    icon=self.theme.settings,
+                    value="Setting"
+                )
+            )
 
-            image_text_list = [
-                GridOrListEntry(
-                            primary_text=first_entry,
-                            image_path=self.theme.favorite,
-                            image_path_selected=self.theme.favorite_selected,
-                            description=first_entry,
-                            icon=self.theme.favorite,
-                            value=first_entry
-                ),                    
-                GridOrListEntry(
-                            primary_text="Game",
-                            image_path=self.theme.game,
-                            image_path_selected=self.theme.game_selected,
-                            description="Your games",
-                            icon=self.theme.game,
-                            value="Game"
-                ),
-                GridOrListEntry(
-                            primary_text="App",
-                            image_path=self.theme.app,
-                            image_path_selected=self.theme.app_selected,
-                            description="Your Apps",
-                            icon=self.theme.app,
-                            value="App"
-                ),      
-                GridOrListEntry(
-                            primary_text="Setting",
-                            image_path=self.theme.settings,
-                            image_path_selected=self.theme.settings_selected,
-                            description="Your Apps",
-                            icon=self.theme.settings,
-                            value="Setting"
-                ),            
-            ]
 
             view = self.view_creator.create_view(
                 view_type=self.theme.get_view_type_for_main_menu(),

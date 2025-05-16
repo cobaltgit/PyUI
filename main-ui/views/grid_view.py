@@ -63,7 +63,7 @@ class GridView(View):
         visible_options: List[GridOrListEntry] = self.options[self.current_left:self.current_right]
 
         #TODO Get hard coded values for padding from theme
-        x_pad = 9 * self.cols
+        x_pad = 10
         usable_width = self.device.screen_width - (2 * x_pad)
         icon_width = usable_width / self.cols  # Initial icon width
         

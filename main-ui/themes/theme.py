@@ -73,6 +73,14 @@ class Theme():
         return os.path.join(self.path,self.skin_folder,"ic-favorite-f.png")
 
     @property
+    def recent(self):
+        return os.path.join(self.path,self.skin_folder,"ic-recent-n.png")
+
+    @property
+    def recent_selected(self):
+        return os.path.join(self.path,self.skin_folder,"ic-recent-f.png")
+
+    @property
     def game(self):
         return os.path.join(self.path,self.skin_folder,"ic-game-n.png")
 
