@@ -4,6 +4,7 @@ from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
+from games.utils.game_system import GameSystem
 from menus.games.game_system_config import GameSystemConfig
 from themes.theme import Theme
 from views.descriptive_list_view import DescriptiveListView
@@ -16,7 +17,7 @@ from views.view_type import ViewType
 # Would like this to be generic in the future but this is so Miyoo specific right now 
 # Due to the oddities in how its handled
 class GameConfigMenu:
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, game_system: str, game : str):
+    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, game_system: GameSystem, game : str):
         self.display = display
         self.controller = controller
         self.device = device
@@ -32,10 +33,9 @@ class GameConfigMenu:
         # We essentially need to re-read the game system config every time
         # an option is selected
         while(selected is not None):
-            game_system_config = GameSystemConfig(self.game_system)
 
             config_list = []
-            for config_option in game_system_config.get_launchlist():
+            for config_option in self.game_system.game_system_config.get_launchlist():
                 config_list.append(
                     GridOrListEntry(
                         primary_text=config_option.get('name'),
@@ -49,7 +49,7 @@ class GameConfigMenu:
             if(view is None):        
                 view = self.view_creator.create_view(
                     view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
-                    top_bar_text=self.game_system + " Configuration", 
+                    top_bar_text=self.game_system.display_name + " Configuration", 
                     options=config_list,
                     selected_index=selected.get_index())
             else:

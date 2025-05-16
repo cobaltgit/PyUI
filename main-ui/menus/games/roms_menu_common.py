@@ -85,7 +85,7 @@ class RomsMenuCommon(ABC):
                     self.display.reinitialize()
                 elif(ControllerInput.X == selected.get_input()):
                     GameConfigMenu(self.display, self.controller, self.device, self.theme, 
-                                   self._extract_game_system(selected.get_selection().get_value()), 
+                                   selected.get_selection().get_value().game_system, 
                                    selected.get_selection().get_value()).show_config()
                     # Regenerate as game config menu might've changed something
                     rom_list = self._get_rom_list()
