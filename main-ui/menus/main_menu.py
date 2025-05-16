@@ -35,9 +35,7 @@ class MainMenu:
         self.view_creator = ViewCreator(display,controller,device,theme)
         self.popup_menu = MainMenuPopup(display,controller,device,theme)
 
-    def run_main_menu_selection(self):
-        selected = Selection(None,None,0)
-        expected_inputs = [ControllerInput.A, ControllerInput.MENU]
+    def build_options(self):
         #TODO make this user config driven
         #first_entry = "Favorite"
         show_favorite = True
@@ -98,7 +96,12 @@ class MainMenu:
                 value="Setting"
             )
         )
+        return image_text_list
 
+    def run_main_menu_selection(self):
+        selected = Selection(None,None,0)
+
+        image_text_list = self.build_options()
         view = self.view_creator.create_view(
             view_type=self.theme.get_view_type_for_main_menu(),
             top_bar_text="PyUI", 
@@ -107,7 +110,9 @@ class MainMenu:
             rows=1,
             selected_index=selected.get_index())
             
-        while(selected.get_input() != ControllerInput.B):        
+        expected_inputs = [ControllerInput.A, ControllerInput.MENU]
+        while(selected.get_input() != ControllerInput.B):      
+            view.set_options(self.build_options())  
             if((selected := view.get_selection(expected_inputs)) is not None):       
                 if(ControllerInput.A == selected.get_input()): 
                     if("Game" == selected.get_selection().get_primary_text()):
