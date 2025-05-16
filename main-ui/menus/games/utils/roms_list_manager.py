@@ -73,7 +73,6 @@ class RomsListManager():
 
         #TODO Refactor to use a dict
         for entry in self._favorites:
-            PyUiLogger.get_logger().info(f"Loaded {entry} into roms list")
             game_system = self.game_system_utils.get_game_system_by_name(entry.game_system_name)
             if(game_system is not None):
                 favorite_rom_info_list.append(RomInfo(game_system,entry.rom_file_path))
