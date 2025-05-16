@@ -45,7 +45,7 @@ class PyUiLogger:
 
             # File handler
             file_handler = RotatingFileHandler(os.path.join(log_dir,"pyui.log"),
-                maxBytes=10 * 1024,  # 1MB file size limit
+                maxBytes=1024 * 1024,  # 1MB file size limit
                 backupCount=5               # Keep up to 5 backup files)
             )
             file_handler.setLevel(logging.DEBUG)
