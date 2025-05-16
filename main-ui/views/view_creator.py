@@ -17,13 +17,12 @@ from views.view_type import ViewType
 
 class ViewCreator():
 
-    def __init__(self, display: Display, controller: Controller, device: Device):
-        self.display = display
+    def __init__(self, controller: Controller, device: Device):
         self.controller = controller
         self.device = device
 
     def get_usable_height_for_text_above_or_below_image(self, img_height, y_pad):
-        return self.display.get_usable_screen_height() - y_pad - img_height
+        return Display.get_usable_screen_height() - y_pad - img_height
 
     def create_view(self, 
                     view_type: ViewType, 
@@ -41,7 +40,6 @@ class ViewCreator():
                         selected_bg = Theme.get_list_large_selected_bg()
 
                 return DescriptiveListView(
-                    display=self.display, 
                     controller=self.controller, 
                     device=self.device, 
                     top_bar_text=top_bar_text,
@@ -56,45 +54,44 @@ class ViewCreator():
 
                 if("TEXT_LEFT_IMAGE_RIGHT" == text_and_image_list_view_mode):
                     img_offset_x = self.device.screen_width - 10 - img_width//2
-                    img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
+                    img_offset_y = (self.device.screen_height - Display.get_top_bar_height() + Display.get_bottom_bar_height())//2 + Display.get_top_bar_height() - Display.get_bottom_bar_height()
                     image_render = RenderMode.MIDDLE_CENTER_ALIGNED
                     text_to_image_relationship = TextToImageRelationship.LEFT_OF_IMAGE
                     usable_height = None # auto-determine
                 elif("TEXT_RIGHT_IMAGE_LEFT" == text_and_image_list_view_mode):
                     img_offset_x = 10 + img_width//2
-                    img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
+                    img_offset_y = (self.device.screen_height - Display.get_top_bar_height() + Display.get_bottom_bar_height())//2 + Display.get_top_bar_height() - Display.get_bottom_bar_height()
                     image_render = RenderMode.MIDDLE_CENTER_ALIGNED
                     text_to_image_relationship = TextToImageRelationship.RIGHT_OF_IMAGE
                     usable_height = None  # auto-determine
                 elif("TEXT_BELOW_IMAGE" == text_and_image_list_view_mode):
                     img_offset_x = self.device.screen_width // 2
                     y_pad = 20 #TODO get from somewhere
-                    img_offset_y = self.display.get_top_bar_height() + y_pad
+                    img_offset_y = Display.get_top_bar_height() + y_pad
                     image_render = RenderMode.TOP_CENTER_ALIGNED
                     text_to_image_relationship = TextToImageRelationship.BELOW_IMAGE
                     usable_height = self.get_usable_height_for_text_above_or_below_image(img_height, y_pad)
                 elif("TEXT_ABOVE_IMAGE" == text_and_image_list_view_mode):
                     img_offset_x = self.device.screen_width // 2
                     y_pad = 20 #TODO get from somewhere
-                    img_offset_y = self.device.screen_height - self.display.get_bottom_bar_height() - y_pad
+                    img_offset_y = self.device.screen_height - Display.get_bottom_bar_height() - y_pad
                     image_render = RenderMode.BOTTOM_CENTER_ALIGNED
                     text_to_image_relationship = TextToImageRelationship.ABOVE_IMAGE
                     usable_height = self.get_usable_height_for_text_above_or_below_image(img_height, y_pad)
                 elif("TEXT_AROUND_LEFT_IMAGE" == text_and_image_list_view_mode):
                     img_offset_x = 10 + img_width//2
-                    img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
+                    img_offset_y = (self.device.screen_height - Display.get_top_bar_height() + Display.get_bottom_bar_height())//2 + Display.get_top_bar_height() - Display.get_bottom_bar_height()
                     image_render = RenderMode.MIDDLE_CENTER_ALIGNED
                     text_to_image_relationship = TextToImageRelationship.TEXT_AROUND_LEFT_IMAGE
                     usable_height = None  # auto-determine
                 elif("TEXT_AROUND_RIGHT_IMAGE" == text_and_image_list_view_mode):
                     img_offset_x = self.device.screen_width - 10 - img_width//2
-                    img_offset_y = (self.device.screen_height - self.display.get_top_bar_height() + self.display.get_bottom_bar_height())//2 + self.display.get_top_bar_height() - self.display.get_bottom_bar_height()
+                    img_offset_y = (self.device.screen_height - Display.get_top_bar_height() + Display.get_bottom_bar_height())//2 + Display.get_top_bar_height() - Display.get_bottom_bar_height()
                     image_render = RenderMode.MIDDLE_CENTER_ALIGNED
                     text_to_image_relationship = TextToImageRelationship.TEXT_AROUND_RIGHT_IMAGE
                     usable_height = None # auto-determine
                     
                 return ImageListView(
-                    display=self.display, 
                     controller=self.controller, 
                     device=self.device, 
                     top_bar_text=top_bar_text,
@@ -112,7 +109,6 @@ class ViewCreator():
                 )            
             case ViewType.TEXT_LIST_VIEW:
                 return TextListView(
-                    display=self.display, 
                     controller=self.controller, 
                     device=self.device, 
                     top_bar_text=top_bar_text,
@@ -124,7 +120,6 @@ class ViewCreator():
                 )   
             case ViewType.POPUP_TEXT_LIST_VIEW:
                 return PopupTextListView(
-                    display=self.display, 
                     controller=self.controller, 
                     device=self.device, 
                     options=options,
@@ -135,7 +130,6 @@ class ViewCreator():
                 )
             case ViewType.GRID_VIEW:
                 return GridView(
-                    display=self.display, 
                     controller=self.controller, 
                     device=self.device, 
                     top_bar_text=top_bar_text,

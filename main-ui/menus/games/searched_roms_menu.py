@@ -1,20 +1,22 @@
 
 import os
+import subprocess
 from controller.controller import Controller
 from devices.device import Device
 from display.display import Display
 from display.on_screen_keyboard import OnScreenKeyboard
 from games.utils.game_system_utils import GameSystemUtils
 from menus.games.roms_menu_common import RomsMenuCommon
+from menus.games.utils.rom_info import RomInfo
 from menus.games.utils.rom_select_options_builder import RomSelectOptionsBuilder
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 
 
 class SearchedRomsMenu(RomsMenuCommon):
-    def __init__(self, display: Display, controller: Controller, device: Device, theme: Theme, search_str):
-        super().__init__(display,controller,device,theme)
-        self.rom_select_options_builder = RomSelectOptionsBuilder(device, theme)
+    def __init__(self, controller: Controller, device: Device, search_str):
+        super().__init__(controller,device)
+        self.rom_select_options_builder = RomSelectOptionsBuilder(device)
         self.search_str = search_str
 
     def include_rom(self,rom_file_path):
@@ -31,3 +33,7 @@ class SearchedRomsMenu(RomsMenuCommon):
 
     def run_rom_selection(self) :
         self._run_rom_selection("Game Search")
+
+    def _run_game(self, selected_entry : RomInfo) -> subprocess.Popen:
+        return self.device.run_game(selected_entry)
+        

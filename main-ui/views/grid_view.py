@@ -15,11 +15,10 @@ from views.view import View
 
 class GridView(View):
 
-    def __init__(self, display: Display, controller: Controller, device: Device, 
+    def __init__(self, controller: Controller, device: Device, 
                   top_bar_text, options: List[GridOrListEntry], cols : int, rows: int,selected_bg : str = None,
                   selected_index=0):
         super().__init__()
-        self.display : Display = display
         self.controller : Controller = controller
         self.device : Device = device
         self.top_bar_text = top_bar_text
@@ -27,7 +26,7 @@ class GridView(View):
 
         self.max_icon_height = 0
         for option in options:           
-            self.max_icon_height = max(self.max_icon_height, display.get_image_dimensions(option.get_image_path())[1])
+            self.max_icon_height = max(self.max_icon_height, Display.get_image_dimensions(option.get_image_path())[1])
 
         self.selected = selected_index
         self.toggles = [False] * len(options)
@@ -73,7 +72,7 @@ class GridView(View):
 
 
     def _render(self):
-        self.display.clear(self.top_bar_text)
+        Display.clear(self.top_bar_text)
         self.correct_selected_for_off_list()
 
         visible_options: List[GridOrListEntry] = self.options[self.current_left:self.current_right]
@@ -93,24 +92,24 @@ class GridView(View):
 
 
             if(self.rows == 1) : 
-                y_icon_offset = self.display.get_center_of_usable_screen_height()
+                y_icon_offset = Display.get_center_of_usable_screen_height()
                 render_mode = RenderMode.MIDDLE_CENTER_ALIGNED
             else :
                 y_index = int(visible_index / self.cols) 
-                row_spacing = self.display.get_usable_screen_height() / self.rows
+                row_spacing = Display.get_usable_screen_height() / self.rows
                 row_start_y = y_index * row_spacing
                 row_mid_y = row_start_y
-                y_icon_offset = int(row_mid_y + self.display.get_top_bar_height())
+                y_icon_offset = int(row_mid_y + Display.get_top_bar_height())
                 render_mode = RenderMode.TOP_CENTER_ALIGNED
 
             if(self.selected_bg is not None):
                 if(actual_index == self.selected):
-                    self.display.render_image(self.selected_bg, 
+                    Display.render_image(self.selected_bg, 
                                             x_offset, 
                                             y_icon_offset,
                                             render_mode)
 
-            self.display.render_image(image_path, 
+            Display.render_image(image_path, 
                                      x_offset, 
                                      y_icon_offset,
                                      render_mode)
@@ -121,15 +120,15 @@ class GridView(View):
             else:
                 real_y_text_offset = y_icon_offset + self.max_icon_height + Theme.get_grid_multirow_text_offset_y()
 
-            self.display.render_text_centered(imageTextPair.get_primary_text(), 
+            Display.render_text_centered(imageTextPair.get_primary_text(), 
                                     x_offset,
                                     real_y_text_offset, color,
                                     self.font_purpose)
         
         # Don't display indexing for single row grids
         if(self.rows > 1) :
-            self.display.add_index_text(self.selected+1, len(self.options))            
-        self.display.present()
+            Display.add_index_text(self.selected+1, len(self.options))            
+        Display.present()
 
     def get_selected_option(self):
         if 0 <= self.selected < len(self.options):

@@ -17,12 +17,11 @@ from views.view_type import ViewType
 
 
 class BluetoothMenu:
-    def __init__(self, display : Display, controller: Controller, device: Device):
-        self.display : Display = display
+    def __init__(self, controller: Controller, device: Device):
         self.controller : Controller = controller
         self.device : Device= device
         self.bluetooth_scanner = BluetoothScanner()
-        self.view_creator = ViewCreator(display,controller,device)
+        self.view_creator = ViewCreator(controller,device)
 
     def bluetooth_adjust(self):
         if self.device.is_bluetooth_enabled():
@@ -37,16 +36,16 @@ class BluetoothMenu:
 
     def scan_for_devices(self):
         PyUiLogger.get_logger().info(f"scan_for_devices start")
-        self.display.clear("Bluetooth")
-        self.display.render_text(
+        Display.clear("Bluetooth")
+        Display.render_text(
             text = "Scanning for Bluetooth Devices (~10s)",
             x = self.device.screen_width // 2,
-            y = self.display.get_usable_screen_height() // 2,
+            y = Display.get_usable_screen_height() // 2,
             color = Theme.text_color(FontPurpose.DESCRIPTIVE_LIST_TITLE),
             purpose = FontPurpose.DESCRIPTIVE_LIST_TITLE,
             render_mode=RenderMode.MIDDLE_CENTER_ALIGNED
         )
-        self.display.present()
+        Display.present()
         devices = self.bluetooth_scanner.scan_devices()
         PyUiLogger.get_logger().info(f"scan_for_devices end")
         return devices

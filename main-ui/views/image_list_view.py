@@ -19,12 +19,11 @@ class ImageListView(NonDescriptiveListView):
     SHOW_ICONS = True
     DONT_SHOW_ICONS = False
 
-    def __init__(self, display: Display, controller: Controller, device: Device, top_bar_text,
+    def __init__(self, controller: Controller, device: Device, top_bar_text,
                  options: List[GridOrListEntry], img_offset_x : int, img_offset_y : int, img_width : int, img_height: int,
                  selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None, usable_height = None,
                  text_to_image_relationship = TextToImageRelationship.LEFT_OF_IMAGE):
-        super().__init__(display=display,
-                         controller=controller,
+        super().__init__(controller=controller,
                          device=device,
                          top_bar_text=top_bar_text,
                          options=options,
@@ -42,13 +41,13 @@ class ImageListView(NonDescriptiveListView):
         self.prev_index = -1
         self.scroll_text_amount = 0
         self.selected_same_entry_time = time.time()
-        self.space_width, self.char_height = self.display.get_text_dimensions(FontPurpose.LIST," ")
+        self.space_width, self.char_height = Display.get_text_dimensions(FontPurpose.LIST," ")
 
     def scroll_string(self,text, amt, text_available_width):
         if(Theme.scroll_rom_selection_text()):
             if not text:
                 return text
-            text_width, char_height = self.display.get_text_dimensions(FontPurpose.LIST,text)
+            text_width, char_height = Display.get_text_dimensions(FontPurpose.LIST,text)
             spaces_to_add = ((text_available_width - text_width) // self.space_width)
             spaces_to_add = max(spaces_to_add, 8)
             text = text + ' ' * spaces_to_add
@@ -73,7 +72,7 @@ class ImageListView(NonDescriptiveListView):
             elif(TextToImageRelationship.BELOW_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
                 y_pad = 20 #TODO get from somewhere
-                y_value = (self.display.get_top_bar_height() + y_pad*2 + self.img_height)  + self.line_height//2
+                y_value = (Display.get_top_bar_height() + y_pad*2 + self.img_height)  + self.line_height//2
                 text_available_width = self.device.screen_width - text_pad * 2
             elif(TextToImageRelationship.ABOVE_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
@@ -104,7 +103,7 @@ class ImageListView(NonDescriptiveListView):
             if actual_index == self.selected:
                 color = Theme.text_color_selected(FontPurpose.LIST)
                 if(self.selected_bg is not None):
-                    self.display.render_image(self.selected_bg,x_value, y_value, render_mode)
+                    Display.render_image(self.selected_bg,x_value, y_value, render_mode)
                 if(self.prev_index == self.selected):
                     scroll_amt = self.scroll_text_amount
                     if(time.time() - self.selected_same_entry_time > 1):
@@ -116,10 +115,10 @@ class ImageListView(NonDescriptiveListView):
                 color = Theme.text_color(FontPurpose.LIST)
 
             if(self.show_icons and imageTextPair.get_icon() is not None):
-                icon_width, icon_height = self.display.render_image(imageTextPair.get_icon(),text_x_value, y_value, render_mode)
+                icon_width, icon_height = Display.render_image(imageTextPair.get_icon(),text_x_value, y_value, render_mode)
                 text_x_value += icon_width + 5 #TODO get 5 from somewhere
 
-            self.display.render_text(self.scroll_string(imageTextPair.get_primary_text(),scroll_amt, text_available_width), text_x_value, y_value, color, FontPurpose.LIST,
+            Display.render_text(self.scroll_string(imageTextPair.get_primary_text(),scroll_amt, text_available_width), text_x_value, y_value, color, FontPurpose.LIST,
                                     render_mode, crop_w=text_available_width, crop_h=None)
         self.prev_index = self.selected
 
@@ -156,7 +155,7 @@ class ImageListView(NonDescriptiveListView):
             actual_index = self.current_top + visible_index
             imagePath = imageTextPair.get_image_path_selected() if actual_index == self.selected else imageTextPair.get_image_path()
             if(actual_index == self.selected and imagePath is not None):
-                self.display.render_image(imagePath, 
+                Display.render_image(imagePath, 
                                      self.img_offset_x, 
                                      self.img_offset_y,
                                      self.image_render_mode,

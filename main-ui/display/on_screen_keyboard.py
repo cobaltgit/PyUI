@@ -8,8 +8,7 @@ from themes.theme import Theme
 
 
 class OnScreenKeyboard:
-    def __init__(self, display, controller: Controller, device: Device):
-        self.display = display
+    def __init__(self,  controller: Controller, device: Device):
         self.controller : Controller = controller
         self.device : Device= device
 
@@ -32,6 +31,7 @@ class OnScreenKeyboard:
         ]
 
     def get_input(self, title_text):
+        from display.display import Display
         self.shifted = False
         self.caps = False
         running = True  
@@ -43,19 +43,19 @@ class OnScreenKeyboard:
         key_h = key_w
 
         while running:
-            self.display.clear("Keyboard")
-            self.display.render_image(
+            Display.clear("Keyboard")
+            Display.render_image(
                 image_path = Theme.keyboard_bg(),
                 x = 0,
-                y = self.display.get_top_bar_height(), 
+                y = Display.get_top_bar_height(), 
                 render_mode = RenderMode.TOP_LEFT_ALIGNED, 
                 target_width=self.device.screen_width, 
                 target_height=self.device.screen_height)
 
-            next_y = self.display.get_top_bar_height()
+            next_y = Display.get_top_bar_height()
             entry_bar_text_x_offset = 10 #TODO get somewhere better
             if(title_text is not None):
-                title_w, title_h = self.display.render_text(text=title_text,
+                title_w, title_h = Display.render_text(text=title_text,
                     x = entry_bar_text_x_offset,
                     y = next_y, 
                     purpose = FontPurpose.ON_SCREEN_KEYBOARD, 
@@ -63,7 +63,7 @@ class OnScreenKeyboard:
                     render_mode = RenderMode.TOP_LEFT_ALIGNED)
                 next_y += title_h
 
-            entry_bar_w, entry_bar_h = self.display.render_image(
+            entry_bar_w, entry_bar_h = Display.render_image(
                 image_path = Theme.keyboard_entry_bg(),
                 x = 0,
                 y = next_y, 
@@ -72,7 +72,7 @@ class OnScreenKeyboard:
                 target_height=key_h)
 
             if(self.entered_text):
-                self.display.render_text(text=self.entered_text,
+                Display.render_text(text=self.entered_text,
                     x = entry_bar_text_x_offset,
                     y = next_y, 
                     purpose = FontPurpose.ON_SCREEN_KEYBOARD, 
@@ -95,7 +95,7 @@ class OnScreenKeyboard:
                         ):
                         color = Theme.text_color_selected(FontPurpose.ON_SCREEN_KEYBOARD)
                         selected = True
-                        self.display.render_image(
+                        Display.render_image(
                             image_path = Theme.key_selected_bg() if selected else Theme.key_bg(),
                             x = x,
                             y = y, 
@@ -107,7 +107,7 @@ class OnScreenKeyboard:
                         color = Theme.text_color(FontPurpose.ON_SCREEN_KEYBOARD)
 
 
-                    self.display.render_text(text=key,
+                    Display.render_text(text=key,
                                             x = x + key_w //2,
                                             y = y + key_h //2, 
                                             purpose = FontPurpose.ON_SCREEN_KEYBOARD, 
@@ -115,7 +115,7 @@ class OnScreenKeyboard:
                                             render_mode = RenderMode.MIDDLE_CENTER_ALIGNED)
                 next_y += key_h
                 
-            self.display.present()
+            Display.present()
             if(self.controller.get_input()):
                 if self.controller.last_input() == ControllerInput.DPAD_UP:
                     if self.selected_row_index > 0:

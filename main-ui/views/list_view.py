@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
+from display.display import Display
 from views.selection import Selection
 from views.view import View
 
@@ -55,14 +56,14 @@ class ListView(View):
     
     def _render_common(self):
         #if(self.clear_display_each_render_cycle):
-        self.display.clear(self.top_bar_text)
+        Display.clear(self.top_bar_text)
         
         self.adjust_selected_top_bottom_for_overflow()
 
         self._render()
         if(self.include_index_text):
-            self.display.add_index_text(self.selected+1, len(self.options))
-        self.display.present()
+            Display.add_index_text(self.selected+1, len(self.options))
+        Display.present()
 
     def adjust_selected_top_bottom_for_overflow(self):
         self.selected = max(0, self.selected)

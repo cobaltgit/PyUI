@@ -19,15 +19,14 @@ from views.view_type import ViewType
 
 
 class BasicSettingsMenu(settings_menu.SettingsMenu):
-    def __init__(self, display: Display, controller: Controller, device: Device, config: PyUiConfig):
+    def __init__(self, controller: Controller, device: Device, config: PyUiConfig):
         super().__init__(
-            display=display,
             controller=controller,
             device=device,
             config=config)
-        self.wifi_menu = WifiMenu(display,controller,device)
-        self.bt_menu = BluetoothMenu(display,controller,device)
-        self.advance_settings_menu = AdvanceSettingsMenu(display,controller,device,config)
+        self.wifi_menu = WifiMenu(controller,device)
+        self.bt_menu = BluetoothMenu(controller,device)
+        self.advance_settings_menu = AdvanceSettingsMenu(controller,device,config)
         self.anything_theme_related_changed = False
 
     def shutdown(self, input: ControllerInput):
@@ -95,10 +94,10 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
             if(selected_index == len(theme_folders)):
                 selected_index = 0
         elif(ControllerInput.A == input):
-            ThemeSettingsMenu(self.display, self.controller, self.device, self.theme).show_theme_options_menu()
+            ThemeSettingsMenu(self.controller, self.device).show_theme_options_menu()
 
         Theme.set_theme_path(os.path.join(self.config["themeDir"], theme_folders[selected_index]), self.device.screen_width, self.device.screen_height)
-        self.display.init_fonts()   
+        Display.init_fonts()   
         self.config["theme"] = theme_folders[selected_index]
         self.config.save()      
         self.theme_changed = True

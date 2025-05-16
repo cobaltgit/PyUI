@@ -17,13 +17,12 @@ from views.view_type import ViewType
 # Would like this to be generic in the future but this is so Miyoo specific right now 
 # Due to the oddities in how its handled
 class GameConfigMenu:
-    def __init__(self, display: Display, controller: Controller, device: Device, game_system: GameSystem, game : str):
-        self.display = display
+    def __init__(self, controller: Controller, device: Device, game_system: GameSystem, game : str):
         self.controller = controller
         self.device = device
         self.game_system = game_system
         self.game = game
-        self.view_creator = ViewCreator(display,controller,device)
+        self.view_creator = ViewCreator(controller,device)
 
     def show_config(self) :
         selected = Selection(None, None, 0)
@@ -62,10 +61,10 @@ class GameConfigMenu:
                 # example arg /media/sdcard0/Emu/PORTS/../../Roms/PORTS/PokeMMO.sh
                 #/media/sdcard0/Emu/PORTS/../../Roms/PORTS/PokeMMO.sh
                 miyoo_game_path = os.path.join("/media/sdcard0/Emu", self.game_system, "../../Roms", self.game_system, self.game)
-                self.display.deinit_display()
+                Display.deinit_display()
                 self.device.run_app([selected.get_selection().get_value(), miyoo_game_path])
                 # TODO Once we remove the display_kill and popups from launch.sh we can remove this
                 # For a good speedup
-                self.display.reinitialize()
+                Display.reinitialize()
             elif(ControllerInput.B == selected.get_input()):
                 selected = None

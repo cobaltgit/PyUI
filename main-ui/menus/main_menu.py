@@ -22,17 +22,16 @@ from views.view_type import ViewType
 
 
 class MainMenu:
-    def __init__(self, display: Display, controller: Controller, device: Device, config: PyUiConfig):
-        self.display : Display= display
+    def __init__(self, controller: Controller, device: Device, config: PyUiConfig):
         self.controller : Controller = controller
         self.device : Device= device
-        self.system_select_menu = GameSystemSelectMenu(display,controller,device)
-        self.app_menu = AppMenu(display,controller,device)
-        self.favorites_menu = FavoritesMenu(display,controller,device)
-        self.recents_menu = RecentsMenu(display,controller,device)
-        self.settings_menu = BasicSettingsMenu(display,controller,device, config)
-        self.view_creator = ViewCreator(display,controller,device)
-        self.popup_menu = MainMenuPopup(display,controller,device)
+        self.system_select_menu = GameSystemSelectMenu(controller,device)
+        self.app_menu = AppMenu(controller,device)
+        self.favorites_menu = FavoritesMenu(controller,device)
+        self.recents_menu = RecentsMenu(controller,device)
+        self.settings_menu = BasicSettingsMenu(controller,device, config)
+        self.view_creator = ViewCreator(controller,device)
+        self.popup_menu = MainMenuPopup(controller,device)
 
     def build_options(self):
         #TODO make this user config driven

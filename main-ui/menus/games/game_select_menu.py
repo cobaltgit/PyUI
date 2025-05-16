@@ -17,8 +17,8 @@ from games.utils.game_system import GameSystem
 
 
 class GameSelectMenu(RomsMenuCommon):
-    def __init__(self, display: Display, controller: Controller, device: Device):
-        super().__init__(display,controller,device)
+    def __init__(self, controller: Controller, device: Device):
+        super().__init__(controller,device)
 
     def _is_favorite(self, favorites: list[GameEntry], rom_file_path):
         return any(Path(rom_file_path).resolve() == Path(fav.rom_path).resolve() for fav in favorites)

@@ -14,11 +14,10 @@ class TextListView(NonDescriptiveListView):
     SHOW_ICONS = True
     DONT_SHOW_ICONS = False
 
-    def __init__(self, display: Display, controller: Controller, device: Device, top_bar_text,
+    def __init__(self, controller: Controller, device: Device, top_bar_text,
                  options: List[GridOrListEntry], 
                  selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None, usable_height = None):
-        super().__init__(display=display,
-                         controller=controller,
+        super().__init__(controller=controller,
                          device=device,
                          top_bar_text=top_bar_text,
                          options=options,
@@ -41,17 +40,17 @@ class TextListView(NonDescriptiveListView):
             if actual_index == self.selected:
                 color = Theme.text_color_selected(FontPurpose.LIST)
                 if(self.selected_bg is not None):
-                    self.display.render_image(self.selected_bg,self.view_x, y_value)
+                    Display.render_image(self.selected_bg,self.view_x, y_value)
             else:
                 color = Theme.text_color(FontPurpose.LIST)
 
             if(self.show_icons and imageTextPair.get_icon() is not None):
-                icon_width, icon_height = self.display.render_image(imageTextPair.get_icon(),x_value, y_value)
+                icon_width, icon_height = Display.render_image(imageTextPair.get_icon(),x_value, y_value)
                 x_value += icon_width
             else:
                 pass
 
-            self.display.render_text(imageTextPair.get_primary_text(), x_value, y_value + self.line_height//2, color, FontPurpose.LIST,
+            Display.render_text(imageTextPair.get_primary_text(), x_value, y_value + self.line_height//2, color, FontPurpose.LIST,
                                     RenderMode.MIDDLE_LEFT_ALIGNED)
 
 

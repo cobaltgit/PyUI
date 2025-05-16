@@ -15,11 +15,10 @@ class NonDescriptiveListView(ListView):
     SHOW_ICONS = True
     DONT_SHOW_ICONS = False
 
-    def __init__(self, display: Display, controller: Controller, device: Device, top_bar_text,
+    def __init__(self, controller: Controller, device: Device, top_bar_text,
                  options: List[GridOrListEntry],
                  selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None, usable_height = None):
         super().__init__(controller)
-        self.display = display
         self.device = device
         self.top_bar_text = top_bar_text
         self.options = options
@@ -27,14 +26,14 @@ class NonDescriptiveListView(ListView):
         while(self.selected > len(options) and self.selected > 0):
             self.selected -= 1
         self.current_top = 0
-        self.base_y_offset = self.display.get_top_bar_height() + 5
+        self.base_y_offset = Display.get_top_bar_height() + 5
         #TODO get line height padding from theme
         self.show_icons = show_icons
         self.image_render_mode = image_render_mode
         self.selected_bg = selected_bg
         self.line_height = self._calculate_line_height()   
         if(usable_height is None):
-            usable_height = self.display.get_usable_screen_height()
+            usable_height = Display.get_usable_screen_height()
         self.max_rows = usable_height // self.line_height
         self.current_bottom = min(self.max_rows,len(options))
 
@@ -42,17 +41,17 @@ class NonDescriptiveListView(ListView):
         self.options = options
 
     def _calculate_line_height(self):
-        text_line_height = self.display.get_line_height(FontPurpose.LIST) + 10  # add 10px padding between lines
+        text_line_height = Display.get_line_height(FontPurpose.LIST) + 10  # add 10px padding between lines
         icon_line_height = 0
         if(self.show_icons):
             for gridOrListEntry in self.options:
                 if(gridOrListEntry.get_icon() is not None):
-                    icon_w, icon_h = self.display.get_image_dimensions(gridOrListEntry.get_icon())
+                    icon_w, icon_h = Display.get_image_dimensions(gridOrListEntry.get_icon())
                     icon_line_height = max(icon_line_height, icon_h)
 
         bg_height = 0
         if(self.selected_bg is not None):
-            bg_w, bg_height = self.display.get_image_dimensions(self.selected_bg)
+            bg_w, bg_height = Display.get_image_dimensions(self.selected_bg)
 
         return max(text_line_height, icon_line_height, bg_height)
 

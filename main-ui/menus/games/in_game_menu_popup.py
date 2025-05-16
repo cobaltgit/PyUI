@@ -12,11 +12,10 @@ from views.view_type import ViewType
 CONTINUE_RUNNING = True
 
 class InGameMenuPopup:
-    def __init__(self, display: Display, controller: Controller, device: Device):
-        self.display : Display= display
+    def __init__(self, controller: Controller, device: Device):
         self.controller : Controller = controller
         self.device : Device= device
-        self.view_creator = ViewCreator(display,controller,device)
+        self.view_creator = ViewCreator(controller,device)
 
     def exit_game(self, input):
         return False

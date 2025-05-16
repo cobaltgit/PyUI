@@ -17,13 +17,12 @@ from views.view_type import ViewType
 
 
 class WifiMenu:
-    def __init__(self, display : Display, controller: Controller, device: Device):
-        self.display : Display = display
+    def __init__(self, controller: Controller, device: Device):
         self.controller : Controller = controller
         self.device : Device= device
         self.wifi_scanner = WiFiScanner()
-        self.on_screen_keyboard = OnScreenKeyboard(display,controller,device)
-        self.view_creator = ViewCreator(display,controller,device)
+        self.on_screen_keyboard = OnScreenKeyboard(controller,device)
+        self.view_creator = ViewCreator(controller,device)
 
     def wifi_adjust(self):
         if self.device.is_wifi_enabled():
@@ -88,15 +87,15 @@ network={{
             
 
             if(wifi_enabled):
-                self.display.clear("WiFi")
-                self.display.render_text(
+                Display.clear("WiFi")
+                Display.render_text(
                     text = "Scanning for Networks (~10s)",
                     x = self.device.screen_width // 2,
-                    y = self.display.get_usable_screen_height() // 2,
+                    y = Display.get_usable_screen_height() // 2,
                     color = Theme.text_color(FontPurpose.DESCRIPTIVE_LIST_TITLE),
                     purpose = FontPurpose.DESCRIPTIVE_LIST_TITLE,
                     render_mode=RenderMode.MIDDLE_CENTER_ALIGNED)
-                self.display.present()
+                Display.present()
                 if(should_scan_for_wifi):
                     should_scan_for_wifi = False
                     networks = self.wifi_scanner.scan_networks(self.device)
