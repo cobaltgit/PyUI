@@ -4,6 +4,7 @@ from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
+from games.utils.game_system import GameSystem
 from games.utils.game_system_utils import GameSystemUtils
 from menus.games.game_select_menu import GameSelectMenu
 from menus.games.game_system_config import GameSystemConfig
@@ -55,56 +56,54 @@ class GameSystemSelectMenu:
 
         return None
     
-    def get_images(self, sys_config):
-        icon_system_name = self.get_system_name_for_icon(sys_config)
-        image_path = self.choose_existing_file(
-                    self.theme.get_system_icon(icon_system_name),
-                    sys_config.get_icon(), 
-                    sys_config.get_emu_folder())
+    def get_first_existing_path(self,icon_system_name_priority):
+        for path in icon_system_name_priority:
+            try:
+                if path and os.path.isfile(path):
+                    return path
+            except Exception:
+                pass
+        return None 
+
+    def get_images(self, game_system : GameSystem):
+        icon_system_name = self.get_system_name_for_icon(game_system.game_system_config)
+        icon_system_name_priority = [self.theme.get_system_icon(icon_system_name),
+                                     self.theme.get_system_icon(game_system.folder_name.lower()),
+                                     self.theme.get_system_icon(game_system.display_name.lower()),
+                                     game_system.game_system_config.get_icon()]
+        if(game_system.game_system_config.get_icon() is not None):
+            icon_system_name_priority.append(os.path.join(game_system.game_system_config.get_emu_folder(),game_system.game_system_config.get_icon()))
+
+        selected_icon_system_name_priority = [self.theme.get_system_icon_selected(icon_system_name),
+                                                self.theme.get_system_icon_selected(game_system.folder_name.lower()),
+                                                self.theme.get_system_icon_selected(game_system.display_name.lower()),
+                                                game_system.game_system_config.get_icon_selected()]
         
-        try:
-            if(sys_config.get_icon_selected() is not None and sys_config.get_icon_selected() != ''):
-                image_path_selected = self.choose_existing_file(self.theme.get_system_icon_selected(icon_system_name),
-                                                                sys_config.get_icon_selected(), 
-                                                                sys_config.get_emu_folder())
-            else:
-                image_path_selected = image_path
+        if(game_system.game_system_config.get_icon_selected() is not None):
+            icon_system_name_priority.append(os.path.join(game_system.game_system_config.get_emu_folder(),game_system.game_system_config.get_icon_selected()))
 
-        except Exception as e:
-            image_path_selected = image_path
-
-        return image_path, image_path_selected
-
+        
+        return self.get_first_existing_path(icon_system_name_priority), self.get_first_existing_path(selected_icon_system_name_priority),
+    
     def run_system_selection(self) :
         selected = Selection(None,None,0)
         systems_list = []
         view = None
         for game_system in self.game_utils.get_active_systems():
             sys_config = game_system.game_system_config
-            if(self.use_emu_cfg):
-                systems_list.append(
-                    GridOrListEntry(
-                        primary_text=game_system.display_name,
-                        image_path=sys_config.get_icon(),
-                        image_path_selected=sys_config.get_icon_selected(),
-                        description="Game System",
-                        icon=sys_config.get_icon_selected(),
-                        value=game_system
-                    ) 
-                )
-            else:
-                image_path, image_path_selected = self.get_images(sys_config)
-                icon = image_path_selected
-                systems_list.append(
-                    GridOrListEntry(
-                        primary_text=game_system.display_name,
-                        image_path=image_path,
-                        image_path_selected=image_path_selected,
-                        description="Game System",
-                        icon=icon,
-                        value=game_system
-                    )                
-                )
+            print(f"{sys_config}")
+            image_path, image_path_selected = self.get_images(game_system)
+            icon = image_path_selected
+            systems_list.append(
+                GridOrListEntry(
+                    primary_text=game_system.display_name,
+                    image_path=image_path,
+                    image_path_selected=image_path_selected,
+                    description="Game System",
+                    icon=icon,
+                    value=game_system
+                )                
+            )
         if(view is None):
             view = self.view_creator.create_view(
                 view_type=self.theme.get_view_type_for_system_select_menu(),
