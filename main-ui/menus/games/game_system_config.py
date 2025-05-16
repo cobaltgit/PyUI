@@ -7,6 +7,9 @@ class GameSystemConfig:
         with open(config_path, 'r', encoding='utf-8') as f:
             self._data = json.load(f)
 
+    def __str__(self):
+        return f"GameSystemConfig(GameSystemConfig='{self.emu_folder}')"
+    
     def get_emu_folder(self):
         return self.emu_folder
 
