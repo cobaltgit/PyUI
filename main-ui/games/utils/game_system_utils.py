@@ -12,6 +12,16 @@ class GameSystemUtils:
         self.emu_path = "/mnt/SDCARD/Emu/"
         self.rom_utils = RomUtils(self.roms_path)
     
+    def get_game_system_by_name(self, system_name) -> GameSystem:
+        game_system_config = GameSystemConfig(system_name)
+
+        if(game_system_config is not None):
+            display_name = game_system_config.get_label()
+            return GameSystem(system_name,display_name, game_system_config)
+
+        PyUiLogger.get_logger().error(f"Unable to load game system for {system_name}")
+        return None
+
     def get_active_systems(self) -> list[GameSystem]:
         active_systems : list[GameSystem]= []
         

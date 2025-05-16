@@ -757,3 +757,6 @@ class MiyooFlip(Device):
 
     def get_bluetooth_scanner(self):
         return BluetoothScanner()
+
+    def get_favorites_path(self):
+        return "/mnt/SDCARD/Saves/pyui-favorites.json"

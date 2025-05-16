@@ -139,6 +139,10 @@ class Device(ABC):
         pass
 
     @abstractmethod
+    def get_favorites_path(self):
+        pass
+
+    @abstractmethod
     def parse_favorites(self) -> list[GameEntry]:
         pass
 

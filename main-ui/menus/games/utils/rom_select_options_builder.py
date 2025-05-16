@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Callable
 from devices.device import Device
 from games.utils.rom_utils import RomUtils
+from menus.games.utils.favorites_manager import FavoritesManager
 from menus.games.utils.rom_info import RomInfo
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
@@ -16,6 +17,7 @@ class RomSelectOptionsBuilder:
         self.theme = theme
         self.roms_path = "/mnt/SDCARD/Roms/"
         self.rom_utils : RomUtils= RomUtils(self.roms_path)
+        
     
     def _remove_extension(self,file_name):
         return os.path.splitext(file_name)[0]
@@ -47,15 +49,13 @@ class RomSelectOptionsBuilder:
 
     def build_rom_list(self, game_system, filter: Callable[[str], bool] = lambda a: True) -> list[GridOrListEntry]:
         rom_list = []
-        favorites = self._build_favorites_dict()
-
-        resolved_folder = str(Path(self.rom_utils.get_system_rom_directory(game_system.folder_name)).resolve())
         for rom_file_path in self.rom_utils.get_roms(game_system.folder_name):
             if(filter(rom_file_path)):
                 rom_file_name = os.path.basename(rom_file_path)
                 img_path = self.get_image_path(rom_file_path)
-                resolved_file_path = resolved_folder+"/"+rom_file_name
-                icon=self.theme.favorite_icon if resolved_file_path in favorites else None
+                rom_info = RomInfo(game_system,rom_file_path)
+                icon=self.theme.favorite_icon if FavoritesManager.is_favorite(rom_info) else None
+
                 rom_list.append(
                     GridOrListEntry(
                         primary_text=self._remove_extension(rom_file_name),
