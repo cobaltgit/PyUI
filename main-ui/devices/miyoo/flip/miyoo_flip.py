@@ -22,6 +22,7 @@ from menus.games.utils.recents_manager import RecentsManager
 from menus.games.utils.rom_info import RomInfo
 import sdl2
 from utils import throttle
+from utils.config_copier import ConfigCopier
 from utils.logger import PyUiLogger
 
 class MiyooFlip(DeviceCommon):
@@ -47,12 +48,12 @@ class MiyooFlip(DeviceCommon):
         }
         os.environ["SDL_VIDEODRIVER"] = "KMSDRM"
         os.environ["SDL_RENDER_DRIVER"] = "kmsdrm"
-
-        #Idea is if something were to change from he we can reload it
-        #so it always has the more accurate data
+        
+        script_dir = Path(__file__).resolve().parent
+        source = script_dir / 'system.json'
+        ConfigCopier.ensure_config("/userdata/system.json", source)
         self.system_config = SystemConfig("/userdata/system.json")
         
-
         self.miyoo_games_file_parser = MiyooGamesFileParser()        
         self._set_lumination_to_config()
         self._set_contrast_to_config()

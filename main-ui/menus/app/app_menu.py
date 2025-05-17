@@ -18,19 +18,37 @@ class AppMenu:
     def _convert_to_theme_version_of_icon(self, icon_path):
         return os.path.join(Theme.get_theme_path(),"icons","app",os.path.basename(icon_path))
 
+    def get_first_existing_path(self,file_priority_list):
+        for path in file_priority_list:
+            try:
+                if path and os.path.isfile(path):
+                    return path
+            except Exception:
+                pass
+        return None 
+
+    def get_icon(self, app_folder, icon_path_from_config):
+        icon_priority = []
+        icon_priority.append(os.path.join(Theme.get_theme_path(),"icons","app",os.path.basename(icon_path_from_config)))
+        icon_priority.append(icon_path_from_config)
+        icon_priority.append(os.path.join(app_folder,icon_path_from_config))
+        return self.get_first_existing_path(icon_priority)
+
     def run_app_selection(self) :
         selected = Selection(None,None,0)
         app_list = []
         view = None
         for app in self.appFinder.get_apps():
             if(app.get_label() is not None):
+                icon = self.get_icon(app.get_folder(),app.get_icon())
+                print(f"Adding app: {app.get_label()} with icon: {icon}")
                 app_list.append(
                     GridOrListEntry(
                         primary_text=app.get_label(),
-                        image_path=app.get_icon(),
-                        image_path_selected=app.get_icon(),
+                        image_path=icon,
+                        image_path_selected=icon,
                         description=app.get_description(),
-                        icon=self._convert_to_theme_version_of_icon(app.get_icon()),
+                        icon=icon,
                         value=app.get_launch()
                     )
                 )

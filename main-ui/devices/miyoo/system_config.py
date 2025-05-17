@@ -5,14 +5,36 @@ class SystemConfig:
     def __init__(self, filepath):
         self._lock = threading.Lock()
         self.filepath = filepath
+        #MainUI often corrupts this file,
+        #this seems to be a consistent fix though
+        self.truncate_after_first_brace(self.filepath)
         self.reload_config()
         
+
+    def truncate_after_first_brace(self,file_path):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        first_brace_index = content.find('}')
+        if first_brace_index == -1:
+            print("No closing brace found.")
+            return
+
+        # Keep everything up to and including the first brace
+        truncated_content = content[:first_brace_index + 1]
+
+        # Overwrite the file with truncated content
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(truncated_content)
+
+        print(f"Truncated file after first '}}' at position {first_brace_index}.")
+
     def reload_config(self):
         with self._lock:
             try:
                 with open(self.filepath, 'r') as f:
                     self.config = json.load(f)
-            except (FileNotFoundError, json.JSONDecodeError) as e:
+            except (json.JSONDecodeError) as e:
                 raise RuntimeError(f"Failed to load config: {e}")
 
     def save_config(self):

@@ -1,5 +1,7 @@
 import argparse
 import os
+from pathlib import Path
+import shutil
 import sys
 import threading
 from devices.device import Device
@@ -13,16 +15,17 @@ from menus.main_menu import MainMenu
 from controller.controller import Controller
 from display.display import Display
 from themes.theme import Theme
-from devices.miyoo_flip import MiyooFlip
+from devices.miyoo.flip.miyoo_flip import MiyooFlip
+from utils.config_copier import ConfigCopier
 from utils.logger import PyUiLogger
 from utils.py_ui_config import PyUiConfig
-
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('-logDir', type=str, default='/mnt/SDCARD/pyui/logs/', help='Directory to store logs')
     parser.add_argument('-pyUiConfig', type=str, default='/mnt/SDCARD/Saves/pyui-config.json', help='Location of PyUI config')
+    parser.add_argument('-device', type=str, default='MIYOO_FLIP', help='The device type (MIYOO_FLIP or TRIMUI_BRICK)')
     return parser.parse_args()
 
 def log_renderer_info():
@@ -32,13 +35,13 @@ def log_renderer_info():
         sdl2.SDL_GetRenderDriverInfo(i, info)
         print(f"Found Renderer {i}: {info.name.decode()}")
 
-def initialize_device():
-    if os.path.exists("/userdata/system.json"):
+def initialize_device(device):
+    if "MIYOO_FLIP" == device:
         Device.init(MiyooFlip())
-    elif os.path.exists("/mnt/UDISK/system.json"):
+    elif "TRIMUI_BRICK" == device:
         Device.init(TrimUIBrick())
     else:
-        raise RuntimeError("No supported device config found")
+        raise RuntimeError(f"{device} is not a supported device")
 
 
 def background_startup():
@@ -53,6 +56,14 @@ def start_background_threads():
     background_thread = threading.Thread(target=background_startup)
     background_thread.start()
 
+def verify_config_exists(config_path):
+    # Determine the directory where this script resides
+    script_dir = Path(__file__).resolve().parent
+    source = script_dir / 'config.json'
+
+    ConfigCopier.ensure_config(config_path, source)
+
+
 def main():
     args = parse_arguments()
 
@@ -63,12 +74,13 @@ def main():
 
     log_renderer_info()
 
+    verify_config_exists(args.pyUiConfig)
     PyUiConfig.init(args.pyUiConfig)
 
     selected_theme = os.path.join(PyUiConfig.get("themeDir"), PyUiConfig.get("theme"))
     PyUiLogger.get_logger().info(f"{selected_theme}")
 
-    initialize_device()
+    initialize_device(args.device)
 
     Theme.init(selected_theme, Device.screen_width(), Device.screen_height())
     Display.init()

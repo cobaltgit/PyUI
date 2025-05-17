@@ -10,7 +10,7 @@ import sdl2.ext
 from controller.controller import Controller
 from display.display import Display
 from themes.theme import Theme
-from devices.miyoo_flip import MiyooFlip
+from devices.miyoo.flip.miyoo_flip import MiyooFlip
 from utils.logger import PyUiLogger
 from utils.py_ui_config import PyUiConfig
 from views.grid_or_list_entry import GridOrListEntry
