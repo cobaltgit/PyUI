@@ -479,8 +479,8 @@ class Theme():
 
     @classmethod
     def get_game_selection_view_type(cls):
-        view_type_str = cls._data.get("gameSelectionViewType", "TEXT_AND_IMAGE_LIST_VIEW")
-        return getattr(ViewType, view_type_str, ViewType.GRID)
+        view_type_str = cls._data.get("gameSelectionViewType", "TEXT_AND_IMAGE")
+        return getattr(ViewType, view_type_str, ViewType.TEXT_AND_IMAGE)
 
     @classmethod
     def set_game_selection_view_type(cls, view_type):
