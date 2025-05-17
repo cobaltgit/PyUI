@@ -397,29 +397,31 @@ class Display:
 
     @classmethod
     def add_index_text(cls, index, total):
-        y_padding = max(5, cls.get_bottom_bar_height() // 4)
-        y_value = Device.screen_height() - y_padding
-        x_padding = 10
+        if(Theme.show_index_text()):
+            print(f"Show index text was true")
+            y_padding = max(5, cls.get_bottom_bar_height() // 4)
+            y_value = Device.screen_height() - y_padding
+            x_padding = 10
 
-        total_text_x = Device.screen_width() - x_padding
-        total_text_w, _ = cls.render_text(
-            str(total),
-            total_text_x,
-            y_value,
-            Theme.text_color(FontPurpose.LIST_TOTAL),
-            FontPurpose.LIST_TOTAL,
-            RenderMode.BOTTOM_RIGHT_ALIGNED
-        )
+            total_text_x = Device.screen_width() - x_padding
+            total_text_w, _ = cls.render_text(
+                str(total),
+                total_text_x,
+                y_value,
+                Theme.text_color(FontPurpose.LIST_TOTAL),
+                FontPurpose.LIST_TOTAL,
+                RenderMode.BOTTOM_RIGHT_ALIGNED
+            )
 
-        index_text_x = Device.screen_width() - x_padding - total_text_w
-        cls.render_text(
-            str(index) + "/",
-            index_text_x,
-            y_value,
-            Theme.text_color(FontPurpose.LIST_INDEX),
-            FontPurpose.LIST_INDEX,
-            RenderMode.BOTTOM_RIGHT_ALIGNED
-        )
+            index_text_x = Device.screen_width() - x_padding - total_text_w
+            cls.render_text(
+                str(index) + "/",
+                index_text_x,
+                y_value,
+                Theme.text_color(FontPurpose.LIST_INDEX),
+                FontPurpose.LIST_INDEX,
+                RenderMode.BOTTOM_RIGHT_ALIGNED
+            )
 
     @classmethod
     def get_current_top_bar_title(cls):

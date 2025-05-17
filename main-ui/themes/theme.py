@@ -302,7 +302,10 @@ class Theme():
                 case FontPurpose.TOP_BAR_TEXT:
                     return cls.hex_to_color(cls._data["grid"]["selectedcolor"])
                 case FontPurpose.BATTERY_PERCENT:
-                    return cls.hex_to_color(cls._data["grid"]["selectedcolor"])
+                    if(cls._data["batteryPercentage"] and cls._data["batteryPercentage"]["color"]):
+                        return cls.hex_to_color(cls._data["batteryPercentage"]["color"])
+                    else:
+                        return cls.hex_to_color(cls._data["grid"]["selectedcolor"])
                 case FontPurpose.ON_SCREEN_KEYBOARD:
                     return cls.hex_to_color(cls._data["grid"]["color"])
                 case FontPurpose.GRID_ONE_ROW:
@@ -462,6 +465,10 @@ class Theme():
     @classmethod
     def scroll_rom_selection_text(cls):
         return cls._data.get("scrollRomSelectionText", True)
+
+    @classmethod
+    def show_index_text(cls):
+        return cls._data.get("showIndexText", True)
 
     @classmethod
     def get_main_menu_column_count(cls):
