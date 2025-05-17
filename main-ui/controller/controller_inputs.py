@@ -28,4 +28,5 @@ class ControllerInput(Enum):
     RIGHT_STICK_RIGHT = auto()
     VOLUME_DOWN = auto()
     VOLUME_UP = auto()
+    POWER_BUTTON = auto()
     UNKNOWN = auto()

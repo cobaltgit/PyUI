@@ -2,7 +2,6 @@ import argparse
 import os
 import sys
 import threading
-from controller.key_watcher import KeyWatcher
 from devices.device import Device
 from devices.trimui.trim_ui_brick import TrimUIBrick
 from menus.games.utils.favorites_manager import FavoritesManager
@@ -49,10 +48,6 @@ def background_startup():
 def start_background_threads():
     startup_thread = threading.Thread(target=Device.perform_startup_tasks)
     startup_thread.start()
-
-    key_watcher = KeyWatcher()
-    key_polling_thread = threading.Thread(target=key_watcher.poll_keyboard, daemon=True)
-    key_polling_thread.start()
 
     # Background favorites/recents init thread
     background_thread = threading.Thread(target=background_startup)

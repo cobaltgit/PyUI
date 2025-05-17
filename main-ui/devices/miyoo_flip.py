@@ -5,6 +5,7 @@ import threading
 import time
 from apps.miyoo.miyoo_app_finder import MiyooAppFinder
 from controller.controller_inputs import ControllerInput
+from controller.key_watcher import KeyWatcher
 from devices.bluetooth.bluetooth_scanner import BluetoothScanner
 from devices.charge.charge_status import ChargeStatus
 from devices.device_common import DeviceCommon
@@ -60,8 +61,14 @@ class MiyooFlip(DeviceCommon):
         self.ensure_wpa_supplicant_conf()
         self.init_gpio()
         threading.Thread(target=self.monitor_wifi, daemon=True).start()
-        self.hardware_poller = MiyooFlipPoller()
+        self.hardware_poller = MiyooFlipPoller(self)
         threading.Thread(target=self.hardware_poller.continuously_monitor, daemon=True).start()
+        self.volume_key_watcher = KeyWatcher("/dev/input/event0")
+        volume_key_polling_thread = threading.Thread(target=self.volume_key_watcher.poll_keyboard, daemon=True)
+        volume_key_polling_thread.start()
+        self.power_key_watcher = KeyWatcher("/dev/input/event2")
+        power_key_polling_thread = threading.Thread(target=self.power_key_watcher.poll_keyboard, daemon=True)
+        power_key_polling_thread.start()
 
     def init_gpio(self):
         try:
@@ -78,6 +85,20 @@ class MiyooFlip(DeviceCommon):
                 return "0" == value 
         except (FileNotFoundError, IOError) as e:
             return False
+        
+    def is_lid_closed(self):
+        try:
+            with open("/sys/devices/platform/hall-mh248/hallvalue", "r") as f:
+                value = f.read().strip()
+                return "0" == value 
+        except (FileNotFoundError, IOError) as e:
+            return False
+
+    def sleep(self):
+        with open("/sys/power/mem_sleep", "w") as f:
+            f.write("deep")
+        with open("/sys/power/state", "w") as f:
+            f.write("mem")  
 
     def ensure_wpa_supplicant_conf(self):
         conf_path = Path("/userdata/cfg/wpa_supplicant.conf")
@@ -479,7 +500,9 @@ class MiyooFlip(DeviceCommon):
             return None
 
     def key_down(self, key_code):
-        PyUiLogger.get_logger().debug(f"key_down {key_code}")
+        if(116 == key_code):
+            self.sleep()
+            return ControllerInput.POWER_BUTTON
         if(115 == key_code):
             self.change_volume(10)
             return ControllerInput.VOLUME_UP
@@ -487,7 +510,7 @@ class MiyooFlip(DeviceCommon):
             self.change_volume(-10)
             return ControllerInput.VOLUME_DOWN
         else:
-            PyUiLogger.get_logger().debug(f"Unrecognized keycode key_code")
+            PyUiLogger.get_logger().debug(f"Unrecognized keycode {key_code}")
 
 
     def get_wifi_connection_quality_info(self) -> WiFiConnectionQualityInfo:

@@ -19,10 +19,10 @@ KEY_REPEAT = 2
 
 class KeyWatcher:
 
-    def __init__(self):
-        pass
+    def __init__(self, event_path):
+        self.event_path = event_path
 
-    def read_keyboard_input(self,event_path="/dev/input/event0", timeout=1.0):
+    def read_keyboard_input(self,timeout=1.0):
         """
         Polls for a single key press from a Linux input device (e.g., keyboard).
 
@@ -34,9 +34,9 @@ class KeyWatcher:
             int or None: The raw Linux keycode of the key pressed, or None if timeout.
         """
         try:
-            fd = os.open(event_path, os.O_RDONLY | os.O_NONBLOCK)
+            fd = os.open(self.event_path, os.O_RDONLY | os.O_NONBLOCK)
         except OSError as e:
-            print(f"Error opening {event_path}: {e}")
+            print(f"Error opening {self.event_path}: {e}")
             return None
 
         try:
