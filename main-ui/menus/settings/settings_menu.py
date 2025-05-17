@@ -1,5 +1,4 @@
 from controller.controller_inputs import ControllerInput
-from utils.py_ui_config import PyUiConfig
 from views.selection import Selection
 from views.view_creator import ViewCreator
 from views.view_type import ViewType
@@ -7,8 +6,8 @@ from abc import ABC, abstractmethod
 
 
 class SettingsMenu(ABC):
-    def __init__(self, config: PyUiConfig):
-        self.config : PyUiConfig = config 
+    def __init__(self):
+        pass
 
     @abstractmethod
     def build_options_list(self):

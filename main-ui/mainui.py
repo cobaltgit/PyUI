@@ -68,18 +68,17 @@ def main():
 
     log_renderer_info()
 
-    config = PyUiConfig(args.pyUiConfig)
-    config.load()
+    PyUiConfig.init(args.pyUiConfig)
 
-    selected_theme = os.path.join(config["themeDir"], config["theme"])
+    selected_theme = os.path.join(PyUiConfig.get("themeDir"), PyUiConfig.get("theme"))
     PyUiLogger.get_logger().info(f"{selected_theme}")
 
     initialize_device()
 
     Theme.init(selected_theme, Device.screen_width(), Device.screen_height())
     Display.init()
-    Controller.init(config)
-    main_menu = MainMenu(config)
+    Controller.init()
+    main_menu = MainMenu()
 
     start_background_threads()
 

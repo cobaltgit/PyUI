@@ -6,6 +6,7 @@ from ctypes import byref
 import time
 
 from utils.logger import PyUiLogger
+from utils.py_ui_config import PyUiConfig
 
 class Controller:
     controller = None
@@ -15,10 +16,9 @@ class Controller:
     event = sdl2.SDL_Event()
     last_input_time = 0
     hold_delay = 0
-    config = None
 
     @staticmethod
-    def init(config):
+    def init():
         Controller.clear_input_queue()
         PyUiLogger.get_logger().info("Checking for a controller")
         count = sdl2.SDL_NumJoysticks()
@@ -33,7 +33,6 @@ class Controller:
                     Controller.mapping = sdl2.SDL_GameControllerMapping(controller).decode()
                     PyUiLogger.get_logger().info(f"Opened GameController {index}: {Controller.name}")
                     PyUiLogger.get_logger().info(f" {Controller.mapping}")
-        Controller.config = config
 
     @staticmethod
     def new_bt_device_paired():
@@ -70,7 +69,7 @@ class Controller:
             time.sleep(0.005)
 
         if not Controller.still_held_down():
-            Controller.hold_delay = Controller.config.get_turbo_delay_ms()
+            Controller.hold_delay = PyUiConfig.get_turbo_delay_ms()
             Controller._last_event().type = 0
             reached_timeout = False
 

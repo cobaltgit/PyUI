@@ -17,12 +17,11 @@ from views.view_type import ViewType
 
 
 class BasicSettingsMenu(settings_menu.SettingsMenu):
-    def __init__(self, config: PyUiConfig):
-        super().__init__(
-            config=config)
+    def __init__(self):
+        super().__init__()
         self.wifi_menu = WifiMenu()
         self.bt_menu = BluetoothMenu()
-        self.advance_settings_menu = AdvanceSettingsMenu(config)
+        self.advance_settings_menu = AdvanceSettingsMenu()
         self.anything_theme_related_changed = False
 
     def shutdown(self, input: ControllerInput):
@@ -68,7 +67,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
             self.bt_menu.show_bluetooth_menu()
 
     def get_theme_folders(self):
-        theme_dir = self.config["themeDir"]
+        theme_dir = PyUiConfig.get("themeDir")
         return sorted(
             [
                 name for name in os.listdir(theme_dir)
@@ -79,7 +78,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
     
     def change_theme(self, input):
         theme_folders = self.get_theme_folders()
-        selected_index = theme_folders.index(self.config["theme"])
+        selected_index = theme_folders.index(PyUiConfig.get("theme"))
 
         if(ControllerInput.DPAD_LEFT == input):
             selected_index-=1
@@ -92,10 +91,10 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         elif(ControllerInput.A == input):
             ThemeSettingsMenu().show_theme_options_menu()
 
-        Theme.set_theme_path(os.path.join(self.config["themeDir"], theme_folders[selected_index]), Device.screen_width(), Device.screen_height())
+        Theme.set_theme_path(os.path.join(PyUiConfig.get("themeDir"), theme_folders[selected_index]), Device.screen_width(), Device.screen_height())
         Display.init_fonts()   
-        self.config["theme"] = theme_folders[selected_index]
-        self.config.save()      
+        PyUiConfig.set("theme",theme_folders[selected_index])
+        PyUiConfig.save()      
         self.theme_changed = True
 
     def launch_advance_settings(self,input):
@@ -165,7 +164,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         option_list.append(
                 GridOrListEntry(
                         primary_text="Theme",
-                        value_text="<    " + self.config["theme"] + "    >",
+                        value_text="<    " + PyUiConfig.get("theme") + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,

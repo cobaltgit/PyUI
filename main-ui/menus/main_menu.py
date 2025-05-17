@@ -14,12 +14,12 @@ from views.view_creator import ViewCreator
 
 
 class MainMenu:
-    def __init__(self, config: PyUiConfig):
+    def __init__(self):
         self.system_select_menu = GameSystemSelectMenu()
         self.app_menu = AppMenu()
         self.favorites_menu = FavoritesMenu()
         self.recents_menu = RecentsMenu()
-        self.settings_menu = BasicSettingsMenu(config)
+        self.settings_menu = BasicSettingsMenu()
         self.popup_menu = MainMenuPopup()
 
     def build_options(self):

@@ -10,9 +10,8 @@ from views.grid_or_list_entry import GridOrListEntry
 
 
 class AdvanceSettingsMenu(settings_menu.SettingsMenu):
-    def __init__(self, config: PyUiConfig):
-        super().__init__(
-            config=config)
+    def __init__(self):
+        super().__init__()
         self.on_screen_keyboard = OnScreenKeyboard()
 
     def reboot(self, input: ControllerInput):
@@ -43,7 +42,7 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
         PyUiLogger.get_logger().info(self.on_screen_keyboard.get_input("On Screen Keyboard Test"))
 
     def change_hold_delay(self, input):
-        current_delay = self.config.get_turbo_delay_ms() * 1000
+        current_delay = PyUiConfig.get_turbo_delay_ms() * 1000
 
         if(ControllerInput.DPAD_LEFT == input):
             if(current_delay > 0):
@@ -58,8 +57,8 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
             if(current_delay < 1000):
                 current_delay+=100
 
-        self.config.set_turbo_delay_ms(current_delay)
-        self.config.save()
+        PyUiConfig.set_turbo_delay_ms(current_delay)
+        PyUiConfig.save()
 
 
     def build_options_list(self):
@@ -102,7 +101,7 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
         option_list.append(
                 GridOrListEntry(
                         primary_text="Menu Turbo Delay (mS)",
-                        value_text="<    " + str(int(self.config.get_turbo_delay_ms()*1000)) + "    >",
+                        value_text="<    " + str(int(PyUiConfig.get_turbo_delay_ms()*1000)) + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
