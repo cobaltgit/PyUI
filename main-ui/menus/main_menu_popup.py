@@ -1,13 +1,9 @@
 
 
-from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
-from devices.device_common import DeviceCommon
-from display.display import Display
 from display.on_screen_keyboard import OnScreenKeyboard
 from menus.games.searched_roms_menu import SearchedRomsMenu
 from themes.theme import Theme
-from utils.py_ui_config import PyUiConfig
 from views.grid_or_list_entry import GridOrListEntry
 from views.view_creator import ViewCreator
 from views.view_type import ViewType
@@ -15,8 +11,7 @@ from views.view_type import ViewType
 
 class MainMenuPopup:
     def __init__(self):
-        self.view_creator = ViewCreator()
-
+        pass
 
     def run_popup_menu_selection(self):
         popup_options = []
@@ -77,7 +72,7 @@ class MainMenuPopup:
             icon=Theme.settings(),
             value="Future Option 3"
         ))
-        popup_view = self.view_creator.create_view(
+        popup_view = ViewCreator.create_view(
             view_type=ViewType.POPUP_TEXT_LIST_VIEW,
             options=popup_options,
             top_bar_text="Main Menu Sub Options",

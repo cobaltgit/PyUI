@@ -13,7 +13,7 @@ CONTINUE_RUNNING = True
 
 class InGameMenuPopup:
     def __init__(self):
-        self.view_creator = ViewCreator()
+        pass
 
     def exit_game(self, input):
         return False
@@ -29,7 +29,7 @@ class InGameMenuPopup:
             value=self.exit_game
         ))
 
-        popup_view = self.view_creator.create_view(
+        popup_view = ViewCreator.create_view(
             view_type=ViewType.TEXT_LIST_VIEW,
             options=popup_options,
             top_bar_text="Main Menu Sub Options",

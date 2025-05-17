@@ -15,7 +15,6 @@ class GameConfigMenu:
     def __init__(self, game_system: GameSystem, game : str):
         self.game_system = game_system
         self.game = game
-        self.view_creator = ViewCreator()
 
     def show_config(self) :
         selected = Selection(None, None, 0)
@@ -38,7 +37,7 @@ class GameConfigMenu:
                     )
                 )
             if(view is None):        
-                view = self.view_creator.create_view(
+                view = ViewCreator.create_view(
                     view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
                     top_bar_text=self.game_system.display_name + " Configuration", 
                     options=config_list,

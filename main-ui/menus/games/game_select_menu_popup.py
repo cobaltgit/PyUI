@@ -17,7 +17,7 @@ from views.view_type import ViewType
 
 class GameSelectMenuPopup:
     def __init__(self):
-        self.view_creator = ViewCreator()
+        pass
 
     def add_favorite(self, rom_info : RomInfo, input_value):
         FavoritesManager.add_favorite(rom_info)
@@ -63,7 +63,7 @@ class GameSelectMenuPopup:
             value=lambda input_value, game_system=rom_info.game_system: self.execute_game_search(game_system, input_value)
         ))
 
-        popup_view = self.view_creator.create_view(
+        popup_view = ViewCreator.create_view(
             view_type=ViewType.POPUP_TEXT_LIST_VIEW,
             options=popup_options,
             top_bar_text=f"{rom_info.game_system.display_name} Menu Sub Options",

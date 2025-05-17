@@ -18,7 +18,6 @@ class WifiMenu:
     def __init__(self):
         self.wifi_scanner = WiFiScanner()
         self.on_screen_keyboard = OnScreenKeyboard()
-        self.view_creator = ViewCreator()
 
     def wifi_adjust(self):
         if Device.is_wifi_enabled():
@@ -123,7 +122,7 @@ network={{
                             )
                     )
 
-            list_view = self.view_creator.create_view(
+            list_view = ViewCreator.create_view(
                     view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
                     top_bar_text="WiFi Configuration", 
                     options=option_list,

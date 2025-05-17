@@ -11,7 +11,6 @@ from abc import ABC, abstractmethod
 class SettingsMenu(ABC):
     def __init__(self, config: PyUiConfig):
         self.config : PyUiConfig = config 
-        self.view_creator = ViewCreator()
 
     @abstractmethod
     def build_options_list(self):
@@ -26,7 +25,7 @@ class SettingsMenu(ABC):
             
 
             if(list_view is None or self.theme_changed):
-                list_view = self.view_creator.create_view(
+                list_view = ViewCreator.create_view(
                     view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
                     top_bar_text="Settings", 
                     options=option_list,

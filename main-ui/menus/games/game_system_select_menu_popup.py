@@ -14,7 +14,7 @@ from views.view_type import ViewType
 
 class GameSystemSelectMenuPopup:
     def __init__(self):
-        self.view_creator = ViewCreator()
+        pass
 
     def execute_game_search(self, game_system, input_value):
         search_txt = OnScreenKeyboard().get_input("Game Search:")
@@ -45,7 +45,7 @@ class GameSystemSelectMenuPopup:
             value=self.all_system_game_search
         ))
 
-        popup_view = self.view_creator.create_view(
+        popup_view = ViewCreator.create_view(
             view_type=ViewType.POPUP_TEXT_LIST_VIEW,
             options=popup_options,
             top_bar_text=f"{game_system} Menu Sub Options",

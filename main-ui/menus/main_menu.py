@@ -20,7 +20,6 @@ class MainMenu:
         self.favorites_menu = FavoritesMenu()
         self.recents_menu = RecentsMenu()
         self.settings_menu = BasicSettingsMenu(config)
-        self.view_creator = ViewCreator()
         self.popup_menu = MainMenuPopup()
 
     def build_options(self):
@@ -87,7 +86,7 @@ class MainMenu:
         return image_text_list
 
     def build_main_menu_view(self, options, selected):
-        return self.view_creator.create_view(
+        return ViewCreator.create_view(
             view_type=Theme.get_view_type_for_main_menu(),
             top_bar_text="PyUI", 
             options=options, 

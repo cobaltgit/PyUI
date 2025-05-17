@@ -12,6 +12,7 @@ from themes.theme import Theme
 from utils.py_ui_config import PyUiConfig
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
+from views.view_creator import ViewCreator
 from views.view_type import ViewType
 
 
@@ -198,7 +199,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
             
 
             if(list_view is None or self.theme_changed):
-                list_view = self.view_creator.create_view(
+                list_view = ViewCreator.create_view(
                     view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
                     top_bar_text="Settings", 
                     options=option_list,

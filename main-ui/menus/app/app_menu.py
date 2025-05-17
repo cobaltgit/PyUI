@@ -14,7 +14,6 @@ from views.view_creator import ViewCreator
 class AppMenu:
     def __init__(self):
         self.appFinder = Device.get_app_finder()
-        self.view_creator = ViewCreator()
 
     def _convert_to_theme_version_of_icon(self, icon_path):
         return os.path.join(Theme.get_theme_path(),"icons","app",os.path.basename(icon_path))
@@ -36,7 +35,7 @@ class AppMenu:
                     )
                 )
         if(view is None):
-            view = self.view_creator.create_view(
+            view = ViewCreator.create_view(
                 view_type=Theme.get_view_type_for_app_menu(),
                 top_bar_text="Apps", 
                 options=app_list,

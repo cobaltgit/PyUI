@@ -20,7 +20,6 @@ from views.view_type import ViewType
 
 class RomsMenuCommon(ABC):
     def __init__(self):
-        self.view_creator = ViewCreator()
         self.rom_select_options_builder = RomSelectOptionsBuilder()
         self.in_game_menu_listener = InGameMenuListener()
         self.popup_menu = GameSelectMenuPopup()
@@ -56,7 +55,7 @@ class RomsMenuCommon(ABC):
         rom_list = self._get_rom_list()
         while(selected is not None):
             if(view is None):
-                view = self.view_creator.create_view(
+                view = ViewCreator.create_view(
                     view_type=ViewType.TEXT_AND_IMAGE_LIST_VIEW,
                     top_bar_text=page_name,
                     options=rom_list,

@@ -16,7 +16,6 @@ class GameSystemSelectMenu:
         self.game_utils : GameSystemUtils = GameSystemUtils()
         self.rom_select_menu : GameSelectMenu = GameSelectMenu()
         self.use_emu_cfg = False
-        self.view_creator = ViewCreator()
         self.game_system_select_menu_popup = GameSystemSelectMenuPopup()
         self.common_icon_mappings = {
             "PPSSPP": "psp",
@@ -89,7 +88,7 @@ class GameSystemSelectMenu:
                 )                
             )
         if(view is None):
-            view = self.view_creator.create_view(
+            view = ViewCreator.create_view(
                 view_type=Theme.get_view_type_for_system_select_menu(),
                 top_bar_text="Game", 
                 options=systems_list, 

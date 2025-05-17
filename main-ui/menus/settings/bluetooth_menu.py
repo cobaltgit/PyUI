@@ -17,7 +17,6 @@ from views.view_type import ViewType
 class BluetoothMenu:
     def __init__(self):
         self.bluetooth_scanner = BluetoothScanner()
-        self.view_creator = ViewCreator()
 
     def bluetooth_adjust(self):
         if Device.is_bluetooth_enabled():
@@ -86,7 +85,7 @@ class BluetoothMenu:
                             )
                     )
 
-            list_view = self.view_creator.create_view(
+            list_view = ViewCreator.create_view(
                     view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
                     top_bar_text="Bluetooth Configuration", 
                     options=option_list,

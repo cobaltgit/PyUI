@@ -8,13 +8,11 @@ from controller.controller_inputs import ControllerInput
 from display.display import Display
 from menus.games.in_game_menu_popup import InGameMenuPopup
 from utils.logger import PyUiLogger
-from views.view_creator import ViewCreator
 import psutil
 import signal
 
 class InGameMenuListener:
     def __init__(self):
-        self.view_creator = ViewCreator()
         self.popup_menu = InGameMenuPopup()
             
     def send_signal(self, proc: subprocess.Popen, sig, timeout: float = 3.0):

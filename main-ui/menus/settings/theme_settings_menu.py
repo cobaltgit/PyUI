@@ -10,7 +10,7 @@ from views.view_type import ViewType, get_next_view_type
 
 class ThemeSettingsMenu():
     def __init__(self):
-        self.view_creator = ViewCreator()
+        pass
 
     def change_main_menu_type(self, input):
         if(ControllerInput.DPAD_LEFT == input):
@@ -65,7 +65,7 @@ class ThemeSettingsMenu():
             
 
             if(list_view is None or self.theme_changed):
-                list_view = self.view_creator.create_view(
+                list_view = ViewCreator.create_view(
                     view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
                     top_bar_text="Settings", 
                     options=option_list,
