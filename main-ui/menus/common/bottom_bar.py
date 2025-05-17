@@ -11,7 +11,7 @@ class BottomBar:
 
     def render_bottom_bar(self) :
         from display.display import Display
-        if(Theme.show_bottom_bar):
+        if(Theme.show_bottom_bar()):
             bottom_bar_bg = Theme.bottom_bar_bg()
             confirm_icon = Theme.confirm_icon()
             back_icon = Theme.back_icon()
