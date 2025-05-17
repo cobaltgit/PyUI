@@ -9,6 +9,7 @@ from menus.games.game_config_menu import GameConfigMenu
 from menus.games.game_select_menu_popup import GameSelectMenuPopup
 from menus.games.in_game_menu_listener import InGameMenuListener
 from menus.games.utils.rom_select_options_builder import RomSelectOptionsBuilder
+from themes.theme import Theme
 from utils.logger import PyUiLogger
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
@@ -56,7 +57,7 @@ class RomsMenuCommon(ABC):
         while(selected is not None):
             if(view is None):
                 view = ViewCreator.create_view(
-                    view_type=ViewType.TEXT_AND_IMAGE_LIST_VIEW,
+                    view_type=Theme.get_game_selection_view_type(),
                     top_bar_text=page_name,
                     options=rom_list,
                     selected_index=selected.get_index())

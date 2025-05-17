@@ -475,6 +475,18 @@ class Theme():
         return cls._data.get("mainMenuColCount", 4)
 
     @classmethod
+    def get_game_selection_view_type(cls):
+        view_type_str = cls._data.get("gameSelectionViewType", "TEXT_AND_IMAGE_LIST_VIEW")
+        return getattr(ViewType, view_type_str, ViewType.GRID_VIEW)
+
+    @classmethod
+    def set_game_selection_view_type(cls, view_type):
+        cls._data["gameSelectionViewType"] = view_type.name
+        cls.save_changes()
+
+    @classmethod
     def set_main_menu_column_count(cls, count):
         cls._data["mainMenuColCount"] = count
         cls.save_changes()
+
+    
