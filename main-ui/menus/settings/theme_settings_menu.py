@@ -12,13 +12,15 @@ class ThemeSettingsMenu():
     def __init__(self):
         pass
 
-    def change_main_menu_type(self, input):
-        if(ControllerInput.DPAD_LEFT == input):
-            next_view_type = get_next_view_type(Theme.get_view_type_for_main_menu(),-1)
-        elif(ControllerInput.DPAD_RIGHT == input):
-            next_view_type = get_next_view_type(Theme.get_view_type_for_main_menu(),+1)
+    def change_view_type(self, input, get_view_type_func, set_view_type_func):
+        if input == ControllerInput.DPAD_LEFT:
+            next_view_type = get_next_view_type(get_view_type_func(), -1)
+        elif input == ControllerInput.DPAD_RIGHT:
+            next_view_type = get_next_view_type(get_view_type_func(), +1)
+        else:
+            return  # No change for other inputs
 
-        Theme.set_view_type_for_main_menu(next_view_type)
+        set_view_type_func(next_view_type)
 
     def change_main_menu_column_count(self, input):
         column_count = Theme.get_main_menu_column_count()
@@ -34,13 +36,24 @@ class ThemeSettingsMenu():
         option_list = []
         option_list.append(
                 GridOrListEntry(
-                        primary_text="Main Menu Type",
+                        primary_text="Main Menu",
                         value_text="<    " + Theme.get_view_type_for_main_menu().name + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
                         icon=None,
-                        value=self.change_main_menu_type
+                        value=lambda input: self.change_view_type(input, Theme.get_view_type_for_main_menu, Theme.set_view_type_for_main_menu)
+                    )
+            )
+        option_list.append(
+                GridOrListEntry(
+                        primary_text="Game Sel Menu",
+                        value_text="<    " + Theme.get_game_selection_view_type().name + "    >",
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=lambda input: self.change_view_type(input, Theme.get_game_selection_view_type, Theme.set_game_selection_view_type)
                     )
             )
         option_list.append(
@@ -66,7 +79,7 @@ class ThemeSettingsMenu():
 
             if(list_view is None or self.theme_changed):
                 list_view = ViewCreator.create_view(
-                    view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
+                    view_type=ViewType.ICON_AND_DESC,
                     top_bar_text="Settings", 
                     options=option_list,
                     selected_index=selected.get_index())

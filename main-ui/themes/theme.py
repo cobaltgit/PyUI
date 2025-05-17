@@ -398,7 +398,7 @@ class Theme():
     @classmethod
     def get_view_type_for_main_menu(cls):
         view_type_str = cls._data.get("mainMenuViewType", "GRID_VIEW")
-        return getattr(ViewType, view_type_str, ViewType.GRID_VIEW)
+        return getattr(ViewType, view_type_str, ViewType.GRID)
 
     @classmethod
     def set_view_type_for_main_menu(cls, view_type):
@@ -408,12 +408,12 @@ class Theme():
     @classmethod
     def get_view_type_for_system_select_menu(cls):
         view_type_str = cls._data.get("systemSelectViewType", "GRID_VIEW")
-        return getattr(ViewType, view_type_str, ViewType.GRID_VIEW)
+        return getattr(ViewType, view_type_str, ViewType.GRID)
 
     @classmethod
     def get_view_type_for_app_menu(cls):
         view_type_str = cls._data.get("appMenuViewType", "DESCRIPTIVE_LIST_VIEW")
-        return getattr(ViewType, view_type_str, ViewType.DESCRIPTIVE_LIST_VIEW)
+        return getattr(ViewType, view_type_str, ViewType.ICON_AND_DESC)
 
     @classmethod
     def get_game_system_select_col_count(cls):
@@ -477,7 +477,7 @@ class Theme():
     @classmethod
     def get_game_selection_view_type(cls):
         view_type_str = cls._data.get("gameSelectionViewType", "TEXT_AND_IMAGE_LIST_VIEW")
-        return getattr(ViewType, view_type_str, ViewType.GRID_VIEW)
+        return getattr(ViewType, view_type_str, ViewType.GRID)
 
     @classmethod
     def set_game_selection_view_type(cls, view_type):

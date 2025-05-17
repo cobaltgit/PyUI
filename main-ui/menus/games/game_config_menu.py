@@ -38,7 +38,7 @@ class GameConfigMenu:
                 )
             if(view is None):        
                 view = ViewCreator.create_view(
-                    view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
+                    view_type=ViewType.ICON_AND_DESC,
                     top_bar_text=self.game_system.display_name + " Configuration", 
                     options=config_list,
                     selected_index=selected.get_index())

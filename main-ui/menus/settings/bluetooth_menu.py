@@ -86,7 +86,7 @@ class BluetoothMenu:
                     )
 
             list_view = ViewCreator.create_view(
-                    view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
+                    view_type=ViewType.ICON_AND_DESC,
                     top_bar_text="Bluetooth Configuration", 
                     options=option_list,
                     selected_index=selected.get_index()) #always reset to the top in case devices change during a scan

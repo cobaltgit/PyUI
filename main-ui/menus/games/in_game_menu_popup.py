@@ -27,7 +27,7 @@ class InGameMenuPopup:
         ))
 
         popup_view = ViewCreator.create_view(
-            view_type=ViewType.TEXT_LIST_VIEW,
+            view_type=ViewType.TEXT_ONLY,
             options=popup_options,
             top_bar_text="Main Menu Sub Options",
             selected_index=0,

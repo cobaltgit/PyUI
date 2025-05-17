@@ -56,7 +56,7 @@ for entry in data:
     )
 
 view = ViewCreator.create_view(
-        view_type=ViewType.TEXT_AND_IMAGE_LIST_VIEW,
+        view_type=ViewType.TEXT_AND_IMAGE,
         top_bar_text=title,
         options=option_list, 
         selected_index=selected.get_index())

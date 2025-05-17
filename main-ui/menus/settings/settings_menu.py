@@ -23,7 +23,7 @@ class SettingsMenu(ABC):
 
             if(list_view is None or self.theme_changed):
                 list_view = ViewCreator.create_view(
-                    view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
+                    view_type=ViewType.ICON_AND_DESC,
                     top_bar_text="Settings", 
                     options=option_list,
                     selected_index=selected.get_index())

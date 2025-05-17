@@ -61,7 +61,7 @@ class GameSelectMenuPopup:
         ))
 
         popup_view = ViewCreator.create_view(
-            view_type=ViewType.POPUP_TEXT_LIST_VIEW,
+            view_type=ViewType.POPUP,
             options=popup_options,
             top_bar_text=f"{rom_info.game_system.display_name} Menu Sub Options",
             selected_index=0,

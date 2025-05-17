@@ -27,7 +27,7 @@ class ViewCreator:
                     cols=None,
                     rows=None):
         match view_type:
-            case ViewType.DESCRIPTIVE_LIST_VIEW:
+            case ViewType.ICON_AND_DESC:
                 selected_bg = Theme.get_list_small_selected_bg()
                 for option in options:
                     icon = option.get_icon()
@@ -41,7 +41,7 @@ class ViewCreator:
                     selected_bg=selected_bg
                 )
 
-            case ViewType.TEXT_AND_IMAGE_LIST_VIEW:
+            case ViewType.TEXT_AND_IMAGE:
                 text_and_image_list_view_mode = Theme.text_and_image_list_view_mode()
                 img_width = Theme.rom_image_width(Device.screen_width())
                 img_height = Theme.rom_image_height(Device.screen_height())
@@ -113,7 +113,7 @@ class ViewCreator:
                     usable_height=usable_height
                 )
 
-            case ViewType.TEXT_LIST_VIEW:
+            case ViewType.TEXT_ONLY:
                 return TextListView(
                     top_bar_text=top_bar_text,
                     options=options,
@@ -123,7 +123,7 @@ class ViewCreator:
                     selected_bg=Theme.get_list_small_selected_bg()
                 )
 
-            case ViewType.POPUP_TEXT_LIST_VIEW:
+            case ViewType.POPUP:
                 return PopupTextListView(
                     options=options,
                     selected_index=selected_index,
@@ -132,7 +132,7 @@ class ViewCreator:
                     selected_bg=Theme.get_popup_menu_selected_bg()
                 )
 
-            case ViewType.GRID_VIEW:
+            case ViewType.GRID:
                 return GridView(
                     top_bar_text=top_bar_text,
                     options=options,

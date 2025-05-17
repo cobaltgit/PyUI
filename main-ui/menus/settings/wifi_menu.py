@@ -123,7 +123,7 @@ network={{
                     )
 
             list_view = ViewCreator.create_view(
-                    view_type=ViewType.DESCRIPTIVE_LIST_VIEW,
+                    view_type=ViewType.ICON_AND_DESC,
                     top_bar_text="WiFi Configuration", 
                     options=option_list,
                     selected_index=selected.get_index())

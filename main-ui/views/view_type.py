@@ -1,13 +1,13 @@
 from enum import Enum, auto
 
 class ViewType(Enum):
-    DESCRIPTIVE_LIST_VIEW = auto()
-    GRID_VIEW = auto()
-    TEXT_AND_IMAGE_LIST_VIEW = auto()
-    TEXT_LIST_VIEW = auto()
-    POPUP_TEXT_LIST_VIEW = auto()
+    ICON_AND_DESC = auto()
+    GRID = auto()
+    TEXT_AND_IMAGE = auto()
+    TEXT_ONLY = auto()
+    POPUP = auto()
 
-def get_next_view_type(current_view_type: ViewType, direction: int, exclude: list[ViewType] = [ViewType.POPUP_TEXT_LIST_VIEW]) -> ViewType:
+def get_next_view_type(current_view_type: ViewType, direction: int, exclude: list[ViewType] = [ViewType.POPUP]) -> ViewType:
     exclude = exclude or []
 
     # Build the filtered list of allowed view types
