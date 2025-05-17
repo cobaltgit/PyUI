@@ -11,10 +11,9 @@ from views.text_list_view import TextListView
 
 
 class PopupTextListView(TextListView):
-    def __init__(self, controller: Controller, device: Device, options: List[GridOrListEntry], 
+    def __init__(self, device: Device, options: List[GridOrListEntry], 
                  selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None):
-        super().__init__(controller=controller,
-                         device=device,
+        super().__init__(device=device,
                          top_bar_text=Display.get_current_top_bar_title(),
                          options=options,
                          selected_index=selected_index,

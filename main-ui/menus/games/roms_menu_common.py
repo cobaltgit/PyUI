@@ -21,13 +21,12 @@ from views.view_type import ViewType
 
 
 class RomsMenuCommon(ABC):
-    def __init__(self, controller: Controller, device: Device):
-        self.controller : Controller = controller
+    def __init__(self, device: Device):
         self.device : Device= device
-        self.view_creator = ViewCreator(controller,device)
+        self.view_creator = ViewCreator(device)
         self.rom_select_options_builder = RomSelectOptionsBuilder(device)
-        self.in_game_menu_listener = InGameMenuListener(controller,device)
-        self.popup_menu = GameSelectMenuPopup(controller,device)
+        self.in_game_menu_listener = InGameMenuListener(device)
+        self.popup_menu = GameSelectMenuPopup(device)
 
     def _remove_extension(self,file_name):
         return os.path.splitext(file_name)[0]
@@ -77,11 +76,11 @@ class RomsMenuCommon(ABC):
         
                     if(game_thread is not None):
                         self.in_game_menu_listener.game_launched(game_thread)
-                        self.controller.clear_input_queue()
+                        Controller.clear_input_queue()
         
                     Display.reinitialize()
                 elif(ControllerInput.X == selected.get_input()):
-                    GameConfigMenu(self.controller, self.device, 
+                    GameConfigMenu(Controller, self.device, 
                                    selected.get_selection().get_value().game_system, 
                                    selected.get_selection().get_value()).show_config()
                     # Regenerate as game config menu might've changed something

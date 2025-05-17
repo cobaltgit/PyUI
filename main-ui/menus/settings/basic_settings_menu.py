@@ -19,14 +19,13 @@ from views.view_type import ViewType
 
 
 class BasicSettingsMenu(settings_menu.SettingsMenu):
-    def __init__(self, controller: Controller, device: Device, config: PyUiConfig):
+    def __init__(self, device: Device, config: PyUiConfig):
         super().__init__(
-            controller=controller,
             device=device,
             config=config)
-        self.wifi_menu = WifiMenu(controller,device)
-        self.bt_menu = BluetoothMenu(controller,device)
-        self.advance_settings_menu = AdvanceSettingsMenu(controller,device,config)
+        self.wifi_menu = WifiMenu(device)
+        self.bt_menu = BluetoothMenu(device)
+        self.advance_settings_menu = AdvanceSettingsMenu(device,config)
         self.anything_theme_related_changed = False
 
     def shutdown(self, input: ControllerInput):
@@ -94,7 +93,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
             if(selected_index == len(theme_folders)):
                 selected_index = 0
         elif(ControllerInput.A == input):
-            ThemeSettingsMenu(self.controller, self.device).show_theme_options_menu()
+            ThemeSettingsMenu(self.device).show_theme_options_menu()
 
         Theme.set_theme_path(os.path.join(self.config["themeDir"], theme_folders[selected_index]), self.device.screen_width, self.device.screen_height)
         Display.init_fonts()   

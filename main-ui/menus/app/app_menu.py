@@ -14,11 +14,10 @@ from views.view_type import ViewType
 
 
 class AppMenu:
-    def __init__(self, controller: Controller, device: Device):
-        self.controller : Controller = controller
+    def __init__(self, device: Device):
         self.device : Device= device
         self.appFinder = device.get_app_finder()
-        self.view_creator = ViewCreator(controller,device)
+        self.view_creator = ViewCreator(device)
 
     def _convert_to_theme_version_of_icon(self, icon_path):
         return os.path.join(Theme.get_theme_path(),"icons","app",os.path.basename(icon_path))
@@ -56,7 +55,7 @@ class AppMenu:
                 directory = os.path.dirname(filepath)
                 Display.deinit_display()
                 self.device.run_app([filepath], directory)
-                self.controller.clear_input_queue()
+                Controller.clear_input_queue()
                 Display.reinitialize()
             elif(ControllerInput.B == selected.get_input()):
                 running = False

@@ -17,20 +17,19 @@ from views.view_type import ViewType
 
 
 class GameSystemSelectMenuPopup:
-    def __init__(self,  controller: Controller, device: Device):
-        self.controller : Controller = controller
+    def __init__(self, device: Device):
         self.device : Device= device
-        self.view_creator = ViewCreator(controller,device)
+        self.view_creator = ViewCreator(device)
 
     def execute_game_search(self, game_system, input_value):
-        search_txt = OnScreenKeyboard(Display,self.controller,self.device).get_input("Game Search:")
+        search_txt = OnScreenKeyboard(self.device).get_input("Game Search:")
         if(search_txt is not None):
-            SearchGamesForSystemMenu(Display,self.controller,self.device, game_system, search_txt.upper()).run_rom_selection()
+            SearchGamesForSystemMenu(self.device, game_system, search_txt.upper()).run_rom_selection()
     
     def all_system_game_search(self, input_value):
-        search_txt = OnScreenKeyboard(Display,self.controller,self.device).get_input("Game Search:")
+        search_txt = OnScreenKeyboard(self.device).get_input("Game Search:")
         if(search_txt is not None):
-            SearchedRomsMenu(Display,self.controller,self.device, search_txt.upper()).run_rom_selection()
+            SearchedRomsMenu(self.device, search_txt.upper()).run_rom_selection()
 
     def run_popup_menu_selection(self, game_system : GameSystem):
         popup_options = []

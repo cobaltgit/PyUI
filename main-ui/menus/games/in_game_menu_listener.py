@@ -15,11 +15,10 @@ import psutil
 import signal
 
 class InGameMenuListener:
-    def __init__(self, controller: Controller, device: Device):
-        self.controller : Controller = controller
+    def __init__(self, device: Device):
         self.device : Device= device
-        self.view_creator = ViewCreator(controller,device)
-        self.popup_menu = InGameMenuPopup(controller,device)
+        self.view_creator = ViewCreator(device)
+        self.popup_menu = InGameMenuPopup(device)
             
     def send_signal(self, proc: subprocess.Popen, sig, timeout: float = 3.0):
         try:
@@ -56,8 +55,8 @@ class InGameMenuListener:
 
     def game_launched(self, game_process: subprocess.Popen):
         while(game_process.poll() is None):
-            if(self.controller.get_input()):
-                if ControllerInput.MENU == self.controller.last_input():
+            if(Controller.get_input()):
+                if ControllerInput.MENU == Controller.last_input():
                     self.send_signal(game_process, signal.SIGSTOP)
                     Display.reinitialize()
                     

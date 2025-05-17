@@ -1,6 +1,5 @@
 
 from typing import List
-from controller.controller import Controller
 from devices.device import Device
 from display.display import Display
 from display.render_mode import RenderMode
@@ -17,8 +16,7 @@ from views.view_type import ViewType
 
 class ViewCreator():
 
-    def __init__(self, controller: Controller, device: Device):
-        self.controller = controller
+    def __init__(self, device: Device):
         self.device = device
 
     def get_usable_height_for_text_above_or_below_image(self, img_height, y_pad):
@@ -40,7 +38,6 @@ class ViewCreator():
                         selected_bg = Theme.get_list_large_selected_bg()
 
                 return DescriptiveListView(
-                    controller=self.controller, 
                     device=self.device, 
                     top_bar_text=top_bar_text,
                     options=options,
@@ -92,7 +89,6 @@ class ViewCreator():
                     usable_height = None # auto-determine
                     
                 return ImageListView(
-                    controller=self.controller, 
                     device=self.device, 
                     top_bar_text=top_bar_text,
                     options=options,
@@ -109,7 +105,6 @@ class ViewCreator():
                 )            
             case ViewType.TEXT_LIST_VIEW:
                 return TextListView(
-                    controller=self.controller, 
                     device=self.device, 
                     top_bar_text=top_bar_text,
                     options=options,
@@ -120,7 +115,6 @@ class ViewCreator():
                 )   
             case ViewType.POPUP_TEXT_LIST_VIEW:
                 return PopupTextListView(
-                    controller=self.controller, 
                     device=self.device, 
                     options=options,
                     selected_index=selected_index,
@@ -130,7 +124,6 @@ class ViewCreator():
                 )
             case ViewType.GRID_VIEW:
                 return GridView(
-                    controller=self.controller, 
                     device=self.device, 
                     top_bar_text=top_bar_text,
                     options=options,

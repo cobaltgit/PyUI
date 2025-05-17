@@ -19,12 +19,11 @@ class ImageListView(NonDescriptiveListView):
     SHOW_ICONS = True
     DONT_SHOW_ICONS = False
 
-    def __init__(self, controller: Controller, device: Device, top_bar_text,
+    def __init__(self, device: Device, top_bar_text,
                  options: List[GridOrListEntry], img_offset_x : int, img_offset_y : int, img_width : int, img_height: int,
                  selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None, usable_height = None,
                  text_to_image_relationship = TextToImageRelationship.LEFT_OF_IMAGE):
-        super().__init__(controller=controller,
-                         device=device,
+        super().__init__(device=device,
                          top_bar_text=top_bar_text,
                          options=options,
                          selected_index=selected_index,

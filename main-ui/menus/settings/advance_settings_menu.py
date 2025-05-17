@@ -19,12 +19,11 @@ from views.view_type import ViewType
 
 
 class AdvanceSettingsMenu(settings_menu.SettingsMenu):
-    def __init__(self, controller: Controller, device: Device, config: PyUiConfig):
+    def __init__(self, device: Device, config: PyUiConfig):
         super().__init__(
-            controller=controller,
             device=device,
             config=config)
-        self.on_screen_keyboard = OnScreenKeyboard(controller,device)
+        self.on_screen_keyboard = OnScreenKeyboard(device)
 
     def reboot(self, input: ControllerInput):
         if(ControllerInput.A == input):

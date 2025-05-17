@@ -12,10 +12,9 @@ from views.view_type import ViewType, get_next_view_type
 
 
 class ThemeSettingsMenu():
-    def __init__(self, controller: Controller, device: Device):
-        self.controller = controller
+    def __init__(self, device: Device):
         self.device = device
-        self.view_creator = ViewCreator(controller,device)
+        self.view_creator = ViewCreator(device)
 
     def change_main_menu_type(self, input):
         if(ControllerInput.DPAD_LEFT == input):

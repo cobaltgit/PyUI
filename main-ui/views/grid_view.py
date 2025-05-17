@@ -15,11 +15,10 @@ from views.view import View
 
 class GridView(View):
 
-    def __init__(self, controller: Controller, device: Device, 
+    def __init__(self, device: Device, 
                   top_bar_text, options: List[GridOrListEntry], cols : int, rows: int,selected_bg : str = None,
                   selected_index=0):
         super().__init__()
-        self.controller : Controller = controller
         self.device : Device = device
         self.top_bar_text = top_bar_text
         self.options : List[GridOrListEntry] = options 
@@ -139,28 +138,28 @@ class GridView(View):
     def get_selection(self, select_controller_inputs = [ControllerInput.A]):
         self._render()
         
-        if(self.controller.get_input()):
-            if self.controller.last_input() == ControllerInput.DPAD_LEFT:
+        if(Controller.get_input()):
+            if Controller.last_input() == ControllerInput.DPAD_LEFT:
                 self.selected-=1
                 self.correct_selected_for_off_list()
-            elif self.controller.last_input() == ControllerInput.DPAD_RIGHT:
+            elif Controller.last_input() == ControllerInput.DPAD_RIGHT:
                 self.selected+=1
                 self.correct_selected_for_off_list()
-            elif self.controller.last_input() == ControllerInput.L1:
+            elif Controller.last_input() == ControllerInput.L1:
                 self.selected-=self.cols*self.rows
                 self.correct_selected_for_off_list()
-            elif self.controller.last_input() == ControllerInput.R1:
+            elif Controller.last_input() == ControllerInput.R1:
                 self.selected+=self.cols*self.rows
                 self.correct_selected_for_off_list()
-            if self.controller.last_input() == ControllerInput.DPAD_UP:
+            if Controller.last_input() == ControllerInput.DPAD_UP:
                 self.selected-=self.cols
                 self.correct_selected_for_off_list()
-            elif self.controller.last_input() == ControllerInput.DPAD_DOWN:
+            elif Controller.last_input() == ControllerInput.DPAD_DOWN:
                 self.selected+=self.cols
                 self.correct_selected_for_off_list()
-            elif self.controller.last_input() in select_controller_inputs:
-                return Selection(self.get_selected_option(),self.controller.last_input(), self.selected)
-            elif self.controller.last_input() == ControllerInput.B:
-                return Selection(self.get_selected_option(),self.controller.last_input(), self.selected)
+            elif Controller.last_input() in select_controller_inputs:
+                return Selection(self.get_selected_option(),Controller.last_input(), self.selected)
+            elif Controller.last_input() == ControllerInput.B:
+                return Selection(self.get_selected_option(),Controller.last_input(), self.selected)
                 
         return Selection(self.get_selected_option(),None, self.selected)

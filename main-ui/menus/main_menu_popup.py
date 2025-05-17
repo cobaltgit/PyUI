@@ -14,10 +14,9 @@ from views.view_type import ViewType
 
 
 class MainMenuPopup:
-    def __init__(self, controller: Controller, device: Device):
-        self.controller : Controller = controller
+    def __init__(self, device: Device):
         self.device : Device= device
-        self.view_creator = ViewCreator(controller,device)
+        self.view_creator = ViewCreator(device)
 
 
     def run_popup_menu_selection(self):

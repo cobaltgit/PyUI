@@ -17,12 +17,11 @@ from views.view_type import ViewType
 
 
 class WifiMenu:
-    def __init__(self, controller: Controller, device: Device):
-        self.controller : Controller = controller
+    def __init__(self,  device: Device):
         self.device : Device= device
         self.wifi_scanner = WiFiScanner()
-        self.on_screen_keyboard = OnScreenKeyboard(controller,device)
-        self.view_creator = ViewCreator(controller,device)
+        self.on_screen_keyboard = OnScreenKeyboard(device)
+        self.view_creator = ViewCreator(device)
 
     def wifi_adjust(self):
         if self.device.is_wifi_enabled():
