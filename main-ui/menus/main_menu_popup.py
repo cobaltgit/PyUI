@@ -22,54 +22,6 @@ class MainMenuPopup:
             value="Rom Search"
         ))
 
-        popup_options.append(GridOrListEntry(
-            primary_text="Future Option 2",
-            image_path=Theme.settings(),
-            image_path_selected=Theme.settings_selected(),
-            description="",
-            icon=Theme.settings(),
-            value="Future Option 2"
-        ))
-        popup_options.append(GridOrListEntry(
-            primary_text="Future Option 3",
-            image_path=Theme.settings(),
-            image_path_selected=Theme.settings_selected(),
-            description="",
-            icon=Theme.settings(),
-            value="Future Option 3"
-        ))
-        popup_options.append(GridOrListEntry(
-            primary_text="Future Option 4",
-            image_path=Theme.settings(),
-            image_path_selected=Theme.settings_selected(),
-            description="",
-            icon=Theme.settings(),
-            value="Future Option 3"
-        ))
-        popup_options.append(GridOrListEntry(
-            primary_text="Future Option 5",
-            image_path=Theme.settings(),
-            image_path_selected=Theme.settings_selected(),
-            description="",
-            icon=Theme.settings(),
-            value="Future Option 3"
-        ))
-        popup_options.append(GridOrListEntry(
-            primary_text="Future Option 6",
-            image_path=Theme.settings(),
-            image_path_selected=Theme.settings_selected(),
-            description="",
-            icon=Theme.settings(),
-            value="Future Option 3"
-        ))
-        popup_options.append(GridOrListEntry(
-            primary_text="Future Option 7",
-            image_path=Theme.settings(),
-            image_path_selected=Theme.settings_selected(),
-            description="",
-            icon=Theme.settings(),
-            value="Future Option 3"
-        ))
         popup_view = ViewCreator.create_view(
             view_type=ViewType.POPUP,
             options=popup_options,
