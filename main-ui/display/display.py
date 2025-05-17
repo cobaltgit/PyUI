@@ -403,7 +403,6 @@ class Display:
     @classmethod
     def add_index_text(cls, index, total):
         if(Theme.show_index_text()):
-            print(f"Show index text was true")
             y_padding = max(5, cls.get_bottom_bar_height() // 4)
             y_value = Device.screen_height() - y_padding
             x_padding = 10
