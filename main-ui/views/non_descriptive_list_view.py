@@ -1,13 +1,9 @@
 from abc import abstractmethod
 from typing import List
-from controller.controller_inputs import ControllerInput
 from display.display import Display
 from display.font_purpose import FontPurpose
 from display.render_mode import RenderMode
 import sdl2
-from devices.device import Device
-from controller.controller import Controller
-from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 from views.list_view import ListView
 
@@ -15,11 +11,10 @@ class NonDescriptiveListView(ListView):
     SHOW_ICONS = True
     DONT_SHOW_ICONS = False
 
-    def __init__(self, device: Device, top_bar_text,
+    def __init__(self, top_bar_text,
                  options: List[GridOrListEntry],
                  selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None, usable_height = None):
         super().__init__()
-        self.device = device
         self.top_bar_text = top_bar_text
         self.options = options
         self.selected = selected_index

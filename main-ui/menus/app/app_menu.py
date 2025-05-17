@@ -6,18 +6,15 @@ from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
 from themes.theme import Theme
-from views.descriptive_list_view import DescriptiveListView
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
 from views.view_creator import ViewCreator
-from views.view_type import ViewType
 
 
 class AppMenu:
-    def __init__(self, device: Device):
-        self.device : Device= device
-        self.appFinder = device.get_app_finder()
-        self.view_creator = ViewCreator(device)
+    def __init__(self):
+        self.appFinder = Device.get_app_finder()
+        self.view_creator = ViewCreator()
 
     def _convert_to_theme_version_of_icon(self, icon_path):
         return os.path.join(Theme.get_theme_path(),"icons","app",os.path.basename(icon_path))
@@ -54,7 +51,7 @@ class AppMenu:
                 filepath = selected.get_selection().get_value()
                 directory = os.path.dirname(filepath)
                 Display.deinit_display()
-                self.device.run_app([filepath], directory)
+                Device.run_app([filepath], directory)
                 Controller.clear_input_queue()
                 Display.reinitialize()
             elif(ControllerInput.B == selected.get_input()):

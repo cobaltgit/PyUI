@@ -1,36 +1,27 @@
 
-from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
-from devices.device import Device
-from display.display import Display
-from display.render_mode import RenderMode
 from menus.app.app_menu import AppMenu
 from menus.games.favorites_menu import FavoritesMenu
 from menus.games.game_system_select_menu import GameSystemSelectMenu
 from menus.main_menu_popup import MainMenuPopup
 from menus.settings.basic_settings_menu import BasicSettingsMenu
-from views.popup_text_list_view import PopupTextListView
 from menus.games.recents_menu import RecentsMenu
-from menus.settings.settings_menu import SettingsMenu
 from themes.theme import Theme
 from utils.py_ui_config import PyUiConfig
 from views.grid_or_list_entry import GridOrListEntry
-from views.grid_view import GridView
 from views.selection import Selection
 from views.view_creator import ViewCreator
-from views.view_type import ViewType
 
 
 class MainMenu:
-    def __init__(self, device: Device, config: PyUiConfig):
-        self.device : Device= device
-        self.system_select_menu = GameSystemSelectMenu(device)
-        self.app_menu = AppMenu(device)
-        self.favorites_menu = FavoritesMenu(device)
-        self.recents_menu = RecentsMenu(device)
-        self.settings_menu = BasicSettingsMenu(device, config)
-        self.view_creator = ViewCreator(device)
-        self.popup_menu = MainMenuPopup(device)
+    def __init__(self, config: PyUiConfig):
+        self.system_select_menu = GameSystemSelectMenu()
+        self.app_menu = AppMenu()
+        self.favorites_menu = FavoritesMenu()
+        self.recents_menu = RecentsMenu()
+        self.settings_menu = BasicSettingsMenu(config)
+        self.view_creator = ViewCreator()
+        self.popup_menu = MainMenuPopup()
 
     def build_options(self):
         #TODO make this user config driven

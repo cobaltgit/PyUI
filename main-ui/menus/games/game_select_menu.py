@@ -5,6 +5,7 @@ import subprocess
 import time
 from controller.controller import Controller
 from devices.device import Device
+from devices.device_common import DeviceCommon
 from display.display import Display
 from games.utils.game_entry import GameEntry
 from games.utils.rom_utils import RomUtils
@@ -17,8 +18,8 @@ from games.utils.game_system import GameSystem
 
 
 class GameSelectMenu(RomsMenuCommon):
-    def __init__(self, device: Device):
-        super().__init__(device)
+    def __init__(self):
+        super().__init__()
 
     def _is_favorite(self, favorites: list[GameEntry], rom_file_path):
         return any(Path(rom_file_path).resolve() == Path(fav.rom_path).resolve() for fav in favorites)
@@ -31,4 +32,4 @@ class GameSelectMenu(RomsMenuCommon):
         self._run_rom_selection(game_system.display_name)
 
     def _run_game(self, selected_entry : RomInfo) -> subprocess.Popen:
-        return self.device.run_game(selected_entry)
+        return Device.run_game(selected_entry)

@@ -325,7 +325,6 @@ class Theme():
                 case _:
                     return cls.hex_to_color(cls._data["grid"]["color"])
         except Exception as e:
-            PyUiLogger.get_logger().error(f"text_color error occurred: {e}")
             return cls.hex_to_color("#808080")
       
     @classmethod

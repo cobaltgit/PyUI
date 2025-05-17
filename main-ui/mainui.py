@@ -4,6 +4,7 @@ import os
 import sys
 import threading
 from controller.key_watcher import KeyWatcher
+from devices.device import Device
 from devices.trimui.trim_ui_brick import TrimUIBrick
 from menus.games.utils.favorites_manager import FavoritesManager
 from menus.games.utils.recents_manager import RecentsManager
@@ -35,27 +36,27 @@ def log_renderer_info():
 
 def initialize_device():
     if os.path.exists("/userdata/system.json"):
-        return MiyooFlip()
+        Device.init(MiyooFlip())
     elif os.path.exists("/mnt/UDISK/system.json"):
-        return TrimUIBrick()
+        Device.init(TrimUIBrick())
     else:
         raise RuntimeError("No supported device config found")
 
 
-def background_startup(device):
-    FavoritesManager.initialize(device.get_favorites_path())
-    RecentsManager.initialize(device.get_recents_path())
+def background_startup():
+    FavoritesManager.initialize(Device.get_favorites_path())
+    RecentsManager.initialize(Device.get_recents_path())
 
-def start_background_threads(device):
-    startup_thread = threading.Thread(target=device.perform_startup_tasks)
+def start_background_threads():
+    startup_thread = threading.Thread(target=Device.perform_startup_tasks)
     startup_thread.start()
 
-    key_watcher = KeyWatcher(device)
+    key_watcher = KeyWatcher()
     key_polling_thread = threading.Thread(target=key_watcher.poll_keyboard, daemon=True)
     key_polling_thread.start()
 
     # Background favorites/recents init thread
-    background_thread = threading.Thread(target=background_startup, args=(device,))
+    background_thread = threading.Thread(target=background_startup)
     background_thread.start()
 
 def main():
@@ -74,14 +75,14 @@ def main():
     selected_theme = os.path.join(config["themeDir"], config["theme"])
     PyUiLogger.get_logger().info(f"{selected_theme}")
 
-    device = initialize_device()
+    initialize_device()
 
-    Theme.init(selected_theme, device.screen_width, device.screen_height)
-    Display.init(device)
-    Controller.init()
-    main_menu = MainMenu(device, config)
+    Theme.init(selected_theme, Device.screen_width(), Device.screen_height())
+    Display.init()
+    Controller.init(config)
+    main_menu = MainMenu(config)
 
-    start_background_threads(device)
+    start_background_threads()
 
     main_menu.run_main_menu_selection()
 

@@ -3,7 +3,7 @@
 import os
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
-from devices.device import Device
+from devices.device_common import DeviceCommon
 from display.display import Display
 from display.on_screen_keyboard import OnScreenKeyboard
 from menus.games.utils.favorites_manager import FavoritesManager
@@ -16,9 +16,8 @@ from views.view_type import ViewType
 
 
 class GameSelectMenuPopup:
-    def __init__(self, device: Device):
-        self.device : Device= device
-        self.view_creator = ViewCreator(device)
+    def __init__(self):
+        self.view_creator = ViewCreator()
 
     def add_favorite(self, rom_info : RomInfo, input_value):
         FavoritesManager.add_favorite(rom_info)
@@ -28,9 +27,9 @@ class GameSelectMenuPopup:
     
     def execute_game_search(self, game_system, input_value):
         from menus.games.search_games_for_system_menu import SearchGamesForSystemMenu
-        search_txt = OnScreenKeyboard(self.device).get_input("Game Search:")
+        search_txt = OnScreenKeyboard().get_input("Game Search:")
         if(search_txt is not None):
-            SearchGamesForSystemMenu(self.device,game_system, search_txt.upper()).run_rom_selection()
+            SearchGamesForSystemMenu(game_system, search_txt.upper()).run_rom_selection()
 
     def run_game_select_popup_menu(self, rom_info : RomInfo):
         popup_options = []

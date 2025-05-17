@@ -4,6 +4,7 @@ from pathlib import Path
 import subprocess
 from controller.controller import Controller
 from devices.device import Device
+from devices.device_common import DeviceCommon
 from display.display import Display
 from menus.games.roms_menu_common import RomsMenuCommon
 from menus.games.utils.recents_manager import RecentsManager
@@ -13,8 +14,8 @@ from views.grid_or_list_entry import GridOrListEntry
 
 
 class RecentsMenu(RomsMenuCommon):
-    def __init__(self, device: Device):
-        super().__init__(device)
+    def __init__(self):
+        super().__init__()
 
     def _get_rom_list(self) -> list[GridOrListEntry]:
         rom_list = []
@@ -37,4 +38,4 @@ class RecentsMenu(RomsMenuCommon):
         self._run_rom_selection("Recents")
 
     def _run_game(self, selected_entry) -> subprocess.Popen:
-        return self.device.run_game(selected_entry)
+        return Device.run_game(selected_entry)

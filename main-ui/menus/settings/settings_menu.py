@@ -1,15 +1,7 @@
 
 import os
-from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
-from devices.device import Device
-from display.display import Display
-from menus.settings.bluetooth_menu import BluetoothMenu
-from menus.settings.wifi_menu import WifiMenu
-from themes.theme import Theme
 from utils.py_ui_config import PyUiConfig
-from views.descriptive_list_view import DescriptiveListView
-from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
 from views.view_creator import ViewCreator
 from views.view_type import ViewType
@@ -17,10 +9,9 @@ from abc import ABC, abstractmethod
 
 
 class SettingsMenu(ABC):
-    def __init__(self, device: Device, config: PyUiConfig):
-        self.device = device
+    def __init__(self, config: PyUiConfig):
         self.config : PyUiConfig = config 
-        self.view_creator = ViewCreator(device)
+        self.view_creator = ViewCreator()
 
     @abstractmethod
     def build_options_list(self):

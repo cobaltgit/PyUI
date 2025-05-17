@@ -1,35 +1,30 @@
 
 
-from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
-from devices.device import Device
-from display.display import Display
 from display.on_screen_keyboard import OnScreenKeyboard
 from games.utils.game_system import GameSystem
 from menus.games.search_games_for_system_menu import SearchGamesForSystemMenu
 from menus.games.searched_roms_menu import SearchedRomsMenu
 from themes.theme import Theme
 from utils.logger import PyUiLogger
-from utils.py_ui_config import PyUiConfig
 from views.grid_or_list_entry import GridOrListEntry
 from views.view_creator import ViewCreator
 from views.view_type import ViewType
 
 
 class GameSystemSelectMenuPopup:
-    def __init__(self, device: Device):
-        self.device : Device= device
-        self.view_creator = ViewCreator(device)
+    def __init__(self):
+        self.view_creator = ViewCreator()
 
     def execute_game_search(self, game_system, input_value):
-        search_txt = OnScreenKeyboard(self.device).get_input("Game Search:")
+        search_txt = OnScreenKeyboard().get_input("Game Search:")
         if(search_txt is not None):
-            SearchGamesForSystemMenu(self.device, game_system, search_txt.upper()).run_rom_selection()
+            SearchGamesForSystemMenu(game_system, search_txt.upper()).run_rom_selection()
     
     def all_system_game_search(self, input_value):
-        search_txt = OnScreenKeyboard(self.device).get_input("Game Search:")
+        search_txt = OnScreenKeyboard().get_input("Game Search:")
         if(search_txt is not None):
-            SearchedRomsMenu(self.device, search_txt.upper()).run_rom_selection()
+            SearchedRomsMenu(search_txt.upper()).run_rom_selection()
 
     def run_popup_menu_selection(self, game_system : GameSystem):
         popup_options = []

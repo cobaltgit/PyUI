@@ -3,6 +3,7 @@ import os
 import subprocess
 from controller.controller import Controller
 from devices.device import Device
+from devices.device_common import DeviceCommon
 from display.display import Display
 from display.on_screen_keyboard import OnScreenKeyboard
 from games.utils.game_system_utils import GameSystemUtils
@@ -14,9 +15,9 @@ from views.grid_or_list_entry import GridOrListEntry
 
 
 class SearchedRomsMenu(RomsMenuCommon):
-    def __init__(self, controller: Controller, device: Device, search_str):
-        super().__init__(controller,device)
-        self.rom_select_options_builder = RomSelectOptionsBuilder(device)
+    def __init__(self, search_str):
+        super().__init__()
+        self.rom_select_options_builder = RomSelectOptionsBuilder()
         self.search_str = search_str
 
     def include_rom(self,rom_file_path):
@@ -35,5 +36,5 @@ class SearchedRomsMenu(RomsMenuCommon):
         self._run_rom_selection("Game Search")
 
     def _run_game(self, selected_entry : RomInfo) -> subprocess.Popen:
-        return self.device.run_game(selected_entry)
+        return Device.run_game(selected_entry)
         

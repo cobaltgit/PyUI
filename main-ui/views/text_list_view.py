@@ -4,7 +4,7 @@ from display.display import Display
 from display.font_purpose import FontPurpose
 from display.render_mode import RenderMode
 import sdl2
-from devices.device import Device
+from devices.device_common import DeviceCommon
 from controller.controller import Controller
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
@@ -14,11 +14,10 @@ class TextListView(NonDescriptiveListView):
     SHOW_ICONS = True
     DONT_SHOW_ICONS = False
 
-    def __init__(self, device: Device, top_bar_text,
+    def __init__(self, top_bar_text,
                  options: List[GridOrListEntry], 
                  selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None, usable_height = None):
-        super().__init__(device=device,
-                         top_bar_text=top_bar_text,
+        super().__init__(top_bar_text=top_bar_text,
                          options=options,
                          selected_index=selected_index,
                          show_icons=show_icons,

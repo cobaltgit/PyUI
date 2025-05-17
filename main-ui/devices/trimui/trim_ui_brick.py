@@ -10,7 +10,7 @@ import time
 from apps.miyoo.miyoo_app_finder import MiyooAppFinder
 from controller.controller_inputs import ControllerInput
 from devices.charge.charge_status import ChargeStatus
-from devices.device import Device
+from devices.device_common import DeviceCommon
 import os
 from devices.miyoo.miyoo_games_file_parser import MiyooGamesFileParser
 from devices.miyoo.system_config import SystemConfig
@@ -24,7 +24,7 @@ import sdl2
 from utils import throttle
 from utils.logger import PyUiLogger
 
-class TrimUIBrick(Device):
+class TrimUIBrick(DeviceCommon):
     
     def __init__(self):
         self.path = self

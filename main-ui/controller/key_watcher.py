@@ -8,6 +8,7 @@ from devices.device import Device
 
 
 
+
 # Constants for Linux input
 EVENT_FORMAT = 'llHHI'
 EVENT_SIZE = struct.calcsize(EVENT_FORMAT)
@@ -18,9 +19,9 @@ KEY_REPEAT = 2
 
 class KeyWatcher:
 
-    def __init__(self, device: Device):
-        self.device = device
-        
+    def __init__(self):
+        pass
+
     def read_keyboard_input(self,event_path="/dev/input/event0", timeout=1.0):
         """
         Polls for a single key press from a Linux input device (e.g., keyboard).
@@ -59,5 +60,5 @@ class KeyWatcher:
             code = self.read_keyboard_input()
             if(code is not None):
                 if(time.time() - last_recorded_time > 0.1):
-                    self.device.key_down(code)
+                    Device.key_down(code)
                     last_recorded_time = time.time()

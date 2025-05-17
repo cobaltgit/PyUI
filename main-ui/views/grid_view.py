@@ -1,25 +1,21 @@
 from typing import List
 from controller.controller_inputs import ControllerInput
+from devices.device import Device
 from display.font_purpose import FontPurpose
-from display.font_size import FontSize
 from display.display import Display
 from display.render_mode import RenderMode
 import sdl2
-from devices.device import Device
 from controller.controller import Controller
 from themes.theme import Theme
-from utils.logger import PyUiLogger
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
 from views.view import View
 
 class GridView(View):
 
-    def __init__(self, device: Device, 
-                  top_bar_text, options: List[GridOrListEntry], cols : int, rows: int,selected_bg : str = None,
+    def __init__(self,top_bar_text, options: List[GridOrListEntry], cols : int, rows: int,selected_bg : str = None,
                   selected_index=0):
         super().__init__()
-        self.device : Device = device
         self.top_bar_text = top_bar_text
         self.options : List[GridOrListEntry] = options 
 
@@ -78,7 +74,7 @@ class GridView(View):
 
         #TODO Get hard coded values for padding from theme
         x_pad = 10
-        usable_width = self.device.screen_width - (2 * x_pad)
+        usable_width = Device.screen_width() - (2 * x_pad)
         icon_width = usable_width / self.cols  # Initial icon width
         
         for visible_index, imageTextPair in enumerate(visible_options):
@@ -115,7 +111,7 @@ class GridView(View):
             color = Theme.text_color_selected(self.font_purpose) if actual_index == self.selected else Theme.text_color(self.font_purpose)
 
             if(self.rows == 1) : 
-                real_y_text_offset = int(self.device.screen_height * 325/480)
+                real_y_text_offset = int(Device.screen_height() * 325/480)
             else:
                 real_y_text_offset = y_icon_offset + self.max_icon_height + Theme.get_grid_multirow_text_offset_y()
 

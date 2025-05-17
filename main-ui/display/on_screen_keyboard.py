@@ -2,16 +2,14 @@
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from devices.device import Device
+from devices.device_common import DeviceCommon
 from display.font_purpose import FontPurpose
 from display.render_mode import RenderMode
 from themes.theme import Theme
 
 
 class OnScreenKeyboard:
-    def __init__(self,  controller: Controller, device: Device):
-        self.controller : Controller = controller
-        self.device : Device= device
-
+    def __init__(self,):
         self.normal_keys = [
             ["`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "="],       
             ["~", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+"],      
@@ -38,8 +36,8 @@ class OnScreenKeyboard:
         self.selected_row_index = 0
         self.selected_key_index = 0
         self.entered_text = ""
-        key_w = self.device.screen_width // 16 #13 keys, set to 16 for spacing
-        key_w_offset = self.device.screen_width // 13
+        key_w = Device.screen_width() // 16 #13 keys, set to 16 for spacing
+        key_w_offset = Device.screen_width() // 13
         key_h = key_w
 
         while running:
@@ -49,8 +47,8 @@ class OnScreenKeyboard:
                 x = 0,
                 y = Display.get_top_bar_height(), 
                 render_mode = RenderMode.TOP_LEFT_ALIGNED, 
-                target_width=self.device.screen_width, 
-                target_height=self.device.screen_height)
+                target_width=Device.screen_width(), 
+                target_height=Device.screen_height())
 
             next_y = Display.get_top_bar_height()
             entry_bar_text_x_offset = 10 #TODO get somewhere better
@@ -116,32 +114,32 @@ class OnScreenKeyboard:
                 next_y += key_h
                 
             Display.present()
-            if(self.controller.get_input()):
-                if self.controller.last_input() == ControllerInput.DPAD_UP:
+            if(Controller.get_input()):
+                if Controller.last_input() == ControllerInput.DPAD_UP:
                     if self.selected_row_index > 0:
                         self.selected_row_index -=1
-                elif self.controller.last_input() == ControllerInput.DPAD_DOWN:
+                elif Controller.last_input() == ControllerInput.DPAD_DOWN:
                     if self.selected_row_index < len(self.normal_keys)-1:
                         self.selected_row_index +=1
-                if self.controller.last_input() == ControllerInput.DPAD_LEFT:
+                if Controller.last_input() == ControllerInput.DPAD_LEFT:
                     if self.selected_key_index > 0:
                         self.selected_key_index -=1
-                elif self.controller.last_input() == ControllerInput.DPAD_RIGHT:
+                elif Controller.last_input() == ControllerInput.DPAD_RIGHT:
                     if self.selected_key_index < len(self.normal_keys[0])-1:
                         self.selected_key_index +=1
-                elif self.controller.last_input() == ControllerInput.L1:
+                elif Controller.last_input() == ControllerInput.L1:
                     self.shifted = not self.shifted
-                elif self.controller.last_input() == ControllerInput.R1:
+                elif Controller.last_input() == ControllerInput.R1:
                     self.caps = not self.caps
                     self.shifted = False
-                elif self.controller.last_input() == ControllerInput.B:
+                elif Controller.last_input() == ControllerInput.B:
                     if self.entered_text:
                         self.entered_text = self.entered_text[:-1]
                     else:
                         return None
-                elif self.controller.last_input() == ControllerInput.START:
+                elif Controller.last_input() == ControllerInput.START:
                     return self.entered_text
-                elif self.controller.last_input() == ControllerInput.A:
+                elif Controller.last_input() == ControllerInput.A:
                     selected_key = keys[self.selected_row_index][self.selected_key_index]
                     if("⇪" == selected_key):
                         self.caps = not self.caps

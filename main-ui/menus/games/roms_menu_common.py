@@ -1,6 +1,5 @@
 
 import os
-from pathlib import Path
 import subprocess
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
@@ -10,7 +9,6 @@ from menus.games.game_config_menu import GameConfigMenu
 from menus.games.game_select_menu_popup import GameSelectMenuPopup
 from menus.games.in_game_menu_listener import InGameMenuListener
 from menus.games.utils.rom_select_options_builder import RomSelectOptionsBuilder
-from themes.theme import Theme
 from utils.logger import PyUiLogger
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
@@ -21,12 +19,11 @@ from views.view_type import ViewType
 
 
 class RomsMenuCommon(ABC):
-    def __init__(self, device: Device):
-        self.device : Device= device
-        self.view_creator = ViewCreator(device)
-        self.rom_select_options_builder = RomSelectOptionsBuilder(device)
-        self.in_game_menu_listener = InGameMenuListener(device)
-        self.popup_menu = GameSelectMenuPopup(device)
+    def __init__(self):
+        self.view_creator = ViewCreator()
+        self.rom_select_options_builder = RomSelectOptionsBuilder()
+        self.in_game_menu_listener = InGameMenuListener()
+        self.popup_menu = GameSelectMenuPopup()
 
     def _remove_extension(self,file_name):
         return os.path.splitext(file_name)[0]
@@ -72,7 +69,7 @@ class RomsMenuCommon(ABC):
                 if(ControllerInput.A == selected.get_input()):
         
                     Display.deinit_display()
-                    game_thread : subprocess.Popen = self.device.run_game(selected.get_selection().get_value())
+                    game_thread : subprocess.Popen = Device.run_game(selected.get_selection().get_value())
         
                     if(game_thread is not None):
                         self.in_game_menu_listener.game_launched(game_thread)
@@ -80,8 +77,7 @@ class RomsMenuCommon(ABC):
         
                     Display.reinitialize()
                 elif(ControllerInput.X == selected.get_input()):
-                    GameConfigMenu(Controller, self.device, 
-                                   selected.get_selection().get_value().game_system, 
+                    GameConfigMenu(selected.get_selection().get_value().game_system, 
                                    selected.get_selection().get_value()).show_config()
                     # Regenerate as game config menu might've changed something
                     rom_list = self._get_rom_list()

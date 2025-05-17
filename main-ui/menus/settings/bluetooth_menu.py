@@ -1,15 +1,13 @@
 
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
-from devices.bluetooth.bluetooth_scanner import BluetoothScanner
 from devices.device import Device
-from devices.wifi.wifi_scanner import WiFiNetwork, WiFiScanner
+from devices.bluetooth.bluetooth_scanner import BluetoothScanner
 from display.display import Display
 from display.font_purpose import FontPurpose
 from display.render_mode import RenderMode
 from themes.theme import Theme
 from utils.logger import PyUiLogger
-from views.descriptive_list_view import DescriptiveListView
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
 from views.view_creator import ViewCreator
@@ -17,20 +15,19 @@ from views.view_type import ViewType
 
 
 class BluetoothMenu:
-    def __init__(self, device: Device):
-        self.device : Device= device
+    def __init__(self):
         self.bluetooth_scanner = BluetoothScanner()
-        self.view_creator = ViewCreator(device)
+        self.view_creator = ViewCreator()
 
     def bluetooth_adjust(self):
-        if self.device.is_bluetooth_enabled():
-            self.device.disable_bluetooth()
+        if Device.is_bluetooth_enabled():
+            Device.disable_bluetooth()
         else:
-            self.device.enable_bluetooth()
+            Device.enable_bluetooth()
             self.should_scan_for_bluetooth = True
 
     def toggle_pairing_device(self, device):
-        self.bluetooth_scanner.connect_to_device(device.address)
+        self.bluetooth_scanner.connect_to_device(Device.address)
         Controller.new_bt_device_paired()
 
     def scan_for_devices(self):
@@ -38,7 +35,7 @@ class BluetoothMenu:
         Display.clear("Bluetooth")
         Display.render_text(
             text = "Scanning for Bluetooth Devices (~10s)",
-            x = self.device.screen_width // 2,
+            x = Device.screen_width() // 2,
             y = Display.get_usable_screen_height() // 2,
             color = Theme.text_color(FontPurpose.DESCRIPTIVE_LIST_TITLE),
             purpose = FontPurpose.DESCRIPTIVE_LIST_TITLE,
@@ -55,7 +52,7 @@ class BluetoothMenu:
         devices = []
         while(selected is not None):
             PyUiLogger.get_logger().info(f"Waiting for bt selection")
-            bluetooth_enabled = self.device.is_bluetooth_enabled()
+            bluetooth_enabled = Device.is_bluetooth_enabled()
             option_list = []
             option_list.append(
                 GridOrListEntry(
@@ -79,8 +76,8 @@ class BluetoothMenu:
                 for device in devices:
                     option_list.append(
                         GridOrListEntry(
-                                primary_text=device.name,
-                                value_text=device.address,
+                                primary_text=Device.name,
+                                value_text=Device.address,
                                 image_path=None,
                                 image_path_selected=None,
                                 description=None,

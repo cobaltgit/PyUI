@@ -1,52 +1,42 @@
 
 import os
-from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from devices.device import Device
-from display.display import Display
 from display.on_screen_keyboard import OnScreenKeyboard
 from menus.settings import settings_menu
-from menus.settings.bluetooth_menu import BluetoothMenu
-from menus.settings.wifi_menu import WifiMenu
-from themes.theme import Theme
 from utils.logger import PyUiLogger
 from utils.py_ui_config import PyUiConfig
-from views.descriptive_list_view import DescriptiveListView
 from views.grid_or_list_entry import GridOrListEntry
-from views.selection import Selection
-from views.view_creator import ViewCreator
-from views.view_type import ViewType
 
 
 class AdvanceSettingsMenu(settings_menu.SettingsMenu):
-    def __init__(self, device: Device, config: PyUiConfig):
+    def __init__(self, config: PyUiConfig):
         super().__init__(
-            device=device,
             config=config)
-        self.on_screen_keyboard = OnScreenKeyboard(device)
+        self.on_screen_keyboard = OnScreenKeyboard()
 
     def reboot(self, input: ControllerInput):
         if(ControllerInput.A == input):
-            self.device.run_app(self.device.reboot_cmd)
+            Device.run_app(Device.reboot_cmd())
     
     
     def brightness_adjust(self, input: ControllerInput):
         if(ControllerInput.DPAD_LEFT == input or ControllerInput.L1 == input):
-            self.device.lower_brightness()
+            Device.lower_brightness()
         elif(ControllerInput.DPAD_RIGHT == input or ControllerInput.R1 == input):
-            self.device.raise_brightness()
+            Device.raise_brightness()
 
     def contrast_adjust(self, input: ControllerInput):
         if(ControllerInput.DPAD_LEFT == input or ControllerInput.L1 == input):
-            self.device.lower_contrast()
+            Device.lower_contrast()
         elif(ControllerInput.DPAD_RIGHT == input or ControllerInput.R1 == input):
-            self.device.raise_contrast()
+            Device.raise_contrast()
 
     def saturation_adjust(self, input: ControllerInput):
         if(ControllerInput.DPAD_LEFT == input or ControllerInput.L1 == input):
-            self.device.lower_saturation()
+            Device.lower_saturation()
         elif(ControllerInput.DPAD_RIGHT == input or ControllerInput.R1 == input):
-            self.device.raise_saturation()
+            Device.raise_saturation()
     
 
     def show_on_screen_keyboard(self, input):
@@ -78,7 +68,7 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
         option_list.append(
                 GridOrListEntry(
                         primary_text="Brightness",
-                        value_text="<    " + str(self.device.brightness) + "    >",
+                        value_text="<    " + str(Device.get_brightness()) + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
@@ -89,7 +79,7 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
         option_list.append(
                 GridOrListEntry(
                         primary_text="Contrast",
-                        value_text="<    " + str(self.device.contrast) + "    >",
+                        value_text="<    " + str(Device.get_contrast()) + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
@@ -100,7 +90,7 @@ class AdvanceSettingsMenu(settings_menu.SettingsMenu):
         option_list.append(
                 GridOrListEntry(
                         primary_text="Saturation",
-                        value_text="<    " + str(self.device.saturation) + "    >",
+                        value_text="<    " + str(Device.get_saturation()) + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,

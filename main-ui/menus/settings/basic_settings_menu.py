@@ -1,6 +1,5 @@
 
 import os
-from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
@@ -11,62 +10,59 @@ from menus.settings.theme_settings_menu import ThemeSettingsMenu
 from menus.settings.wifi_menu import WifiMenu
 from themes.theme import Theme
 from utils.py_ui_config import PyUiConfig
-from views.descriptive_list_view import DescriptiveListView
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
-from views.view_creator import ViewCreator
 from views.view_type import ViewType
 
 
 class BasicSettingsMenu(settings_menu.SettingsMenu):
-    def __init__(self, device: Device, config: PyUiConfig):
+    def __init__(self, config: PyUiConfig):
         super().__init__(
-            device=device,
             config=config)
-        self.wifi_menu = WifiMenu(device)
-        self.bt_menu = BluetoothMenu(device)
-        self.advance_settings_menu = AdvanceSettingsMenu(device,config)
+        self.wifi_menu = WifiMenu()
+        self.bt_menu = BluetoothMenu()
+        self.advance_settings_menu = AdvanceSettingsMenu(config)
         self.anything_theme_related_changed = False
 
     def shutdown(self, input: ControllerInput):
         if(ControllerInput.A == input):
-           self.device.run_app(self.device.power_off_cmd)
+           Device.run_app(Device.power_off_cmd())
     
     def reboot(self, input: ControllerInput):
         if(ControllerInput.A == input):
-            self.device.run_app(self.device.reboot_cmd)
+            Device.run_app(Device.reboot_cmd())
     
     def lumination_adjust(self, input: ControllerInput):
         if(ControllerInput.DPAD_LEFT == input or ControllerInput.L1 == input):
-            self.device.lower_lumination()
+            Device.lower_lumination()
         elif(ControllerInput.DPAD_RIGHT == input or ControllerInput.R1 == input):
-            self.device.raise_lumination()
+            Device.raise_lumination()
         
     def volume_adjust(self, input: ControllerInput):
         if(ControllerInput.DPAD_LEFT == input):
-            self.device.change_volume(-10)
+            Device.change_volume(-10)
         elif(ControllerInput.L1 == input):
-            self.device.change_volume(-1)
+            Device.change_volume(-1)
         elif(ControllerInput.DPAD_RIGHT == input):
-            self.device.change_volume(+10)
+            Device.change_volume(+10)
         elif(ControllerInput.R1 == input):
-            self.device.change_volume(+1)
+            Device.change_volume(+1)
 
     def show_wifi_menu(self, input):
         if(ControllerInput.DPAD_LEFT == input or ControllerInput.DPAD_RIGHT == input):
-            if(self.device.is_wifi_enabled()):
-                self.device.disable_wifi()
+            if(Device.is_wifi_enabled()):
+                Device.disable_wifi()
             else:
-                self.device.enable_wifi()
+                Device.enable_wifi()
         else:
             self.wifi_menu.show_wifi_menu()
 
     def show_bt_menu(self, input):
         if(ControllerInput.DPAD_LEFT == input or ControllerInput.DPAD_RIGHT == input):
-            if(self.device.is_bluetooth_enabled()):
-                self.device.disable_bluetooth()
+            if(Device.is_bluetooth_enabled()):
+                Device.disable_bluetooth()
             else:
-                self.device.enable_bluetooth()
+                Device.enable_bluetooth()
         else:
             self.bt_menu.show_bluetooth_menu()
 
@@ -93,9 +89,9 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
             if(selected_index == len(theme_folders)):
                 selected_index = 0
         elif(ControllerInput.A == input):
-            ThemeSettingsMenu(self.device).show_theme_options_menu()
+            ThemeSettingsMenu().show_theme_options_menu()
 
-        Theme.set_theme_path(os.path.join(self.config["themeDir"], theme_folders[selected_index]), self.device.screen_width, self.device.screen_height)
+        Theme.set_theme_path(os.path.join(self.config["themeDir"], theme_folders[selected_index]), Device.screen_width(), Device.screen_height())
         Display.init_fonts()   
         self.config["theme"] = theme_folders[selected_index]
         self.config.save()      
@@ -120,7 +116,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         option_list.append(
                 GridOrListEntry(
                         primary_text="Backlight",
-                        value_text="<    " + str(self.device.lumination) + "    >",
+                        value_text="<    " + str(Device.lumination()) + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
@@ -132,7 +128,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         option_list.append(
                 GridOrListEntry(
                         primary_text="Volume",
-                        value_text="<    " + str(self.device.get_volume()) + "    >",
+                        value_text="<    " + str(Device.get_volume()) + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
@@ -143,7 +139,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         option_list.append(
                 GridOrListEntry(
                         primary_text="WiFi",
-                        value_text="<    " + ("On" if self.device.is_wifi_enabled() else "Off") + "    >",
+                        value_text="<    " + ("On" if Device.is_wifi_enabled() else "Off") + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
@@ -152,11 +148,11 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
                     )
             )
         
-        if(self.device.get_bluetooth_scanner() is not None):
+        if(Device.get_bluetooth_scanner() is not None):
             option_list.append(
                     GridOrListEntry(
                             primary_text="Bluetooth",
-                            value_text="<    " + ("On" if self.device.is_bluetooth_enabled() else "Off") + "    >",
+                            value_text="<    " + ("On" if Device.is_bluetooth_enabled() else "Off") + "    >",
                             image_path=None,
                             image_path_selected=None,
                             description=None,

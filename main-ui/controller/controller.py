@@ -6,7 +6,6 @@ from ctypes import byref
 import time
 
 from utils.logger import PyUiLogger
-from utils.py_ui_config import PyUiConfig
 
 class Controller:
     controller = None
@@ -16,9 +15,10 @@ class Controller:
     event = sdl2.SDL_Event()
     last_input_time = 0
     hold_delay = 0
+    config = None
 
     @staticmethod
-    def init():
+    def init(config):
         Controller.clear_input_queue()
         PyUiLogger.get_logger().info("Checking for a controller")
         count = sdl2.SDL_NumJoysticks()
@@ -33,6 +33,7 @@ class Controller:
                     Controller.mapping = sdl2.SDL_GameControllerMapping(controller).decode()
                     PyUiLogger.get_logger().info(f"Opened GameController {index}: {Controller.name}")
                     PyUiLogger.get_logger().info(f" {Controller.mapping}")
+        Controller.config = config
 
     @staticmethod
     def new_bt_device_paired():
@@ -53,9 +54,9 @@ class Controller:
         return sdl2.SDL_GameControllerGetButton(Controller.controller, Controller.event.cbutton.button)
 
     @staticmethod
-    def get_input(device, config, timeout=-2):
+    def get_input(timeout=-2):
         if timeout == -2:
-            timeout = device.input_timeout_default
+            timeout = Device.input_timeout_default()
 
         if time.time() - Controller.last_input_time > 0.2:
             sdl2.SDL_PumpEvents()
@@ -69,7 +70,7 @@ class Controller:
             time.sleep(0.005)
 
         if not Controller.still_held_down():
-            Controller.hold_delay = config.get_turbo_delay_ms()
+            Controller.hold_delay = Controller.config.get_turbo_delay_ms()
             Controller._last_event().type = 0
             reached_timeout = False
 
@@ -82,7 +83,7 @@ class Controller:
                 ms_remaining = int(remaining_time * 1000)
                 event_available = sdl2.SDL_WaitEventTimeout(byref(Controller.event), ms_remaining)
 
-                if event_available and Controller.last_input(device) is not None:
+                if event_available and Controller.last_input() is not None:
                     break
                 elif event_available and Controller._last_event().type == sdl2.SDL_CONTROLLERDEVICEADDED:
                     PyUiLogger.get_logger().info("New controller detected")
@@ -115,10 +116,10 @@ class Controller:
         return Controller.event
 
     @staticmethod
-    def last_input(device):
+    def last_input():
         event = Controller._last_event()
         if event.type == sdl2.SDL_CONTROLLERBUTTONDOWN:
-            return device.map_digital_input(event.cbutton.button)
+            return Device.map_digital_input(event.cbutton.button)
         elif event.type == sdl2.SDL_CONTROLLERAXISMOTION:
-            return device.map_analog_input(event.caxis.axis, event.caxis.value)
+            return Device.map_analog_input(event.caxis.axis, event.caxis.value)
         return None

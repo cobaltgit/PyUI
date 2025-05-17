@@ -1,13 +1,14 @@
 import time
 from typing import List
 from controller.controller_inputs import ControllerInput
+from devices.device import Device
 from display.display import Display
 from display.font_purpose import FontPurpose
 from display.render_mode import RenderMode
 from display.x_render_option import XRenderOption
 from display.y_render_option import YRenderOption
 import sdl2
-from devices.device import Device
+from devices.device_common import DeviceCommon
 from controller.controller import Controller
 from themes.theme import Theme
 from utils.logger import PyUiLogger
@@ -19,12 +20,11 @@ class ImageListView(NonDescriptiveListView):
     SHOW_ICONS = True
     DONT_SHOW_ICONS = False
 
-    def __init__(self, device: Device, top_bar_text,
+    def __init__(self, top_bar_text,
                  options: List[GridOrListEntry], img_offset_x : int, img_offset_y : int, img_width : int, img_height: int,
                  selected_index : int, show_icons : bool, image_render_mode: RenderMode, selected_bg = None, usable_height = None,
                  text_to_image_relationship = TextToImageRelationship.LEFT_OF_IMAGE):
-        super().__init__(device=device,
-                         top_bar_text=top_bar_text,
+        super().__init__(top_bar_text=top_bar_text,
                          options=options,
                          selected_index=selected_index,
                          show_icons=show_icons,
@@ -67,20 +67,20 @@ class ImageListView(NonDescriptiveListView):
             elif(TextToImageRelationship.RIGHT_OF_IMAGE == self.text_to_image_relationship):
                 x_value = self.img_width//2 + self.img_offset_x
                 y_value = self.base_y_offset + self.line_height//2
-                text_available_width = self.device.screen_width - self.img_width - text_pad*2
+                text_available_width = Device.screen_width() - self.img_width - text_pad*2
             elif(TextToImageRelationship.BELOW_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
                 y_pad = 20 #TODO get from somewhere
                 y_value = (Display.get_top_bar_height() + y_pad*2 + self.img_height)  + self.line_height//2
-                text_available_width = self.device.screen_width - text_pad * 2
+                text_available_width = Device.screen_width() - text_pad * 2
             elif(TextToImageRelationship.ABOVE_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
                 y_value = self.base_y_offset + self.line_height//2
-                text_available_width = self.device.screen_width - text_pad * 2
+                text_available_width = Device.screen_width() - text_pad * 2
             elif(TextToImageRelationship.TEXT_AROUND_LEFT_IMAGE == self.text_to_image_relationship):
                 x_value = 0
                 y_value = self.base_y_offset + self.line_height//2
-                text_available_width = self.device.screen_width - text_pad*2
+                text_available_width = Device.screen_width() - text_pad*2
             elif(TextToImageRelationship.TEXT_AROUND_RIGHT_IMAGE == self.text_to_image_relationship):
                 x_value = 0 
                 y_value = self.base_y_offset + self.line_height//2
@@ -90,9 +90,9 @@ class ImageListView(NonDescriptiveListView):
 
             if(TextToImageRelationship.TEXT_AROUND_LEFT_IMAGE == self.text_to_image_relationship and self.is_y_coord_in_img_box(y_value)):
                 x_value += self.img_width//2 + self.img_offset_x
-                text_available_width = self.device.screen_width - self.img_width - text_pad*2
+                text_available_width = Device.screen_width() - self.img_width - text_pad*2
             elif(TextToImageRelationship.TEXT_AROUND_RIGHT_IMAGE == self.text_to_image_relationship and self.is_y_coord_in_img_box(y_value)):
-                text_available_width = self.device.screen_width - self.img_width - text_pad*2
+                text_available_width = Device.screen_width() - self.img_width - text_pad*2
 
             text_x_value = x_value + text_pad
 

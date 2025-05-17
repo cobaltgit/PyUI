@@ -5,20 +5,17 @@ import subprocess
 import time
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
-from devices.device import Device
 from display.display import Display
 from menus.games.in_game_menu_popup import InGameMenuPopup
-from themes.theme import Theme
 from utils.logger import PyUiLogger
 from views.view_creator import ViewCreator
 import psutil
 import signal
 
 class InGameMenuListener:
-    def __init__(self, device: Device):
-        self.device : Device= device
-        self.view_creator = ViewCreator(device)
-        self.popup_menu = InGameMenuPopup(device)
+    def __init__(self):
+        self.view_creator = ViewCreator()
+        self.popup_menu = InGameMenuPopup()
             
     def send_signal(self, proc: subprocess.Popen, sig, timeout: float = 3.0):
         try:

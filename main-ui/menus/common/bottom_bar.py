@@ -1,13 +1,13 @@
 from devices.device import Device
+from devices.device_common import DeviceCommon
 from display.font_purpose import FontPurpose
 from display.render_mode import RenderMode
 from themes.theme import Theme
 
 
 class BottomBar:
-    def __init__(self, device: Device):
-        self.device : Device= device
-
+    def __init__(self):
+        pass
 
     def render_bottom_bar(self) :
         from display.display import Display
@@ -16,11 +16,11 @@ class BottomBar:
             confirm_icon = Theme.confirm_icon()
             back_icon = Theme.back_icon()
             
-            self.bottom_bar_w, self.bottom_bar_h = Display.render_image(bottom_bar_bg,0,self.device.screen_height,render_mode=RenderMode.BOTTOM_LEFT_ALIGNED)
+            self.bottom_bar_w, self.bottom_bar_h = Display.render_image(bottom_bar_bg,0,Device.screen_height(),render_mode=RenderMode.BOTTOM_LEFT_ALIGNED)
             
             # TODO don't hard code these
             padding = 5 
-            bottom_icons_y = self.device.screen_height - padding
+            bottom_icons_y = Device.screen_height() - padding
 
             confirm_icon_x = padding
             confirm_icon_w, confirm_icon_h = Display.render_image(confirm_icon,confirm_icon_x, bottom_icons_y, RenderMode.BOTTOM_LEFT_ALIGNED)

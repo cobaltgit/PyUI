@@ -12,8 +12,7 @@ from views.grid_or_list_entry import GridOrListEntry
 
 
 class RomSelectOptionsBuilder:
-    def __init__(self, device: Device):
-        self.device = device
+    def __init__(self):
         self.roms_path = "/mnt/SDCARD/Roms/"
         self.rom_utils : RomUtils= RomUtils(self.roms_path)
         
@@ -39,7 +38,7 @@ class RomSelectOptionsBuilder:
             return None
 
     def _build_favorites_dict(self):
-        favorites = self.device.parse_favorites()
+        favorites = Device.parse_favorites()
         favorite_paths = []
         for favorite in favorites:
             favorite_paths.append(str(Path(favorite.rom_path).resolve()))

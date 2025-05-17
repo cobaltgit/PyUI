@@ -1,21 +1,18 @@
 from typing import List
-from controller.controller_inputs import ControllerInput
+from devices.device import Device
 from display.display import Display
 from display.font_purpose import FontPurpose
 from display.render_mode import RenderMode
 import sdl2
-from devices.device import Device
-from controller.controller import Controller
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 from views.list_view import ListView
 
 class DescriptiveListView(ListView):
 
-    def __init__(self, controller: Controller, device: Device, top_bar_text,
+    def __init__(self, top_bar_text,
                  options: List[GridOrListEntry], selected_bg, selected : int = 0):
-        super().__init__(controller)
-        self.device = device
+        super().__init__()
         self.top_bar_text = top_bar_text
         self.options : List[GridOrListEntry] = options
 
@@ -65,7 +62,7 @@ class DescriptiveListView(ListView):
             if(gridOrListEntry.get_value_text() is not None):
                 Display.render_text(
                     gridOrListEntry.get_value_text(), 
-                    self.device.screen_width - Theme.get_descriptive_list_text_from_icon_offset(), 
+                    Device.screen_width() - Theme.get_descriptive_list_text_from_icon_offset(), 
                     row_offset_y + Theme.get_descriptive_list_text_offset_y(), 
                     color, 
                     FontPurpose.DESCRIPTIVE_LIST_TITLE,

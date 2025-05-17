@@ -8,7 +8,7 @@ from apps.miyoo.miyoo_app_finder import MiyooAppFinder
 from controller.controller_inputs import ControllerInput
 from devices.bluetooth.bluetooth_scanner import BluetoothScanner
 from devices.charge.charge_status import ChargeStatus
-from devices.device import Device
+from devices.device_common import DeviceCommon
 import os
 from devices.miyoo.flip.miyoo_flip_poller import MiyooFlipPoller
 from devices.miyoo.miyoo_games_file_parser import MiyooGamesFileParser
@@ -24,7 +24,7 @@ import sdl2
 from utils import throttle
 from utils.logger import PyUiLogger
 
-class MiyooFlip(Device):
+class MiyooFlip(DeviceCommon):
     
     def __init__(self):
         self.path = self
@@ -61,7 +61,7 @@ class MiyooFlip(Device):
         self.ensure_wpa_supplicant_conf()
         self.init_gpio()
         threading.Thread(target=self.monitor_wifi, daemon=True).start()
-        self.hardware_poller = MiyooFlipPoller(self)
+        self.hardware_poller = MiyooFlipPoller()
         threading.Thread(target=self.hardware_poller.continuously_monitor, daemon=True).start()
 
     def init_gpio(self):

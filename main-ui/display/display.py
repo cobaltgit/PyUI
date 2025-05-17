@@ -1,4 +1,5 @@
 import time
+from devices.device import Device
 from display.font_purpose import FontPurpose
 from display.loaded_font import LoadedFont
 from display.render_mode import RenderMode
@@ -10,12 +11,10 @@ import sdl2
 import sdl2.ext
 import sdl2.sdlttf
 from themes.theme import Theme
-from devices.device import Device
 from utils.logger import PyUiLogger
 
 class Display:
     debug = False
-    device = None
     renderer = None
     fonts = {}
     bg_canvas = None
@@ -28,23 +27,22 @@ class Display:
     screen = None
 
     @classmethod
-    def init(cls, device: Device):
-        cls.device = device
+    def init(cls):
         cls._init_display()
         cls.init_fonts()
         cls.render_canvas = sdl2.SDL_CreateTexture(
             cls.renderer.renderer,
             sdl2.SDL_PIXELFORMAT_ARGB8888,
             sdl2.SDL_TEXTUREACCESS_TARGET,
-            cls.device.screen_width,
-            cls.device.screen_height
+            Device.screen_width(),
+            Device.screen_height()
         )
         PyUiLogger.get_logger().info(f"sdl2.SDL_GetError() : {sdl2.SDL_GetError()}")
         sdl2.SDL_SetRenderTarget(cls.renderer.renderer, cls.render_canvas)
         PyUiLogger.get_logger().info(f"sdl2.SDL_GetError() : {sdl2.SDL_GetError()}")
         cls._check_for_bg_change()
-        cls.top_bar = TopBar(device)
-        cls.bottom_bar = BottomBar(device)
+        cls.top_bar = TopBar()
+        cls.bottom_bar = BottomBar()
         cls.clear("init")
         cls.present()
 
@@ -64,7 +62,7 @@ class Display:
         display_mode = sdl2.SDL_DisplayMode()
         if sdl2.SDL_GetCurrentDisplayMode(0, display_mode) != 0:
             PyUiLogger.get_logger().error("Failed to get display mode, using fallback 640x480")
-            width, height = cls.device.screen_width(), cls.device.screen_height()
+            width, height = Device.screen_width(), Device.screen_height()
         else:
             width, height = display_mode.w, display_mode.h
             PyUiLogger.get_logger().info(f"Display size: {width}x{height}")
@@ -158,8 +156,8 @@ class Display:
             cls.renderer.renderer,
             sdl2.SDL_PIXELFORMAT_ARGB8888,
             sdl2.SDL_TEXTUREACCESS_TARGET,
-            cls.device.screen_width,
-            cls.device.screen_height
+            Device.screen_width(),
+            Device.screen_height()
         )
         sdl2.SDL_SetRenderTarget(cls.renderer.renderer, cls.render_canvas)
         sdl2.SDL_RenderCopy(cls.renderer.sdlrenderer, cls.bg_canvas, None, None)
@@ -353,8 +351,8 @@ class Display:
 
         sdl2.SDL_SetRenderTarget(cls.renderer.renderer, None)
 
-        if cls.device.should_scale_screen():
-            scaled_canvas = cls.scale_texture_to_fit(cls.render_canvas, cls.device.output_screen_width, cls.device.output_screen_height)
+        if Device.should_scale_screen():
+            scaled_canvas = cls.scale_texture_to_fit(cls.render_canvas, Device.output_screen_width, Device.output_screen_height)
             sdl2.SDL_RenderCopy(cls.renderer.sdlrenderer, scaled_canvas, None, None)
             sdl2.SDL_DestroyTexture(scaled_canvas)
         else:
@@ -373,11 +371,11 @@ class Display:
 
     @classmethod
     def get_usable_screen_height(cls):
-        return cls.device.screen_height - cls.get_bottom_bar_height() - cls.get_top_bar_height()
+        return Device.screen_height() - cls.get_bottom_bar_height() - cls.get_top_bar_height()
 
     @classmethod
     def get_center_of_usable_screen_height(cls):
-        return ((cls.device.screen_height - cls.get_bottom_bar_height() - cls.get_top_bar_height()) // 2) + cls.get_top_bar_height()
+        return ((Device.screen_height() - cls.get_bottom_bar_height() - cls.get_top_bar_height()) // 2) + cls.get_top_bar_height()
 
     @classmethod
     def get_image_dimensions(cls, img):
@@ -401,10 +399,10 @@ class Display:
     @classmethod
     def add_index_text(cls, index, total):
         y_padding = max(5, cls.get_bottom_bar_height() // 4)
-        y_value = cls.device.screen_height - y_padding
+        y_value = Device.screen_height() - y_padding
         x_padding = 10
 
-        total_text_x = cls.device.screen_width - x_padding
+        total_text_x = Device.screen_width() - x_padding
         total_text_w, _ = cls.render_text(
             str(total),
             total_text_x,
@@ -414,7 +412,7 @@ class Display:
             RenderMode.BOTTOM_RIGHT_ALIGNED
         )
 
-        index_text_x = cls.device.screen_width - x_padding - total_text_w
+        index_text_x = Device.screen_width() - x_padding - total_text_w
         cls.render_text(
             str(index) + "/",
             index_text_x,

@@ -1,31 +1,23 @@
 
 import os
-from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
-from devices.device import Device
-from display.display import Display
 from games.utils.game_system import GameSystem
 from games.utils.game_system_utils import GameSystemUtils
 from menus.games.game_select_menu import GameSelectMenu
-from menus.games.game_system_config import GameSystemConfig
 from menus.games.game_system_select_menu_popup import GameSystemSelectMenuPopup
 from themes.theme import Theme
-from utils.logger import PyUiLogger
 from views.grid_or_list_entry import GridOrListEntry
-from views.grid_view import GridView
 from views.selection import Selection
 from views.view_creator import ViewCreator
-from views.view_type import ViewType
 
 
 class GameSystemSelectMenu:
-    def __init__(self, device: Device):
-        self.device : Device= device
+    def __init__(self):
         self.game_utils : GameSystemUtils = GameSystemUtils()
-        self.rom_select_menu : GameSelectMenu = GameSelectMenu(device)
+        self.rom_select_menu : GameSelectMenu = GameSelectMenu()
         self.use_emu_cfg = False
-        self.view_creator = ViewCreator(device)
-        self.game_system_select_menu_popup = GameSystemSelectMenuPopup(device)
+        self.view_creator = ViewCreator()
+        self.game_system_select_menu_popup = GameSystemSelectMenuPopup()
         self.common_icon_mappings = {
             "PPSSPP": "psp",
             "FFPLAY":"ffplay",

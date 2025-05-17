@@ -2,7 +2,7 @@
 
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
-from devices.device import Device
+from devices.device_common import DeviceCommon
 from display.display import Display
 from display.on_screen_keyboard import OnScreenKeyboard
 from menus.games.searched_roms_menu import SearchedRomsMenu
@@ -14,9 +14,8 @@ from views.view_type import ViewType
 
 
 class MainMenuPopup:
-    def __init__(self, device: Device):
-        self.device : Device= device
-        self.view_creator = ViewCreator(device)
+    def __init__(self):
+        self.view_creator = ViewCreator()
 
 
     def run_popup_menu_selection(self):
@@ -95,6 +94,6 @@ class MainMenuPopup:
 
         if(ControllerInput.A == popup_selection.get_input()): 
             if("Rom Search" == popup_selection.get_selection().get_primary_text()):
-                search_txt = OnScreenKeyboard(self.controller,self.device).get_input("Game Search:")
+                search_txt = OnScreenKeyboard().get_input("Game Search:")
                 if(search_txt is not None):
-                    SearchedRomsMenu(self.controller,self.device, search_txt.upper()).run_rom_selection()
+                    SearchedRomsMenu(search_txt.upper()).run_rom_selection()
