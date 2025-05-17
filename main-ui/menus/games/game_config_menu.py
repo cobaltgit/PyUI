@@ -1,8 +1,10 @@
 
 import os
 from controller.controller_inputs import ControllerInput
+from devices.device import Device
 from display.display import Display
 from games.utils.game_system import GameSystem
+from menus.games.utils.rom_info import RomInfo
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
 from views.view_creator import ViewCreator
@@ -12,7 +14,7 @@ from views.view_type import ViewType
 # Would like this to be generic in the future but this is so Miyoo specific right now 
 # Due to the oddities in how its handled
 class GameConfigMenu:
-    def __init__(self, game_system: GameSystem, game : str):
+    def __init__(self, game_system: GameSystem, game : RomInfo):
         self.game_system = game_system
         self.game = game
 
@@ -52,11 +54,13 @@ class GameConfigMenu:
                 # Example rom /mnt/SDCARD/Roms/PORTS/PokeMMO.sh               
                 # example arg /media/sdcard0/Emu/PORTS/../../Roms/PORTS/PokeMMO.sh
                 #/media/sdcard0/Emu/PORTS/../../Roms/PORTS/PokeMMO.sh
-                miyoo_game_path = os.path.join("/media/sdcard0/Emu", self.game_system, "../../Roms", self.game_system, self.game)
+                game_file_name = os.path.basename(self.game.rom_file_path)
+                miyoo_game_path = os.path.join("/media/sdcard0/Emu", self.game_system.folder_name, "../../Roms", self.game_system.folder_name, game_file_name)
                 Display.deinit_display()
-                self.Device.run_app([selected.get_selection().get_value(), miyoo_game_path])
+                Device.run_app(["sh",os.path.join("/media/sdcard0/Emu", self.game_system.folder_name,selected.get_selection().get_value()), miyoo_game_path], dir=os.path.join("/media/sdcard0/Emu", self.game_system.folder_name))
                 # TODO Once we remove the display_kill and popups from launch.sh we can remove this
                 # For a good speedup
                 Display.reinitialize()
+                self.game_system.game_system_config.reload_config()
             elif(ControllerInput.B == selected.get_input()):
                 selected = None

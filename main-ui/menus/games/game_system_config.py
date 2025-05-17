@@ -3,8 +3,11 @@ import json
 class GameSystemConfig:
     def __init__(self, system_name):
         self.emu_folder = f"/mnt/SDCARD/Emu/{system_name}"
-        config_path = f"{self.emu_folder}/config.json"
-        with open(config_path, 'r', encoding='utf-8') as f:
+        self.config_path = f"{self.emu_folder}/config.json"
+        self.reload_config()
+
+    def reload_config(self):
+        with open(self.config_path, 'r', encoding='utf-8') as f:
             self._data = json.load(f)
 
     def __str__(self):

@@ -443,22 +443,17 @@ class MiyooFlip(DeviceCommon):
         self.write_cmd_to_run(f'''chmod a+x "{launch_path}";"{launch_path}" "{miyoo_app_path}"''')
 
         self.fix_sleep_sound_bug()
-        PyUiLogger.get_logger().debug(f"About to launch {launch_path} {rom_info.rom_file_path} | {miyoo_app_path}")
         try:
             return subprocess.Popen([launch_path,rom_info.rom_file_path], stdin=subprocess.DEVNULL,
                  stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         except Exception as e:
             PyUiLogger.get_logger().error(f"Failed to launch game {rom_info.rom_file_path}: {e}")
             return None
-        #self.delete_cmd_to_run()
 
     def run_app(self, args, dir = None):
-        PyUiLogger.get_logger().debug(f"About to launch app {args}")
         self.fix_sleep_sound_bug()
-        if(dir is not None):
-            subprocess.run(args, cwd = dir)
-        else:
-            subprocess.run(args, cwd = dir)
+        PyUiLogger.get_logger().debug(f"About to launch app {args} from dir {dir}")
+        subprocess.run(args, cwd = dir)
 
     #TODO untested
     def map_analog_axis(self,sdl_input, value, threshold=16000):
