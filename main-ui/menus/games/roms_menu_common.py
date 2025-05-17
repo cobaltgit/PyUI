@@ -74,7 +74,7 @@ class RomsMenuCommon(ABC):
                     game_thread : subprocess.Popen = Device.run_game(selected.get_selection().get_value())
         
                     if(game_thread is not None):
-                        self.in_game_menu_listener.game_launched(game_thread)
+                        self.in_game_menu_listener.game_launched(game_thread, selected.get_selection().get_value())
                         Controller.clear_input_queue()
         
                     Display.reinitialize()

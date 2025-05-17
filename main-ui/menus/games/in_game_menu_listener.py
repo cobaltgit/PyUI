@@ -6,7 +6,9 @@ import time
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from display.display import Display
+from games.utils.game_system import GameSystem
 from menus.games.in_game_menu_popup import InGameMenuPopup
+from menus.games.utils.rom_info import RomInfo
 from utils.logger import PyUiLogger
 import psutil
 import signal
@@ -46,12 +48,13 @@ class InGameMenuListener:
 
         except Exception as e:
             PyUiLogger.get_logger().error(f"Error in send_signal: {e}")
-
-
-    def game_launched(self, game_process: subprocess.Popen):
+    
+    def game_launched(self, game_process: subprocess.Popen, game: RomInfo):
+        support_menu_button_in_game = game.game_system.game_system_config.run_in_game_menu()
         while(game_process.poll() is None):
+            
             if(Controller.get_input()):
-                if ControllerInput.MENU == Controller.last_input():
+                if (ControllerInput.MENU == Controller.last_input() and support_menu_button_in_game):
                     self.send_signal(game_process, signal.SIGSTOP)
                     Display.reinitialize()
                     

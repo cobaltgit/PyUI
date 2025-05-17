@@ -63,3 +63,6 @@ class GameSystemConfig:
 
     def get_launchlist(self):
         return self._data.get('launchlist', [])
+    
+    def run_in_game_menu(self):
+        return bool(self._data.get('ingamemenu', 0))
