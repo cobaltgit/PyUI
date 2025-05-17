@@ -6,7 +6,7 @@ from display.display import Display
 from menus.settings import settings_menu
 from menus.settings.advance_settings_menu import AdvanceSettingsMenu
 from menus.settings.bluetooth_menu import BluetoothMenu
-from menus.settings.theme_settings_menu import ThemeSettingsMenu
+from menus.settings.theme.theme_settings_menu import ThemeSettingsMenu
 from menus.settings.wifi_menu import WifiMenu
 from themes.theme import Theme
 from utils.py_ui_config import PyUiConfig
