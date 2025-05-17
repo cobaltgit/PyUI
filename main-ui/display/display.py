@@ -1,4 +1,3 @@
-import time
 from devices.device import Device
 from display.font_purpose import FontPurpose
 from display.loaded_font import LoadedFont

@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 import subprocess
 
 from games.utils.game_entry import GameEntry
-from utils.logger import PyUiLogger
 
 class DeviceCommon(ABC):
  

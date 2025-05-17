@@ -1,15 +1,10 @@
 
 import os
-from pathlib import Path
 import subprocess
-from controller.controller import Controller
 from devices.device import Device
-from devices.device_common import DeviceCommon
-from display.display import Display
 from menus.games.roms_menu_common import RomsMenuCommon
 from menus.games.utils.recents_manager import RecentsManager
 from menus.games.utils.rom_info import RomInfo
-from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 
 

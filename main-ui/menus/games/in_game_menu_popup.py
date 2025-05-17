@@ -1,9 +1,6 @@
 
 
-from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
-from devices.device_common import DeviceCommon
-from display.display import Display
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 from views.view_creator import ViewCreator

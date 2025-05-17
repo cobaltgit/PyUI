@@ -4,7 +4,6 @@ import fcntl
 from pathlib import Path
 import re
 import subprocess
-import sys
 import threading
 import time
 from apps.miyoo.miyoo_app_finder import MiyooAppFinder

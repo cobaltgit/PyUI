@@ -1,5 +1,3 @@
-
-import os
 from controller.controller_inputs import ControllerInput
 from utils.py_ui_config import PyUiConfig
 from views.selection import Selection

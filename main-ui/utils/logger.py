@@ -1,8 +1,6 @@
 import logging
 from logging.handlers import RotatingFileHandler
 import os
-from pathlib import Path
-import shutil
 import sys
 
 class StreamToLogger:

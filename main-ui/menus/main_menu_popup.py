@@ -1,5 +1,3 @@
-
-
 from controller.controller_inputs import ControllerInput
 from display.on_screen_keyboard import OnScreenKeyboard
 from menus.games.searched_roms_menu import SearchedRomsMenu

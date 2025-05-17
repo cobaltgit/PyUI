@@ -2,7 +2,6 @@
 from dataclasses import dataclass
 import json
 from typing import List
-from devices.device_common import DeviceCommon
 from games.utils.game_system_utils import GameSystemUtils
 from menus.games.utils.rom_info import RomInfo
 from utils.logger import PyUiLogger

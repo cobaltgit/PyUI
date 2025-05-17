@@ -2,7 +2,6 @@
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from devices.device import Device
-from devices.device_common import DeviceCommon
 from display.font_purpose import FontPurpose
 from display.render_mode import RenderMode
 from themes.theme import Theme

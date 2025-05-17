@@ -1,5 +1,4 @@
 import argparse
-from multiprocessing import get_logger
 import os
 import sys
 import threading

@@ -4,7 +4,6 @@ import os
 from devices.charge.charge_status import ChargeStatus
 from devices.wifi.wifi_status import WifiStatus
 from display.font_purpose import FontPurpose
-from display.render_mode import RenderMode
 from utils.logger import PyUiLogger
 from views.view_type import ViewType
 
