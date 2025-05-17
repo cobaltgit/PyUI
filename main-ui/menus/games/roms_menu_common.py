@@ -60,7 +60,9 @@ class RomsMenuCommon(ABC):
                     view_type=Theme.get_game_selection_view_type(),
                     top_bar_text=page_name,
                     options=rom_list,
-                    selected_index=selected.get_index())
+                    selected_index=selected.get_index(),
+                    rows=2,
+                    cols=4)
             else:
                 view.set_options(rom_list)
 

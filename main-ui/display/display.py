@@ -271,6 +271,8 @@ class Display:
 
     @classmethod
     def render_image(cls, image_path: str, x: int, y: int, render_mode=RenderMode.TOP_LEFT_ALIGNED, target_width=None, target_height=None):
+        if(image_path is None):
+            return 0, 0
         surface = sdl2.sdlimage.IMG_Load(image_path.encode('utf-8'))
         if not surface:
             PyUiLogger.get_logger().error(f"Failed to load image: {image_path}")
@@ -378,6 +380,9 @@ class Display:
 
     @classmethod
     def get_image_dimensions(cls, img):
+        if(img is None):
+            return 0, 0
+        
         surface = sdl2.sdlimage.IMG_Load(img.encode('utf-8'))
         if not surface:
             return 0, 0
