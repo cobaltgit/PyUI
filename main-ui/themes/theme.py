@@ -300,7 +300,10 @@ class Theme():
         try:
             match font_purpose:
                 case FontPurpose.TOP_BAR_TEXT:
-                    return cls.hex_to_color(cls._data["grid"]["selectedcolor"])
+                    if(cls._data["title"] and cls._data["title"]["color"]):
+                        return cls.hex_to_color(cls._data["title"]["color"])
+                    else:
+                        return cls.hex_to_color(cls._data["grid"]["selectedcolor"])
                 case FontPurpose.BATTERY_PERCENT:
                     if(cls._data["batteryPercentage"] and cls._data["batteryPercentage"]["color"]):
                         return cls.hex_to_color(cls._data["batteryPercentage"]["color"])
