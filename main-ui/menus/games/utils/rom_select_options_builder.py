@@ -21,21 +21,28 @@ class RomSelectOptionsBuilder:
         return os.path.splitext(file_name)[0]
 
     def get_image_path(self, rom_path):
-        # Get the base filename without extension (e.g., "DKC")
+        # Get the base filename without extension
         base_name = os.path.splitext(os.path.basename(rom_path))[0]
         
-        # Get the parent directory of the ROM file
-        parent_dir = os.path.dirname(rom_path)
-        
-        # Construct the path to the Imgs directory
-        imgs_dir = os.path.join(parent_dir, "Imgs")
-        
-        # Construct the full path to the PNG image
-        image_path = os.path.join(imgs_dir, base_name + ".png")
+        # Normalize and split the path into components
+        parts = os.path.normpath(rom_path).split(os.sep)
+
+        try:
+            roms_index = parts.index("Roms")
+            first_after_roms = parts[roms_index + 1]
+        except (ValueError, IndexError):
+            return None  # "Roms" not in path or nothing after "Roms"
+
+        # Build path to the image using the extracted directory
+        root_dir = os.sep.join(parts[:roms_index+2])  # base path before Roms
+        image_path = os.path.join(root_dir, "Imgs", base_name + ".png")
+        print(f"Image path: {image_path}")
+
         if os.path.exists(image_path):
             return image_path
         else:
             return None
+
 
     def _build_favorites_dict(self):
         favorites = Device.parse_favorites()
@@ -45,9 +52,9 @@ class RomSelectOptionsBuilder:
 
         return favorite_paths
 
-    def build_rom_list(self, game_system, filter: Callable[[str], bool] = lambda a: True) -> list[GridOrListEntry]:
+    def build_rom_list(self, game_system, filter: Callable[[str], bool] = lambda a: True, subfolder = None) -> list[GridOrListEntry]:
         rom_list = []
-        for rom_file_path in self.rom_utils.get_roms(game_system.folder_name):
+        for rom_file_path in self.rom_utils.get_roms(game_system.folder_name, subfolder):
             if(filter(rom_file_path)):
                 rom_file_name = os.path.basename(rom_file_path)
                 img_path = self.get_image_path(rom_file_path)

@@ -15,6 +15,8 @@ class RomUtils:
             "WSC":"WS"
         }
 
+        self.dont_scan_subfolders = ["PORTS","PORTS32","PORTS64","PM"]
+
     def get_roms_path(self):
         return self.roms_path
     
@@ -30,13 +32,19 @@ class RomUtils:
     def get_system_rom_directory(self, system):
         return os.path.join(self.roms_path, self.get_roms_dir_for_emu_dir(system))
     
-    def has_roms(self, system):
-        directory = self.get_system_rom_directory(system)
+    def has_roms(self, system, directory = None):
+        if(directory is None):
+            directory = self.get_system_rom_directory(system)
+
+        print(f"system {system} directory {directory}")
         valid_suffix_set = self._get_valid_suffix(system)
 
         try:
             for entry in os.scandir(directory):
                 if not entry.is_file(follow_symlinks=False):
+                    if (entry.is_dir(follow_symlinks=False) and system not in self.dont_scan_subfolders):
+                        if(self.has_roms(system, directory=entry)):
+                            return True
                     continue
 
                 if len(valid_suffix_set) == 0:
@@ -51,8 +59,10 @@ class RomUtils:
             PyUiLogger.get_logger().error(f"Error scanning directory '{directory}': {e}")
             return False
     
-    def get_roms(self, system):
-        directory = self.get_system_rom_directory(system)
+    def get_roms(self, system, directory = None):
+        if(directory is None):
+            directory = self.get_system_rom_directory(system)
+       
         valid_suffix_set = self._get_valid_suffix(system)
         if(len(valid_suffix_set) == 0):
             valid_files = sorted(
@@ -67,5 +77,13 @@ class RomUtils:
                 if entry.is_file(follow_symlinks=False)
                 and Path(entry.name).suffix.lower() in valid_suffix_set
             )
+
+        valid_folders = sorted(
+            entry.path for entry in os.scandir(directory)
+            if entry.is_dir(follow_symlinks=False)
+            and self.has_roms(system,entry.path)
+        )
+
+        valid_files.extend(valid_folders)
 
         return valid_files

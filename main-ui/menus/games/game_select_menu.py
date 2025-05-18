@@ -17,11 +17,9 @@ class GameSelectMenu(RomsMenuCommon):
         return any(Path(rom_file_path).resolve() == Path(fav.rom_path).resolve() for fav in favorites)
 
     def _get_rom_list(self) -> list[GridOrListEntry]:
-        return self.rom_select_options_builder.build_rom_list(self.game_system)
+        return self.rom_select_options_builder.build_rom_list(self.game_system, subfolder=self.subfolder)
 
-    def run_rom_selection(self,game_system : GameSystem) :
+    def run_rom_selection(self,game_system : GameSystem, subfolder = None) :
         self.game_system = game_system
+        self.subfolder = subfolder
         self._run_rom_selection(game_system.display_name)
-
-    def _run_game(self, selected_entry : RomInfo) -> subprocess.Popen:
-        return Device.run_game(selected_entry)
