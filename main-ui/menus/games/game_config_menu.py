@@ -58,7 +58,7 @@ class GameConfigMenu:
                 miyoo_game_path = os.path.join("/media/sdcard0/Emu", self.game_system.folder_name, "../../Roms", self.game_system.folder_name, game_file_name)
                 Display.deinit_display()
 
-                app_path = self.game_system.folder_name,selected.get_selection().get_value()
+                app_path = selected.get_selection().get_value()
                 if(not os.path.isfile(app_path)):
                     app_path = os.path.join("/media/sdcard0/Emu", self.game_system.folder_name, selected.get_selection().get_value())
 
