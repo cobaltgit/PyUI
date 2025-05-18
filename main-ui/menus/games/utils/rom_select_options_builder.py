@@ -18,9 +18,6 @@ class RomSelectOptionsBuilder:
         self.rom_utils : RomUtils= RomUtils(self.roms_path)
         
     
-    def _remove_extension(self,file_name):
-        return os.path.splitext(file_name)[0]
-
     def get_image_path(self, rom_path):
         # Get the base filename without extension
         base_name = os.path.splitext(os.path.basename(rom_path))[0]
@@ -52,25 +49,26 @@ class RomSelectOptionsBuilder:
 
         return favorite_paths
 
-    def build_rom_list(self, game_system, filter: Callable[[str], bool] = lambda a: True, subfolder = None) -> list[GridOrListEntry]:
+    def build_rom_list(self, game_system, subfolder = None) -> list[GridOrListEntry]:
         rom_list = []
         all_files_in_folder = self.rom_utils.get_roms(game_system.folder_name, subfolder)
 
+        PyUiLogger.get_logger().info(f"    Starting building entries")
         for rom_file_path in all_files_in_folder:
-            if(filter(rom_file_path)):
-                rom_file_name = os.path.basename(rom_file_path)
-                img_path = self.get_image_path(rom_file_path)
-                rom_info = RomInfo(game_system,rom_file_path)
-                icon=Theme.favorite_icon() if FavoritesManager.is_favorite(rom_info) else None
+            rom_file_name = os.path.basename(rom_file_path)
+            img_path = self.get_image_path(rom_file_path)
+            rom_info = RomInfo(game_system,rom_file_path)
+            icon=Theme.favorite_icon() if FavoritesManager.is_favorite(rom_info) else None
 
-                rom_list.append(
-                    GridOrListEntry(
-                        primary_text=self._remove_extension(rom_file_name),
-                        image_path=img_path,
-                        image_path_selected=img_path,
-                        description=game_system.folder_name, 
-                        icon=icon,
-                        value=RomInfo(game_system,rom_file_path))
-                )
+            rom_list.append(
+                GridOrListEntry(
+                    primary_text=os.path.splitext(rom_file_name)[0],
+                    image_path=img_path,
+                    image_path_selected=img_path,
+                    description=game_system.folder_name, 
+                    icon=icon,
+                    value=RomInfo(game_system,rom_file_path))
+            )
+        PyUiLogger.get_logger().info(f"    Finished building entries")
 
         return rom_list
