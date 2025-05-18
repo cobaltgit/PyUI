@@ -24,6 +24,7 @@ import sdl2
 from utils import throttle
 from utils.config_copier import ConfigCopier
 from utils.logger import PyUiLogger
+from utils.py_ui_config import PyUiConfig
 
 class MiyooFlip(DeviceCommon):
     
@@ -64,12 +65,13 @@ class MiyooFlip(DeviceCommon):
         threading.Thread(target=self.monitor_wifi, daemon=True).start()
         self.hardware_poller = MiyooFlipPoller(self)
         threading.Thread(target=self.hardware_poller.continuously_monitor, daemon=True).start()
-        self.volume_key_watcher = KeyWatcher("/dev/input/event0")
-        volume_key_polling_thread = threading.Thread(target=self.volume_key_watcher.poll_keyboard, daemon=True)
-        volume_key_polling_thread.start()
-        self.power_key_watcher = KeyWatcher("/dev/input/event2")
-        power_key_polling_thread = threading.Thread(target=self.power_key_watcher.poll_keyboard, daemon=True)
-        power_key_polling_thread.start()
+        if(PyUiConfig.enable_button_watchers()):
+            self.volume_key_watcher = KeyWatcher("/dev/input/event0")
+            volume_key_polling_thread = threading.Thread(target=self.volume_key_watcher.poll_keyboard, daemon=True)
+            volume_key_polling_thread.start()
+            self.power_key_watcher = KeyWatcher("/dev/input/event2")
+            power_key_polling_thread = threading.Thread(target=self.power_key_watcher.poll_keyboard, daemon=True)
+            power_key_polling_thread.start()
 
     def init_gpio(self):
         try:
