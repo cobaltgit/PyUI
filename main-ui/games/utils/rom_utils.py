@@ -63,26 +63,21 @@ class RomUtils:
             directory = self.get_system_rom_directory(system)
        
         valid_suffix_set = self._get_valid_suffix(system)
-        if(len(valid_suffix_set) == 0):
-            valid_files = sorted(
-                entry.path for entry in os.scandir(directory)
-                if entry.is_file(follow_symlinks=False)
-                and not entry.name.startswith('.')
-                and not entry.name.endswith(('.xml', '.txt', '.db'))
-            )
-        else:
-            valid_files = sorted(
-                entry.path for entry in os.scandir(directory)
-                if entry.is_file(follow_symlinks=False)
-                and Path(entry.name).suffix.lower() in valid_suffix_set
-            )
+        valid_files = []
+        valid_folders = []
 
-        valid_folders = sorted(
-            entry.path for entry in os.scandir(directory)
-            if entry.is_dir(follow_symlinks=False)
-            and self.has_roms(system,entry.path)
-        )
+        for entry in os.scandir(directory):
+            if entry.is_file(follow_symlinks=False):
+                if not entry.name.startswith('.') and (
+                    len(valid_suffix_set) == 0 and not entry.name.endswith(('.xml', '.txt', '.db'))
+                    or Path(entry.name).suffix.lower() in valid_suffix_set
+                ):
+                    valid_files.append(entry.path)
+            elif entry.is_dir(follow_symlinks=False):
+                if self.has_roms(system, entry.path):
+                    valid_folders.append(entry.path)
 
-        valid_files.extend(valid_folders)
+        # Combine and sort once at the end
+        valid_files = sorted(valid_files + valid_folders)
 
         return valid_files

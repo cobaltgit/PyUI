@@ -8,6 +8,7 @@ from games.utils.rom_utils import RomUtils
 from menus.games.utils.favorites_manager import FavoritesManager
 from menus.games.utils.rom_info import RomInfo
 from themes.theme import Theme
+from utils.logger import PyUiLogger
 from views.grid_or_list_entry import GridOrListEntry
 
 
@@ -53,7 +54,9 @@ class RomSelectOptionsBuilder:
 
     def build_rom_list(self, game_system, filter: Callable[[str], bool] = lambda a: True, subfolder = None) -> list[GridOrListEntry]:
         rom_list = []
-        for rom_file_path in self.rom_utils.get_roms(game_system.folder_name, subfolder):
+        all_files_in_folder = self.rom_utils.get_roms(game_system.folder_name, subfolder)
+
+        for rom_file_path in all_files_in_folder:
             if(filter(rom_file_path)):
                 rom_file_name = os.path.basename(rom_file_path)
                 img_path = self.get_image_path(rom_file_path)

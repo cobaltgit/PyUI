@@ -64,6 +64,7 @@ class RomsMenuCommon(ABC):
                     selected_index=selected.get_index(),
                     rows=2,
                     cols=4)
+
             else:
                 view.set_options(rom_list)
 
