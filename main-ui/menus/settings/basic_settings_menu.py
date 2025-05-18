@@ -54,7 +54,8 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
                 Device.disable_wifi()
             else:
                 Device.enable_wifi()
-        else:
+
+        if(ControllerInput.A == input):
             self.wifi_menu.show_wifi_menu()
 
     def show_bt_menu(self, input):
@@ -139,7 +140,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         option_list.append(
                 GridOrListEntry(
                         primary_text="WiFi",
-                        value_text="<    " + ("On" if Device.is_wifi_enabled() else "Off") + "    >",
+                        value_text="<    " + (Device.get_ip_addr_text()) + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,

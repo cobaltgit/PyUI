@@ -1,5 +1,6 @@
 from pathlib import Path
 import re
+import socket
 import subprocess
 import threading
 import time
@@ -25,6 +26,7 @@ from utils import throttle
 from utils.config_copier import ConfigCopier
 from utils.logger import PyUiLogger
 from utils.py_ui_config import PyUiConfig
+import psutil
 
 class MiyooFlip(DeviceCommon):
     
@@ -714,6 +716,7 @@ class MiyooFlip(DeviceCommon):
         ProcessRunner.run(["ifconfig","wlan0","down"])
         self.stop_wifi_services()
         self.get_wifi_status.force_refresh()
+        self.get_ip_addr_text.force_refresh()
 
     def enable_wifi(self):
         self.system_config.reload_config()
@@ -722,6 +725,7 @@ class MiyooFlip(DeviceCommon):
         ProcessRunner.run(["ifconfig","wlan0","up"])
         self.start_wifi_services()
         self.get_wifi_status.force_refresh()
+        self.get_ip_addr_text.force_refresh()
 
     @throttle.limit_refresh(5)
     def get_charge_status(self):
@@ -786,3 +790,20 @@ class MiyooFlip(DeviceCommon):
     
     def get_recents_path(self):
         return "/mnt/SDCARD/Saves/pyui-recents.json"
+    
+    @throttle.limit_refresh(15)
+    def get_ip_addr_text(self):
+        if self.is_wifi_enabled():
+            try:
+                addrs = psutil.net_if_addrs().get("wlan0")
+                if addrs:
+                    for addr in addrs:
+                        if addr.family == socket.AF_INET:
+                            return addr.address
+                    return "Connecting"
+                else:
+                    return "Connecting"
+            except Exception:
+                return "Error"
+        
+        return "None"
