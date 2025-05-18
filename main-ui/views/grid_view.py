@@ -148,10 +148,24 @@ class GridView(View):
                 self.selected+=self.cols*self.rows
                 self.correct_selected_for_off_list()
             if Controller.last_input() == ControllerInput.DPAD_UP:
-                self.selected-=self.cols
+                
+                if(self.selected == 0):
+                    self.selected-= 1
+                elif(self.selected - self.cols < 0):
+                    self.selected = 0
+                else:
+                    self.selected-=self.cols
+
                 self.correct_selected_for_off_list()
             elif Controller.last_input() == ControllerInput.DPAD_DOWN:
-                self.selected+=self.cols
+                
+                if(self.selected == len(self.options)-1):
+                    self.selected=len(self.options)
+                elif(self.selected + self.cols >= len(self.options)):
+                    self.selected = len(self.options) - 1
+                else:
+                    self.selected+=self.cols
+
                 self.correct_selected_for_off_list()
             elif Controller.last_input() in select_controller_inputs:
                 return Selection(self.get_selected_option(),Controller.last_input(), self.selected)
