@@ -55,23 +55,25 @@ class RomSelectOptionsBuilder:
         else:
             return None
 
-    def build_rom_list(self, game_system, subfolder = None) -> list[GridOrListEntry]:
+    def build_rom_list(self, game_system,filter: Callable[[str], bool] = lambda a: True, subfolder = None) -> list[GridOrListEntry]:
         rom_list = []
+        print(f"Building rom list for {game_system} in {subfolder}")
         all_files_in_folder = self.rom_utils.get_roms(game_system.folder_name, subfolder)
 
         for rom_file_path in all_files_in_folder:
-            rom_file_name = os.path.basename(rom_file_path)
-            rom_info = RomInfo(game_system,rom_file_path)
+            if(filter(rom_file_path)):
+                rom_file_name = os.path.basename(rom_file_path)
+                rom_info = RomInfo(game_system,rom_file_path)
 
-            rom_list.append(
-                GridOrListEntry(
-                    primary_text=os.path.splitext(rom_file_name)[0],
-                    description=game_system.folder_name, 
-                    value=rom_info,
-                    image_path_searcher=lambda rom_info: self.get_image_path(rom_info),
-                    image_path_selected_searcher=lambda rom_info: self.get_image_path(rom_info),
-                    icon_searcher=lambda rom_info: self._get_favorite_icon(rom_info)
+                rom_list.append(
+                    GridOrListEntry(
+                        primary_text=os.path.splitext(rom_file_name)[0],
+                        description=game_system.folder_name, 
+                        value=rom_info,
+                        image_path_searcher=lambda rom_info: self.get_image_path(rom_info),
+                        image_path_selected_searcher=lambda rom_info: self.get_image_path(rom_info),
+                        icon_searcher=lambda rom_info: self._get_favorite_icon(rom_info)
+                    )
                 )
-            )
 
         return rom_list
