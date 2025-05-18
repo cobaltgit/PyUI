@@ -108,6 +108,11 @@ class Device:
     @staticmethod
     def enable_wifi():
         return Device._impl.enable_wifi()
+    
+    @staticmethod
+    def wifi_error_detected():
+        return Device._impl.enable_wifi()
+
 
     @staticmethod
     def get_battery_percent():
