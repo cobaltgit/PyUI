@@ -36,7 +36,6 @@ class RomUtils:
         if(directory is None):
             directory = self.get_system_rom_directory(system)
 
-        print(f"system {system} directory {directory}")
         valid_suffix_set = self._get_valid_suffix(system)
 
         try:

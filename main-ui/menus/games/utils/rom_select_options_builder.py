@@ -36,7 +36,6 @@ class RomSelectOptionsBuilder:
         # Build path to the image using the extracted directory
         root_dir = os.sep.join(parts[:roms_index+2])  # base path before Roms
         image_path = os.path.join(root_dir, "Imgs", base_name + ".png")
-        print(f"Image path: {image_path}")
 
         if os.path.exists(image_path):
             return image_path
