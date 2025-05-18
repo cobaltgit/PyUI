@@ -36,6 +36,9 @@ class RomUtils:
         if(directory is None):
             directory = self.get_system_rom_directory(system)
 
+        if os.path.basename(directory) == "Imgs":
+            return False
+
         valid_suffix_set = self._get_valid_suffix(system)
 
         try:
@@ -61,7 +64,10 @@ class RomUtils:
     def get_roms(self, system, directory = None):
         if(directory is None):
             directory = self.get_system_rom_directory(system)
-       
+
+        if os.path.basename(directory) == "Imgs":
+            return []
+        
         valid_suffix_set = self._get_valid_suffix(system)
         valid_files = []
         valid_folders = []

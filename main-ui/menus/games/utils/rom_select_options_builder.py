@@ -18,12 +18,12 @@ class RomSelectOptionsBuilder:
         self.rom_utils : RomUtils= RomUtils(self.roms_path)
         
     
-    def get_image_path(self, rom_path):
+    def get_image_path(self, rom_info: RomInfo) -> str:
         # Get the base filename without extension
-        base_name = os.path.splitext(os.path.basename(rom_path))[0]
+        base_name = os.path.splitext(os.path.basename(rom_info.rom_file_path))[0]
         
         # Normalize and split the path into components
-        parts = os.path.normpath(rom_path).split(os.sep)
+        parts = os.path.normpath(rom_info.rom_file_path).split(os.sep)
 
         try:
             roms_index = parts.index("Roms")
@@ -49,26 +49,29 @@ class RomSelectOptionsBuilder:
 
         return favorite_paths
 
+    def _get_favorite_icon(self, rom_info: RomInfo) -> str:
+        if FavoritesManager.is_favorite(rom_info):
+            return Theme.favorite_icon()
+        else:
+            return None
+
     def build_rom_list(self, game_system, subfolder = None) -> list[GridOrListEntry]:
         rom_list = []
         all_files_in_folder = self.rom_utils.get_roms(game_system.folder_name, subfolder)
 
-        PyUiLogger.get_logger().info(f"    Starting building entries")
         for rom_file_path in all_files_in_folder:
             rom_file_name = os.path.basename(rom_file_path)
-            img_path = self.get_image_path(rom_file_path)
             rom_info = RomInfo(game_system,rom_file_path)
-            icon=Theme.favorite_icon() if FavoritesManager.is_favorite(rom_info) else None
 
             rom_list.append(
                 GridOrListEntry(
                     primary_text=os.path.splitext(rom_file_name)[0],
-                    image_path=img_path,
-                    image_path_selected=img_path,
                     description=game_system.folder_name, 
-                    icon=icon,
-                    value=RomInfo(game_system,rom_file_path))
+                    value=rom_info,
+                    image_path_searcher=lambda rom_info: self.get_image_path(rom_info),
+                    image_path_selected_searcher=lambda rom_info: self.get_image_path(rom_info),
+                    icon_searcher=lambda rom_info: self._get_favorite_icon(rom_info)
+                )
             )
-        PyUiLogger.get_logger().info(f"    Finished building entries")
 
         return rom_list
