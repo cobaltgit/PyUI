@@ -66,6 +66,8 @@ class MiyooFlip(DeviceCommon):
         self.hardware_poller = MiyooFlipPoller(self)
         threading.Thread(target=self.hardware_poller.continuously_monitor, daemon=True).start()
         if(PyUiConfig.enable_button_watchers()):
+            #/dev/miyooio if we want to get rid of miyoo_inputd
+            # debug in terminal: hexdump  /dev/miyooio
             self.volume_key_watcher = KeyWatcher("/dev/input/event0")
             volume_key_polling_thread = threading.Thread(target=self.volume_key_watcher.poll_keyboard, daemon=True)
             volume_key_polling_thread.start()
