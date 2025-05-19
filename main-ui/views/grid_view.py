@@ -7,21 +7,27 @@ from display.render_mode import RenderMode
 import sdl2
 from controller.controller import Controller
 from themes.theme import Theme
+from utils.logger import PyUiLogger
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
 from views.view import View
 
 class GridView(View):
-
     def __init__(self,top_bar_text, options: List[GridOrListEntry], cols : int, rows: int,selected_bg : str = None,
-                  selected_index=0, show_grid_text=True):
+                  selected_index=0, show_grid_text=True, resized_width=None, resized_height=None, 
+                  set_top_bar_text_to_selection=False):
         super().__init__()
+        self.resized_width = resized_width
+        self.resized_height = resized_height
         self.top_bar_text = top_bar_text
+        self.set_top_bar_text_to_selection = set_top_bar_text_to_selection
         self.options : List[GridOrListEntry] = options 
 
-        self.max_icon_height = 0
-        for option in options:           
-            self.max_icon_height = max(self.max_icon_height, Display.get_image_dimensions(option.get_image_path())[1])
+        self.max_img_height = resized_height
+        if(self.max_img_height is None):
+            self.max_img_height = 0
+            for option in options:           
+                self.max_img_height = max(self.max_img_height, Display.get_image_dimensions(option.get_image_path())[1])
 
         self.selected = selected_index
         self.toggles = [False] * len(options)
@@ -66,9 +72,11 @@ class GridView(View):
                 self.current_left +=1
                 self.current_right +=1
 
-
     def _render(self):
-        Display.clear(self.top_bar_text)
+        if(self.set_top_bar_text_to_selection) and len(self.options) > 0:
+            Display.clear(self.options[self.selected].get_primary_text())
+        else:
+            Display.clear(self.top_bar_text)
         self.correct_selected_for_off_list()
 
         visible_options: List[GridOrListEntry] = self.options[self.current_left:self.current_right]
@@ -88,33 +96,45 @@ class GridView(View):
 
 
             if(self.rows == 1) : 
-                y_icon_offset = Display.get_center_of_usable_screen_height()
+                y_image_offset = Display.get_center_of_usable_screen_height()
                 render_mode = RenderMode.MIDDLE_CENTER_ALIGNED
             else :
                 y_index = int(visible_index / self.cols) 
                 row_spacing = Display.get_usable_screen_height() / self.rows
                 row_start_y = y_index * row_spacing
                 row_mid_y = row_start_y
-                y_icon_offset = int(row_mid_y + Display.get_top_bar_height())
+                y_image_offset = int(row_mid_y + Display.get_top_bar_height())
                 render_mode = RenderMode.TOP_CENTER_ALIGNED
 
             if(self.selected_bg is not None):
                 if(actual_index == self.selected):
+                    target_bg_width = self.resized_width
+                    target_bg_height = self.resized_height
+                    
+                    if(self.resized_width is not None):
+                        target_bg_width += 10
+                        target_bg_height += 10
+                        
                     Display.render_image(self.selected_bg, 
                                             x_offset, 
-                                            y_icon_offset,
-                                            render_mode)
-
+                                            y_image_offset,
+                                            render_mode,
+                                            target_width=target_bg_width,
+                                            target_height=target_bg_height)
+            
+            PyUiLogger.get_logger().debug(f"{image_path} w/ y_offset {y_image_offset}")
             Display.render_image(image_path, 
-                                     x_offset, 
-                                     y_icon_offset,
-                                     render_mode)
+                                    x_offset, 
+                                    y_image_offset,
+                                    render_mode,
+                                    target_width=self.resized_width,
+                                    target_height=self.resized_height)
             color = Theme.text_color_selected(self.font_purpose) if actual_index == self.selected else Theme.text_color(self.font_purpose)
 
             if(self.rows == 1) : 
                 real_y_text_offset = int(Device.screen_height() * 325/480)
             else:
-                real_y_text_offset = y_icon_offset + self.max_icon_height + Theme.get_grid_multirow_text_offset_y()
+                real_y_text_offset = y_image_offset + self.max_img_height + Theme.get_grid_multirow_text_offset_y()
 
             if(self.show_grid_text) :
                 Display.render_text_centered(imageTextPair.get_primary_text(), 

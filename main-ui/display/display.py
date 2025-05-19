@@ -475,9 +475,10 @@ class Display:
         sdl2.SDL_SetRenderTarget(cls.renderer.renderer, cls.render_canvas)
         cls.renderer.present()
 
+    #TODO make default false and fix everywhere
     @classmethod
-    def get_top_bar_height(cls):
-        return 0 if Theme.ignore_top_and_bottom_bar_for_layout() else cls.top_bar.get_top_bar_height()
+    def get_top_bar_height(cls, force_include_top_bar = True):
+        return 0 if Theme.ignore_top_and_bottom_bar_for_layout() and not force_include_top_bar else cls.top_bar.get_top_bar_height()
 
     @classmethod
     def get_bottom_bar_height(cls):
@@ -488,8 +489,8 @@ class Display:
         return Device.screen_height() - cls.get_bottom_bar_height() - cls.get_top_bar_height()
 
     @classmethod
-    def get_center_of_usable_screen_height(cls):
-        return ((Device.screen_height() - cls.get_bottom_bar_height() - cls.get_top_bar_height()) // 2) + cls.get_top_bar_height()
+    def get_center_of_usable_screen_height(cls, force_include_top_bar = False):
+        return ((Device.screen_height() - cls.get_bottom_bar_height() - cls.get_top_bar_height(force_include_top_bar)) // 2) + cls.get_top_bar_height(force_include_top_bar)
 
     @classmethod
     def get_image_dimensions(cls, img):

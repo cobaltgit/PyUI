@@ -453,6 +453,24 @@ class Theme():
         cls._data["systemSelectShowTextGridMode"] = value
         cls.save_changes()
 
+    @classmethod
+    def get_game_select_show_text_grid_mode(cls):
+        return cls._data.get("gameSelectShowTextGridMode", True)
+    
+    @classmethod
+    def set_game_select_show_text_grid_mode(cls, value):
+        cls._data["gameSelectShowTextGridMode"] = value
+        cls.save_changes()
+
+
+    @classmethod
+    def get_game_select_show_sel_bg_grid_mode(cls):
+        return cls._data.get("gameSelectShowSelectedBgGridMode", True)
+    
+    @classmethod
+    def set_game_select_show_sel_bg_grid_mode(cls, value):
+        cls._data["gameSelectShowSelectedBgGridMode"] = value
+        cls.save_changes()
 
     @classmethod
     def get_main_menu_show_text_grid_mode(cls):
@@ -545,17 +563,6 @@ class Theme():
         return cls._data.get("popupMenuRows", 1)
 
     @classmethod
-    def rom_image_width(cls, device_width):
-        return int(device_width * 294 / 640)
-
-    @classmethod
-    def rom_image_height(cls, device_height):
-        if cls._data.get("showBottomBar", False):
-            return int(device_height * 300 / 640)
-        else:
-            return int(device_height * 340 / 640)
-
-    @classmethod
     def text_and_image_list_view_mode(cls):
         return cls._data.get("textAndImageListViewMode", "TEXT_LEFT_IMAGE_RIGHT")
 
@@ -626,4 +633,51 @@ class Theme():
     def get_main_menu_option_ordering(cls):
         return cls._data.get("mainMenuOrdering", ["Recent", "Favorite", "Game", "App", "Setting"])
 
+    @classmethod
+    def get_game_select_row_count(cls):
+        return cls._data.get("gameSelectRowCount", 2)
+
+    @classmethod
+    def set_game_select_row_count(cls, value):
+        cls._data["gameSelectRowCount"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_game_select_col_count(cls):
+        return cls._data.get("gameSelectColCount", 4)
+
+    @classmethod
+    def set_game_select_col_count(cls, value):
+        cls._data["gameSelectColCount"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_game_select_img_width(cls):
+        from devices.device import Device
+        return cls._data.get("gameSelectImgWidth", int(Device.screen_width() * 294 / 640))
     
+    @classmethod
+    def set_game_select_img_width(cls, value):
+        cls._data["gameSelectImgWidth"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_game_select_img_height(cls):
+        from devices.device import Device
+        return cls._data.get("gameSelectImgHeight", int(Device.screen_height() * 300 / 640))
+    
+    @classmethod
+    def set_game_select_img_height(cls, value):
+        cls._data["gameSelectImgHeight"] = value
+        cls.save_changes()
+
+
+    @classmethod
+    def get_set_top_bar_text_to_game_selection(cls):
+        return cls._data.get("setTopBarTextToGameSelection", False)
+    
+    @classmethod
+    def set_set_top_bar_text_to_game_selection(cls, value):
+        cls._data["setTopBarTextToGameSelection"] = value
+        cls.save_changes()
+

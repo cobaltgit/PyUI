@@ -3,6 +3,7 @@ from controller.controller_inputs import ControllerInput
 from menus.settings.theme.theme_settings_menu_common import ThemeSettingsMenuCommon
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
+from views.view_type import ViewType
 
 
 class ThemeSettingsGameSelectMenu(ThemeSettingsMenuCommon):
@@ -18,5 +19,51 @@ class ThemeSettingsGameSelectMenu(ThemeSettingsMenuCommon):
                 set_value_func=Theme.set_game_selection_view_type
             )
         )
+        if (ViewType.GRID == Theme.get_game_selection_view_type()):
+            option_list.append(
+                self.build_numeric_entry(
+                    primary_text="Rows",
+                    get_value_func=Theme.get_game_select_row_count,
+                    set_value_func=Theme.set_game_select_row_count
+                )
+            )
+            option_list.append(
+                self.build_numeric_entry(
+                    primary_text="Cols",
+                    get_value_func=Theme.get_game_select_col_count,
+                    set_value_func=Theme.set_game_select_col_count
+                )
+            )
+            option_list.append(
+                self.build_numeric_entry(
+                    primary_text="Img Width",
+                    get_value_func=Theme.get_game_select_img_width,
+                    set_value_func=Theme.set_game_select_img_width
+                )
+            )
+            option_list.append(
+                self.build_numeric_entry(
+                    primary_text="Img Height",
+                    get_value_func=Theme.get_game_select_img_height,
+                    set_value_func=Theme.set_game_select_img_height
+                )
+            )
+            option_list.append(
+                self.build_enabled_disabled_entry("Show Text", 
+                                        Theme.get_game_select_show_text_grid_mode, 
+                                        Theme.set_game_select_show_text_grid_mode)
+            )
+            option_list.append(
+                self.build_enabled_disabled_entry("Show Sel BG", 
+                                        Theme.get_game_select_show_sel_bg_grid_mode, 
+                                        Theme.set_game_select_show_sel_bg_grid_mode)
+            )
+
+            option_list.append(
+                self.build_enabled_disabled_entry("TopBar = GameName", 
+                                        Theme.get_set_top_bar_text_to_game_selection, 
+                                        Theme.set_set_top_bar_text_to_game_selection)
+            )
+
 
         return option_list
