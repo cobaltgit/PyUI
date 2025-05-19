@@ -3,6 +3,7 @@ from typing import List
 from devices.device import Device
 from display.display import Display
 from display.render_mode import RenderMode
+from display.resize_type import ResizeType
 from themes.theme import Theme
 from views.descriptive_list_view import DescriptiveListView
 from views.grid_or_list_entry import GridOrListEntry
@@ -32,7 +33,8 @@ class ViewCreator:
                     grid_resized_width=None,
                     grid_resized_height=None,
                     set_top_bar_text_to_selection=False,
-                    grid_selected_bg=None) -> object:
+                    grid_selected_bg=None,
+                    grid_resize_type=None) -> object:
         match view_type:
             case ViewType.ICON_AND_DESC:
                 selected_bg = Theme.get_list_small_selected_bg()
@@ -144,6 +146,7 @@ class ViewCreator:
                     grid_selected_bg = None
                 elif(grid_selected_bg is None):
                     grid_selected_bg = Theme.get_grid_bg(rows, cols, use_mutli_row_grid_select_as_backup_for_single_row_grid_select)
+                print(f"grid_resize_type = {grid_resize_type}, grid_selected_bg={grid_selected_bg}")
                 return GridView(
                     top_bar_text=top_bar_text,
                     options=options,
@@ -154,7 +157,8 @@ class ViewCreator:
                     show_grid_text=show_grid_text,
                     resized_width=grid_resized_width,
                     resized_height=grid_resized_height,
-                    set_top_bar_text_to_selection=set_top_bar_text_to_selection
+                    set_top_bar_text_to_selection=set_top_bar_text_to_selection,
+                    resize_type=grid_resize_type
                 )
 
             case _:

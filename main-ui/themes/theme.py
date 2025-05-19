@@ -4,6 +4,7 @@ import os
 from devices.charge.charge_status import ChargeStatus
 from devices.wifi.wifi_status import WifiStatus
 from display.font_purpose import FontPurpose
+from display.resize_type import ResizeType
 from utils.logger import PyUiLogger
 from views.view_type import ViewType
 
@@ -231,7 +232,7 @@ class Theme():
         return cls._asset("bg-game-item-single-f.png")
 
     @classmethod
-    def grid_game_selected_bg(cls):
+    def get_grid_game_selected_bg(cls):
         return cls._asset("grid-game-selected.png")
 
     @classmethod
@@ -518,6 +519,17 @@ class Theme():
     def set_view_type_for_system_select_menu(cls, view_type):
         cls._data["systemSelectViewType"] = view_type.name
         cls.save_changes()
+
+    @classmethod
+    def get_grid_game_selected_resize_type(cls):
+        view_type_str = cls._data.get("gameSelectGridResizeType", "ZOOM")
+        return getattr(ResizeType, view_type_str, ResizeType.ZOOM)
+
+    @classmethod
+    def set_grid_game_selected_resize_type(cls, view_type):
+        cls._data["gameSelectGridResizeType"] = view_type.name
+        cls.save_changes()
+
 
     @classmethod
     def get_view_type_for_app_menu(cls):

@@ -4,6 +4,7 @@ from devices.device import Device
 from display.font_purpose import FontPurpose
 from display.display import Display
 from display.render_mode import RenderMode
+from display.resize_type import ResizeType
 import sdl2
 from controller.controller import Controller
 from themes.theme import Theme
@@ -15,10 +16,11 @@ from views.view import View
 class GridView(View):
     def __init__(self,top_bar_text, options: List[GridOrListEntry], cols : int, rows: int,selected_bg : str = None,
                   selected_index=0, show_grid_text=True, resized_width=None, resized_height=None, 
-                  set_top_bar_text_to_selection=False):
+                  set_top_bar_text_to_selection=False, resize_type=None):
         super().__init__()
         self.resized_width = resized_width
         self.resized_height = resized_height
+        self.resize_type = resize_type
         self.top_bar_text = top_bar_text
         self.set_top_bar_text_to_selection = set_top_bar_text_to_selection
         self.options : List[GridOrListEntry] = options 
@@ -123,15 +125,16 @@ class GridView(View):
                                             y_image_offset + selected_bg_offset,
                                             render_mode,
                                             target_width=target_bg_width,
-                                            target_height=target_bg_height)
+                                            target_height=target_bg_height,
+                                            resize_type=self.resize_type)
             
-            PyUiLogger.get_logger().debug(f"{image_path} w/ y_offset {y_image_offset}")
             Display.render_image(image_path, 
                                     x_offset, 
                                     y_image_offset,
                                     render_mode,
                                     target_width=self.resized_width,
-                                    target_height=self.resized_height)
+                                    target_height=self.resized_height,
+                                    resize_type=self.resize_type)
             color = Theme.text_color_selected(self.font_purpose) if actual_index == self.selected else Theme.text_color(self.font_purpose)
 
             if(self.rows == 1) : 
