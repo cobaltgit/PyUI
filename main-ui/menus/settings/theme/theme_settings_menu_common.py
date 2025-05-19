@@ -73,6 +73,19 @@ class ThemeSettingsMenuCommon(ABC):
             value=lambda input: self.change_numeric(
                 input, get_value_func, set_value_func)
         )
+      
+    def build_view_type_entry(self, primary_text, get_value_func, set_value_func) -> GridOrListEntry:
+
+        return GridOrListEntry(
+            primary_text=primary_text,
+            value_text="<    " + str(get_value_func().name) + "    >",
+            image_path=None,
+            image_path_selected=None,
+            description=None,
+            icon=None,
+            value=lambda input: self.change_view_type(
+                input, get_value_func, set_value_func)
+        )
     
 
     def change_view_type(self, input, get_view_type_func, set_view_type_func):

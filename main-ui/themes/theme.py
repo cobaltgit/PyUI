@@ -453,6 +453,11 @@ class Theme():
         return getattr(ViewType, view_type_str, ViewType.GRID)
 
     @classmethod
+    def set_view_type_for_system_select_menu(cls, view_type):
+        cls._data["systemSelectViewType"] = view_type.name
+        cls.save_changes()
+
+    @classmethod
     def get_view_type_for_app_menu(cls):
         view_type_str = cls._data.get("appMenuViewType", "DESCRIPTIVE_LIST_VIEW")
         return getattr(ViewType, view_type_str, ViewType.ICON_AND_DESC)

@@ -5,6 +5,7 @@ from display.display import Display
 from menus.settings.theme.theme_settings_fonts import ThemeSettingsFonts
 from menus.settings.theme.theme_settings_game_select_menu import ThemeSettingsGameSelectMenu
 from menus.settings.theme.theme_settings_main_menu import ThemeSettingsMainMenu
+from menus.settings.theme.theme_settings_system_select_menu import ThemeSettingsSystemSelectMenu
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
@@ -24,6 +25,10 @@ class ThemeSettingsMenu():
         if (input == ControllerInput.A):
             ThemeSettingsGameSelectMenu().show_theme_options_menu()
 
+    def launch_system_select_menu_theme_options(self, input):
+        if (input == ControllerInput.A):
+            ThemeSettingsSystemSelectMenu().show_theme_options_menu()
+
     def launch_font_menu_theme_options(self, input):
         if (input == ControllerInput.A):
             ThemeSettingsFonts().show_theme_options_menu()
@@ -42,6 +47,19 @@ class ThemeSettingsMenu():
                 value=self.launch_main_menu_theme_options
             )
         )
+
+        option_list.append(
+            GridOrListEntry(
+                primary_text="System Select Theme Options",
+                value_text="",
+                image_path=None,
+                image_path_selected=None,
+                description=None,
+                icon=None,
+                value=self.launch_system_select_menu_theme_options
+            )
+        )
+
 
         option_list.append(
             GridOrListEntry(

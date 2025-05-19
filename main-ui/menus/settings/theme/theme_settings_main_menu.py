@@ -13,17 +13,13 @@ class ThemeSettingsMainMenu(ThemeSettingsMenuCommon):
     def build_options_list(self) -> list[GridOrListEntry]:
         option_list = []
         option_list.append(
-            GridOrListEntry(
+            self.build_view_type_entry(
                 primary_text="Main Menu",
-                value_text="<    " + Theme.get_view_type_for_main_menu().name + "    >",
-                image_path=None,
-                image_path_selected=None,
-                description=None,
-                icon=None,
-                value=lambda input: self.change_view_type(
-                    input, Theme.get_view_type_for_main_menu, Theme.set_view_type_for_main_menu)
+                get_value_func=Theme.get_view_type_for_main_menu,
+                set_value_func=Theme.set_view_type_for_main_menu
             )
         )
+
         option_list.append(
             self.build_numeric_entry(
                 primary_text="Main Menu Columns",

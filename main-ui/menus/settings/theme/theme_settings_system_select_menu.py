@@ -5,7 +5,7 @@ from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
 
 
-class ThemeSettingsGameSelectMenu(ThemeSettingsMenuCommon):
+class ThemeSettingsSystemSelectMenu(ThemeSettingsMenuCommon):
     def __init__(self):
         super().__init__()
 
@@ -13,10 +13,9 @@ class ThemeSettingsGameSelectMenu(ThemeSettingsMenuCommon):
         option_list = []
         option_list.append(
             self.build_view_type_entry(
-                primary_text="Game Sel Menu",
-                get_value_func=Theme.get_game_selection_view_type,
-                set_value_func=Theme.set_game_selection_view_type
+                primary_text="System Sel Menu",
+                get_value_func=Theme.get_view_type_for_system_select_menu,
+                set_value_func=Theme.set_view_type_for_system_select_menu
             )
         )
-
         return option_list
