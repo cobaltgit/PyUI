@@ -92,7 +92,8 @@ class MainMenu:
             options=options, 
             cols=Theme.get_main_menu_column_count(), 
             rows=1,
-            selected_index=selected.get_index())
+            selected_index=selected.get_index(),
+            show_grid_text=Theme.get_main_menu_show_text_grid_mode())
 
     def run_main_menu_selection(self):
         selected = Selection(None,None,0)

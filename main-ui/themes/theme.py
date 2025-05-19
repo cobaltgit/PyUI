@@ -453,6 +453,16 @@ class Theme():
         cls._data["systemSelectShowTextGridMode"] = value
         cls.save_changes()
 
+
+    @classmethod
+    def get_main_menu_show_text_grid_mode(cls):
+        return cls._data.get("mainMenuShowTextGridMode", True)
+    
+    @classmethod
+    def set_main_menu_show_text_grid_mode(cls, value):
+        cls._data["mainMenuShowTextGridMode"] = value
+        cls.save_changes()
+
     @classmethod
     def get_grid_bg(cls, rows, cols, use_multi_row_select_as_backup = False):
         # TODO better handle this dynamically

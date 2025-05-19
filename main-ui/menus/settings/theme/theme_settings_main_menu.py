@@ -29,6 +29,13 @@ class ThemeSettingsMainMenu(ThemeSettingsMenuCommon):
                     set_value_func=Theme.set_main_menu_column_count
                 )
             )
+            option_list.append(
+                self.build_enabled_disabled_entry(
+                    primary_text="Show Text",
+                    get_value_func=Theme.get_main_menu_show_text_grid_mode,
+                    set_value_func=Theme.set_main_menu_show_text_grid_mode
+                )
+            )
         
         option_list.append(
             self.build_enabled_disabled_entry(
