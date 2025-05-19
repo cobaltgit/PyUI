@@ -231,6 +231,10 @@ class Theme():
         return cls._asset("bg-game-item-single-f.png")
 
     @classmethod
+    def grid_game_selected_bg(cls):
+        return cls._asset("grid-game-selected.png")
+
+    @classmethod
     def get_system_icon(cls, system):
         return os.path.join(cls._path, cls._icon_folder, system + ".png")
    
@@ -671,7 +675,6 @@ class Theme():
         cls._data["gameSelectImgHeight"] = value
         cls.save_changes()
 
-
     @classmethod
     def get_set_top_bar_text_to_game_selection(cls):
         return cls._data.get("setTopBarTextToGameSelection", False)
@@ -681,3 +684,41 @@ class Theme():
         cls._data["setTopBarTextToGameSelection"] = value
         cls.save_changes()
 
+    @classmethod
+    def skip_main_menu(cls):
+        return cls._data.get("skipMainMenu", False)
+    
+    @classmethod
+    def set_skip_main_menu(cls, value):
+        cls._data["skipMainMenu"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_grid_multi_row_extra_y_pad(cls):
+        return cls._data.get("gridMultiRowExtraYPad", 17)
+    
+    @classmethod
+    def set_grid_multi_row_extra_y_pad(cls, value):
+        cls._data["gridMultiRowExtraYPad"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_grid_multi_row_sel_bg_resize_pad_width(cls):
+        return cls._data.get("gridMultiRowSelBgResizePadWidth", 20)
+    
+    @classmethod
+    def set_grid_multi_row_sel_bg_resize_pad_width(cls, value):
+        cls._data["gridMultiRowSelBgResizePadWidth"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_grid_multi_row_sel_bg_resize_pad_height(cls):
+        return cls._data.get("gridMultiRowSelBgResizePadHeight", 20)
+    
+    @classmethod
+    def set_grid_multi_row_sel_bg_resize_pad_height(cls, value):
+        cls._data["gridMultiRowSelBgResizePadHeight"] = value
+        cls.save_changes()
+
+
+    

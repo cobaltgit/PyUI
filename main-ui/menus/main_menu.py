@@ -105,29 +105,33 @@ class MainMenu:
             show_grid_text=Theme.get_main_menu_show_text_grid_mode())
 
     def run_main_menu_selection(self):
-        selected = Selection(None,None,0)
+        
+        if(Theme.skip_main_menu()):
+            self.system_select_menu.run_system_selection()
+        else:
+            selected = Selection(None,None,0)
 
-        image_text_list = self.build_options()
-        view =  self.build_main_menu_view(image_text_list, selected)        
-            
-        expected_inputs = [ControllerInput.A, ControllerInput.MENU]
-        while(selected.get_input() != ControllerInput.B):      
+            image_text_list = self.build_options()
+            view =  self.build_main_menu_view(image_text_list, selected)        
+                
+            expected_inputs = [ControllerInput.A, ControllerInput.MENU]
+            while(selected.get_input() != ControllerInput.B):      
 
-            if((selected := view.get_selection(expected_inputs)) is not None):       
-                if(ControllerInput.A == selected.get_input()): 
-                    if("Game" == selected.get_selection().get_primary_text()):
-                        self.system_select_menu.run_system_selection()
-                    elif("App" == selected.get_selection().get_primary_text()):
-                        self.app_menu.run_app_selection()
-                    elif("Favorite" == selected.get_selection().get_primary_text()):
-                        self.favorites_menu.run_rom_selection()
-                    elif("Recent" == selected.get_selection().get_primary_text()):
-                        self.recents_menu.run_rom_selection()
-                    elif("Setting" == selected.get_selection().get_primary_text()):
-                        self.settings_menu.show_menu()
-                elif(ControllerInput.MENU == selected.get_input()):
-                    self.popup_menu.run_popup_menu_selection()
+                if((selected := view.get_selection(expected_inputs)) is not None):       
+                    if(ControllerInput.A == selected.get_input()): 
+                        if("Game" == selected.get_selection().get_primary_text()):
+                            self.system_select_menu.run_system_selection()
+                        elif("App" == selected.get_selection().get_primary_text()):
+                            self.app_menu.run_app_selection()
+                        elif("Favorite" == selected.get_selection().get_primary_text()):
+                            self.favorites_menu.run_rom_selection()
+                        elif("Recent" == selected.get_selection().get_primary_text()):
+                            self.recents_menu.run_rom_selection()
+                        elif("Setting" == selected.get_selection().get_primary_text()):
+                            self.settings_menu.show_menu()
+                    elif(ControllerInput.MENU == selected.get_input()):
+                        self.popup_menu.run_popup_menu_selection()
 
-                if(selected.get_input() is not None):
-                    image_text_list = self.build_options()
-                    view =  self.build_main_menu_view(image_text_list, selected)        
+                    if(selected.get_input() is not None):
+                        image_text_list = self.build_options()
+                        view =  self.build_main_menu_view(image_text_list, selected)        

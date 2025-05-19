@@ -4,6 +4,7 @@ from controller.controller_inputs import ControllerInput
 from display.display import Display
 from menus.settings.theme.theme_settings_fonts import ThemeSettingsFonts
 from menus.settings.theme.theme_settings_game_select_menu import ThemeSettingsGameSelectMenu
+from menus.settings.theme.theme_settings_grid_view import ThemeSettingsGridView
 from menus.settings.theme.theme_settings_main_menu import ThemeSettingsMainMenu
 from menus.settings.theme.theme_settings_system_select_menu import ThemeSettingsSystemSelectMenu
 from themes.theme import Theme
@@ -32,6 +33,12 @@ class ThemeSettingsMenu():
     def launch_font_menu_theme_options(self, input):
         if (input == ControllerInput.A):
             ThemeSettingsFonts().show_theme_options_menu()
+
+
+    def launch_grid_view_menu_theme_options(self, input):
+        if (input == ControllerInput.A):
+            ThemeSettingsGridView().show_theme_options_menu()
+
 
     def build_options_list(self):
         option_list = []
@@ -73,7 +80,6 @@ class ThemeSettingsMenu():
             )
         )
 
-
         option_list.append(
             GridOrListEntry(
                 primary_text="Fonts",
@@ -85,6 +91,20 @@ class ThemeSettingsMenu():
                 value=self.launch_font_menu_theme_options
             )
         )
+
+        option_list.append(
+            GridOrListEntry(
+                primary_text="Grid View Theme Options",
+                value_text="",
+                image_path=None,
+                image_path_selected=None,
+                description=None,
+                icon=None,
+                value=self.launch_grid_view_menu_theme_options
+            )
+        )
+
+        
 
         return option_list
 

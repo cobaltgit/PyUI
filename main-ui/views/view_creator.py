@@ -31,7 +31,8 @@ class ViewCreator:
                     show_grid_text=True,
                     grid_resized_width=None,
                     grid_resized_height=None,
-                    set_top_bar_text_to_selection=False) -> object:
+                    set_top_bar_text_to_selection=False,
+                    grid_selected_bg=None) -> object:
         match view_type:
             case ViewType.ICON_AND_DESC:
                 selected_bg = Theme.get_list_small_selected_bg()
@@ -140,15 +141,15 @@ class ViewCreator:
 
             case ViewType.GRID:
                 if(hide_grid_bg):
-                    selected_bg = None
-                else:
-                    selected_bg = Theme.get_grid_bg(rows, cols, use_mutli_row_grid_select_as_backup_for_single_row_grid_select)
+                    grid_selected_bg = None
+                elif(grid_selected_bg is None):
+                    grid_selected_bg = Theme.get_grid_bg(rows, cols, use_mutli_row_grid_select_as_backup_for_single_row_grid_select)
                 return GridView(
                     top_bar_text=top_bar_text,
                     options=options,
                     cols=cols,
                     rows=rows,
-                    selected_bg=selected_bg,
+                    selected_bg=grid_selected_bg,
                     selected_index=selected_index,
                     show_grid_text=show_grid_text,
                     resized_width=grid_resized_width,

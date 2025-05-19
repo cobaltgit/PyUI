@@ -103,7 +103,7 @@ class GridView(View):
                 row_spacing = Display.get_usable_screen_height() / self.rows
                 row_start_y = y_index * row_spacing
                 row_mid_y = row_start_y
-                y_image_offset = int(row_mid_y + Display.get_top_bar_height())
+                y_image_offset = int(row_mid_y + Display.get_top_bar_height()) + Theme.get_grid_multi_row_extra_y_pad()
                 render_mode = RenderMode.TOP_CENTER_ALIGNED
 
             if(self.selected_bg is not None):
@@ -111,13 +111,16 @@ class GridView(View):
                     target_bg_width = self.resized_width
                     target_bg_height = self.resized_height
                     
+                    selected_bg_offset = 0
                     if(self.resized_width is not None):
-                        target_bg_width += 10
-                        target_bg_height += 10
+                        #TODO not fixed values
+                        target_bg_width += Theme.get_grid_multi_row_sel_bg_resize_pad_width()
+                        target_bg_height += Theme.get_grid_multi_row_sel_bg_resize_pad_height()
+                        selected_bg_offset = -1 * Theme.get_grid_multi_row_sel_bg_resize_pad_height()//2
                         
                     Display.render_image(self.selected_bg, 
                                             x_offset, 
-                                            y_image_offset,
+                                            y_image_offset + selected_bg_offset,
                                             render_mode,
                                             target_width=target_bg_width,
                                             target_height=target_bg_height)
