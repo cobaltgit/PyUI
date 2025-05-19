@@ -84,6 +84,6 @@ class RomUtils:
                     valid_folders.append(entry.path)
 
         # Combine and sort once at the end
-        valid_files = sorted(valid_files + valid_folders)
+        valid_files = sorted(valid_folders) + sorted(valid_files)
 
         return valid_files
