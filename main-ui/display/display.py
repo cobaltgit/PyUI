@@ -4,6 +4,7 @@ from devices.device import Device
 from display.font_purpose import FontPurpose
 from display.loaded_font import LoadedFont
 from display.render_mode import RenderMode
+from display.resize_type import ResizeType
 from display.x_render_option import XRenderOption
 from display.y_render_option import YRenderOption
 from menus.common.bottom_bar import BottomBar
@@ -264,69 +265,98 @@ class Display:
             cls.top_bar.render_top_bar(cls.screen,hide_top_bar_icons)
             cls.bottom_bar.render_bottom_bar()
 
-    @staticmethod
-    def _calculate_scaled_width_and_height(orig_w, orig_h, target_width, target_height):
-        # Maintain aspect ratio
-        if target_width and target_height:
-            scale = min(target_width / orig_w, target_height / orig_h)
-            render_w = int(orig_w * scale)
-            render_h = int(orig_h * scale)
-        elif target_width:
-            scale = target_width / orig_w
-            render_w = int(orig_w * scale)
-            render_h = orig_h
-        elif target_height:
-            render_w = orig_w
-            scale = target_height / orig_h
-            render_h = int(orig_h * scale)
-        else:
-            render_w = orig_w
-            render_h = orig_h
-
-        return int(render_w), int(render_h)
-
     @classmethod
     def _log(cls, msg):
         if cls.debug:
             PyUiLogger.get_logger().info(msg)
 
+    @staticmethod
+    def _calculate_scaled_width_and_height(orig_w, orig_h, target_width, target_height, resize_type):
+        if resize_type == ResizeType.FIT:
+            if target_width and target_height:
+                scale = min(target_width / orig_w, target_height / orig_h)
+            elif target_width:
+                scale = target_width / orig_w
+            elif target_height:
+                scale = target_height / orig_h
+            else:
+                scale = 1.0
+            render_w = int(orig_w * scale)
+            render_h = int(orig_h * scale)
+
+        elif resize_type == ResizeType.ZOOM:
+            if target_width and target_height:
+                scale = max(target_width / orig_w, target_height / orig_h)
+                render_w = int(orig_w * scale)
+                render_h = int(orig_h * scale)
+            else:
+                render_w = orig_w
+                render_h = orig_h
+        else:
+            render_w = orig_w
+            render_h = orig_h
+
+        return render_w, render_h
+
+
     @classmethod
-    def _render_surface_texture(cls, x, y, texture, surface, render_mode: RenderMode, texture_id, scale_width=None, scale_height=None,
-                                crop_w=None, crop_h=None):
-        render_w, render_h = cls._calculate_scaled_width_and_height(surface.contents.w, surface.contents.h, scale_width, scale_height)
+    def _render_surface_texture(cls, x, y, texture, surface, render_mode: RenderMode, texture_id,
+                                scale_width=None, scale_height=None, crop_w=None, crop_h=None,
+                                resize_type=ResizeType.FIT):
+        
+        orig_w = surface.contents.w
+        orig_h = surface.contents.h
+        render_w, render_h = cls._calculate_scaled_width_and_height(orig_w, orig_h, scale_width, scale_height, resize_type)
 
         # Adjust position based on render mode
         adj_x = x
         adj_y = y
-        
+
         if XRenderOption.CENTER == render_mode.x_mode:
-            adj_x = x - render_w // 2
+            adj_x = x - (scale_width or render_w) // 2
         elif XRenderOption.RIGHT == render_mode.x_mode:
-            adj_x = x - render_w
+            adj_x = x - (scale_width or render_w)
 
         if YRenderOption.CENTER == render_mode.y_mode:
-            adj_y = y - render_h // 2
+            adj_y = y - (scale_height or render_h) // 2
         elif YRenderOption.BOTTOM == render_mode.y_mode:
-            adj_y = y - render_h
+            adj_y = y - (scale_height or render_h)
 
         adj_x = int(adj_x)
         adj_y = int(adj_y)
 
-        if crop_w is None and crop_h is None:            
+        if resize_type == ResizeType.ZOOM and scale_width and scale_height:
+            # Calculate cropping to center the zoomed image
+            src_w = int(scale_width * (orig_w / render_w))
+            src_h = int(scale_height * (orig_h / render_h))
+            src_x = max(0, (orig_w - src_w) // 2)
+            src_y = max(0, (orig_h - src_h) // 2)
+
+            src_rect = sdl2.SDL_Rect(src_x, src_y, src_w, src_h)
+            dst_rect = sdl2.SDL_Rect(adj_x, adj_y, scale_width, scale_height)
+
+            PyUiLogger.get_logger().info(f"Rendered (ZOOM) {texture_id} at {adj_x}, {adj_y} with cropped source {src_x},{src_y},{src_w}x{src_h} to fit {scale_width}x{scale_height}")
+            sdl2.SDL_RenderCopy(cls.renderer.renderer, texture, src_rect, dst_rect)
+
+            return scale_width, scale_height
+
+        # Handle regular FIT or uncropped draw
+        if crop_w is None and crop_h is None:
             rect = sdl2.SDL_Rect(adj_x, adj_y, render_w, render_h)
             cls._log(f"Rendered {texture_id} at {adj_x}, {adj_y} with dimensions {render_w}x{render_h}")
             sdl2.SDL_RenderCopy(cls.renderer.renderer, texture, None, rect)
         else:
-            if crop_w is None or crop_w > surface.contents.w:
-                crop_w = surface.contents.w
-            if crop_h is None or crop_h > surface.contents.h:
-                crop_h = surface.contents.h
+            if crop_w is None or crop_w > orig_w:
+                crop_w = orig_w
+            if crop_h is None or crop_h > orig_h:
+                crop_h = orig_h
 
             src_rect = sdl2.SDL_Rect(0, 0, crop_w, crop_h)
-            dst_rect = sdl2.SDL_Rect(adj_x, adj_y, int(crop_w), int(crop_h))
+            dst_rect = sdl2.SDL_Rect(adj_x, adj_y, crop_w, crop_h)
             sdl2.SDL_RenderCopy(cls.renderer.renderer, texture, src_rect, dst_rect)
 
         return render_w, render_h
+
 
     @classmethod
     def render_text(cls, text, x, y, color, purpose: FontPurpose, render_mode=RenderMode.TOP_LEFT_ALIGNED,
@@ -367,7 +397,7 @@ class Display:
         return cls.render_text(text, x, y, color, purpose, RenderMode.TOP_CENTER_ALIGNED)
 
     @classmethod
-    def render_image(cls, image_path: str, x: int, y: int, render_mode=RenderMode.TOP_LEFT_ALIGNED, target_width=None, target_height=None):
+    def render_image(cls, image_path: str, x: int, y: int, render_mode=RenderMode.TOP_LEFT_ALIGNED, target_width=None, target_height=None, resize_type=None):
         if(image_path is None):
             return 0, 0
 
@@ -397,7 +427,8 @@ class Display:
                                            surface=surface, 
                                            render_mode=render_mode, 
                                            scale_width=target_width, 
-                                           scale_height=target_height, 
+                                           scale_height=target_height,
+                                           resize_type=resize_type, 
                                            texture_id=image_path)
 
     @classmethod
