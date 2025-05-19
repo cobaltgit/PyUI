@@ -66,7 +66,7 @@ class MainMenu:
             )
         )
 
-        if (Theme.get_favorites_enabled()):
+        if (Theme.get_apps_enabled()):
 
             image_text_list.append(
                 GridOrListEntry(
