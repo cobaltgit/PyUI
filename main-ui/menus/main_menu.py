@@ -118,5 +118,6 @@ class MainMenu:
                 elif(ControllerInput.MENU == selected.get_input()):
                     self.popup_menu.run_popup_menu_selection()
 
-                view.set_options(self.build_options())  
-                view =  self.build_main_menu_view(image_text_list, selected)        
+                if(selected.get_input() is not None):
+                    image_text_list = self.build_options()
+                    view =  self.build_main_menu_view(image_text_list, selected)        

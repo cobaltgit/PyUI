@@ -157,6 +157,16 @@ class Display:
         cls.init_fonts()
 
     @classmethod
+    def clear_image_cache(cls):
+        PyUiLogger.get_logger().debug("Clearing image cache")    
+        cls._image_texture_cache.clear_cache()
+
+    @classmethod
+    def clear_cache(cls):
+        cls.clear_image_cache()
+        cls.clear_text_cache()
+
+    @classmethod
     def deinit_fonts(cls):
         for loaded_font in cls.fonts.values():
             sdl2.sdlttf.TTF_CloseFont(loaded_font.font)

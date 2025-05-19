@@ -73,6 +73,8 @@ class Theme():
         with open(cls._loaded_file_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
         PyUiLogger.get_logger().info(f"Wrote Theme : {cls._data.get('description', 'UNKNOWN')}")
+        from display.display import Display
+        Display.clear_cache()
 
     @classmethod
     def _asset(cls, *parts):
