@@ -115,12 +115,18 @@ class ThemeSettingsMenuCommon(ABC):
 
     def change_numeric(self, input, get_value_func, set_value_func):
         value = get_value_func()
-
-        if input == ControllerInput.DPAD_LEFT and value > 1:
-            value-=1
+        delta = 0
+        if input == ControllerInput.DPAD_LEFT:
+            delta = -1
         elif input == ControllerInput.DPAD_RIGHT:
-            value+=1
+            delta = +1
+        elif input == ControllerInput.L1:
+            delta = -10
+        elif input == ControllerInput.R1:
+            delta = +10
         else:
             return  # No change for other inputs
 
-        set_value_func(value)
+        value += delta
+        if(value > 0):
+            set_value_func(value)
