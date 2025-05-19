@@ -23,13 +23,11 @@ class MainMenu:
         self.popup_menu = MainMenuPopup()
 
     def build_options(self):
-        #TODO make this user config driven
-        #first_entry = "Favorite"
-        show_favorite = True
-        show_recents = True
-            
+        # TODO make this user config driven
+        # first_entry = "Favorite"
+
         image_text_list = []
-        if(show_recents):
+        if (Theme.get_recents_enabled()):
             image_text_list.append(
                 GridOrListEntry(
                     primary_text="Recent",
@@ -41,8 +39,8 @@ class MainMenu:
                 )
             )
 
-        if(show_favorite):
-             image_text_list.append(
+        if (Theme.get_favorites_enabled()):
+            image_text_list.append(
                 GridOrListEntry(
                     primary_text="Favorite",
                     image_path=Theme.favorite(),
@@ -52,7 +50,7 @@ class MainMenu:
                     value="Favorite"
                 )
             )
-             
+
         image_text_list.append(
             GridOrListEntry(
                 primary_text="Game",
@@ -63,26 +61,31 @@ class MainMenu:
                 value="Game"
             )
         )
-        image_text_list.append(
-             GridOrListEntry(
-                 primary_text="App",
-                image_path=Theme.app(),
-                image_path_selected=Theme.app_selected(),
-                description="Your Apps",
-                icon=None,
-                value="App"
+
+        if (Theme.get_favorites_enabled()):
+
+            image_text_list.append(
+                GridOrListEntry(
+                    primary_text="App",
+                    image_path=Theme.app(),
+                    image_path_selected=Theme.app_selected(),
+                    description="Your Apps",
+                    icon=None,
+                    value="App"
+                )
             )
-        )
-        image_text_list.append(
-             GridOrListEntry(
-                primary_text="Setting",
-                image_path=Theme.settings(),
-                image_path_selected=Theme.settings_selected(),
-                description="Your Apps",
-                icon=None,
-                value="Setting"
+
+        if (Theme.get_settings_enabled()):
+            image_text_list.append(
+                GridOrListEntry(
+                    primary_text="Setting",
+                    image_path=Theme.settings(),
+                    image_path_selected=Theme.settings_selected(),
+                    description="Your Apps",
+                    icon=None,
+                    value="Setting"
+                )
             )
-        )
         return image_text_list
 
     def build_main_menu_view(self, options, selected):
@@ -102,7 +105,6 @@ class MainMenu:
             
         expected_inputs = [ControllerInput.A, ControllerInput.MENU]
         while(selected.get_input() != ControllerInput.B):      
-            view.set_options(self.build_options())  
 
             if((selected := view.get_selection(expected_inputs)) is not None):       
                 if(ControllerInput.A == selected.get_input()): 
@@ -115,9 +117,9 @@ class MainMenu:
                     elif("Recent" == selected.get_selection().get_primary_text()):
                         self.recents_menu.run_rom_selection()
                     elif("Setting" == selected.get_selection().get_primary_text()):
-                        theme_updated = self.settings_menu.show_menu()
-                        if(theme_updated):
-                            view =  self.build_main_menu_view(image_text_list, selected)        
-
+                        self.settings_menu.show_menu()
                 elif(ControllerInput.MENU == selected.get_input()):
                     self.popup_menu.run_popup_menu_selection()
+                    
+                view.set_options(self.build_options())  
+                view =  self.build_main_menu_view(image_text_list, selected)        

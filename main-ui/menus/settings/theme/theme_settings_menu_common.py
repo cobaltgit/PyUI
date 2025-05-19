@@ -55,3 +55,15 @@ class ThemeSettingsMenuCommon(ABC):
 
         set_view_type_func(next_view_type)
 
+
+    def change_enabled_disabled(self, input, get_value_func, set_value_func):
+        value = get_value_func()
+
+        if input == ControllerInput.DPAD_LEFT:
+            value = not get_value_func()
+        elif input == ControllerInput.DPAD_RIGHT:
+            value = not get_value_func()
+        else:
+            return  # No change for other inputs
+
+        set_value_func(value)

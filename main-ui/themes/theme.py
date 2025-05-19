@@ -474,10 +474,6 @@ class Theme():
         return cls._data.get("showIndexText", True)
 
     @classmethod
-    def get_main_menu_column_count(cls):
-        return cls._data.get("mainMenuColCount", 4)
-
-    @classmethod
     def get_game_selection_view_type(cls):
         view_type_str = cls._data.get("gameSelectionViewType", "TEXT_AND_IMAGE")
         return getattr(ViewType, view_type_str, ViewType.TEXT_AND_IMAGE)
@@ -488,8 +484,48 @@ class Theme():
         cls.save_changes()
 
     @classmethod
+    def get_main_menu_column_count(cls):
+        return cls._data.get("mainMenuColCount", 4)
+
+    @classmethod
     def set_main_menu_column_count(cls, count):
         cls._data["mainMenuColCount"] = count
+        cls.save_changes()
+
+    @classmethod
+    def get_recents_enabled(cls):
+        return cls._data.get("recentsEnabled", True)
+
+    @classmethod
+    def set_recents_enabled(cls, value):
+        cls._data["recentsEnabled"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_favorites_enabled(cls):
+        return cls._data.get("favoritesEnabled", True)
+
+    @classmethod
+    def set_favorites_enabled(cls, value):
+        cls._data["favoritesEnabled"] = value
+        cls.save_changes()
+    
+    @classmethod
+    def get_apps_enabled(cls):
+        return cls._data.get("appsEnabled", True)
+
+    @classmethod
+    def set_apps_enabled(cls, value):
+        cls._data["appsEnabled"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_settings_enabled(cls):
+        return cls._data.get("settingsEnabled", True)
+
+    @classmethod
+    def set_settings_enabled(cls, value):
+        cls._data["settingsEnabled"] = value
         cls.save_changes()
 
     
