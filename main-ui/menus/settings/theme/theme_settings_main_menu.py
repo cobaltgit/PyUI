@@ -31,28 +31,28 @@ class ThemeSettingsMainMenu(ThemeSettingsMenuCommon):
             )
         
         option_list.append(
-            self.build_column_enabled_entry(
+            self.build_enabled_disabled_entry(
                 primary_text="Show Recents",
                 get_value_func=Theme.get_recents_enabled,
                 set_value_func=Theme.set_recents_enabled
             )
         )
         option_list.append(
-            self.build_column_enabled_entry(
+            self.build_enabled_disabled_entry(
                 primary_text="Show Favorites",
                 get_value_func=Theme.get_favorites_enabled,
                 set_value_func=Theme.set_favorites_enabled
             )
         )
         option_list.append(
-            self.build_column_enabled_entry(
+            self.build_enabled_disabled_entry(
                 primary_text="Show Apps",
                 get_value_func=Theme.get_apps_enabled,
                 set_value_func=Theme.set_apps_enabled
             )
         )
         option_list.append(
-            self.build_column_enabled_entry(
+            self.build_enabled_disabled_entry(
                 primary_text="Show Settings",
                 get_value_func=Theme.get_settings_enabled,
                 set_value_func=Theme.set_settings_enabled

@@ -217,12 +217,18 @@ class Theme():
     @classmethod
     def system(cls, system):
         return os.path.join(cls._path, cls._icon_folder, system.lower() + ".png")
+    
     @classmethod
     def system_selected(cls, system):
         return os.path.join(cls._path, cls._icon_folder, "sel", system.lower() + ".png")
+    
     @classmethod
-    def _grid_4_x_2_selected_bg(cls):
+    def _grid_multi_row_selected_bg(cls):
         return cls._asset("bg-game-item-f.png")
+
+    @classmethod
+    def _grid_single_row_selected_bg(cls):
+        return cls._asset("bg-game-item-single-f.png")
 
     @classmethod
     def get_system_icon(cls, system):
@@ -430,12 +436,36 @@ class Theme():
         return cls._data.get("gridMultirowTextOffsetY", -25)
 
     @classmethod
-    def get_grid_bg(cls, rows, cols):
+    def get_system_select_show_sel_bg_grid_mode(cls):
+        return cls._data.get("systemSelectShowSelectedBgGridMode", True)
+    
+    @classmethod
+    def set_system_select_show_sel_bg_grid_mode(cls, value):
+        cls._data["systemSelectShowSelectedBgGridMode"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_system_select_show_text_grid_mode(cls):
+        return cls._data.get("systemSelectShowTextGridMode", True)
+    
+    @classmethod
+    def set_system_select_show_text_grid_mode(cls, value):
+        cls._data["systemSelectShowTextGridMode"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_grid_bg(cls, rows, cols, use_multi_row_select_as_backup = False):
+        # TODO better handle this dynamically
         if rows > 1:
-            # TODO better handle this dynamically
-            return cls._grid_4_x_2_selected_bg()
+            return cls._grid_multi_row_selected_bg()
         else:
-            return None
+            single_row_bg = cls._grid_single_row_selected_bg()
+            if single_row_bg and os.path.exists(single_row_bg):
+                return single_row_bg
+            elif use_multi_row_select_as_backup:
+                return cls._grid_multi_row_selected_bg()
+            else:
+                return None
 
     @classmethod
     def get_view_type_for_main_menu(cls):

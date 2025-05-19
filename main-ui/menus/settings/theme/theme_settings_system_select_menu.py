@@ -29,4 +29,15 @@ class ThemeSettingsSystemSelectMenu(ThemeSettingsMenuCommon):
                                         Theme.get_game_system_select_row_count, 
                                         Theme.set_game_system_select_row_count)
             )
+            option_list.append(
+                self.build_enabled_disabled_entry("Show Text", 
+                                        Theme.get_system_select_show_text_grid_mode, 
+                                        Theme.set_system_select_show_text_grid_mode)
+            )
+            option_list.append(
+                self.build_enabled_disabled_entry("Show Sel BG", 
+                                        Theme.get_system_select_show_sel_bg_grid_mode, 
+                                        Theme.set_system_select_show_sel_bg_grid_mode)
+            )
+            
         return option_list

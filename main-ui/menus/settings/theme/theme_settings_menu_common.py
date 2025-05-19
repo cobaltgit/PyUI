@@ -51,7 +51,7 @@ class ThemeSettingsMenuCommon(ABC):
             elif(ControllerInput.B == selected.get_input()):
                 selected = None
 
-    def build_column_enabled_entry(self, primary_text, get_value_func, set_value_func) -> GridOrListEntry:
+    def build_enabled_disabled_entry(self, primary_text, get_value_func, set_value_func) -> GridOrListEntry:
 
         return GridOrListEntry(
             primary_text=primary_text,

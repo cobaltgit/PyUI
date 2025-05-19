@@ -25,7 +25,10 @@ class ViewCreator:
                     top_bar_text,
                     selected_index: int = None,
                     cols=None,
-                    rows=None):
+                    rows=None,
+                    use_mutli_row_grid_select_as_backup_for_single_row_grid_select=False,
+                    hide_grid_bg=False,
+                    show_grid_text=True) -> object:
         match view_type:
             case ViewType.ICON_AND_DESC:
                 selected_bg = Theme.get_list_small_selected_bg()
@@ -138,8 +141,9 @@ class ViewCreator:
                     options=options,
                     cols=cols,
                     rows=rows,
-                    selected_bg=Theme.get_grid_bg(rows, cols),
-                    selected_index=selected_index
+                    selected_bg=Theme.get_grid_bg(rows, cols, use_mutli_row_grid_select_as_backup_for_single_row_grid_select),
+                    selected_index=selected_index,
+                    show_grid_text=show_grid_text
                 )
 
             case _:

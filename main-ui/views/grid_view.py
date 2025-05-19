@@ -14,7 +14,7 @@ from views.view import View
 class GridView(View):
 
     def __init__(self,top_bar_text, options: List[GridOrListEntry], cols : int, rows: int,selected_bg : str = None,
-                  selected_index=0):
+                  selected_index=0, show_grid_text=True):
         super().__init__()
         self.top_bar_text = top_bar_text
         self.options : List[GridOrListEntry] = options 
@@ -38,6 +38,7 @@ class GridView(View):
             self.font_purpose = FontPurpose.GRID_ONE_ROW
 
         self.selected_bg = selected_bg
+        self.show_grid_text = show_grid_text
      
     def set_options(self, options):
         self.options = options
@@ -115,10 +116,11 @@ class GridView(View):
             else:
                 real_y_text_offset = y_icon_offset + self.max_icon_height + Theme.get_grid_multirow_text_offset_y()
 
-            Display.render_text_centered(imageTextPair.get_primary_text(), 
-                                    x_offset,
-                                    real_y_text_offset, color,
-                                    self.font_purpose)
+            if(self.show_grid_text) :
+                Display.render_text_centered(imageTextPair.get_primary_text(), 
+                                        x_offset,
+                                        real_y_text_offset, color,
+                                        self.font_purpose)
         
         # Don't display indexing for single row grids
         if(self.rows > 1) :
