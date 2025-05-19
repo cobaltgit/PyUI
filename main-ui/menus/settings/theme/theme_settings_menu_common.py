@@ -24,11 +24,13 @@ class ThemeSettingsMenuCommon(ABC):
         selected = Selection(None, None, 0)
         list_view = None
         self.theme_changed = False
+        reload_view = True
         while(selected is not None):
             option_list = self.build_options_list()
             
 
-            if(list_view is None or self.theme_changed):
+            if(reload_view):
+                reload_view = False
                 list_view = ViewCreator.create_view(
                     view_type=ViewType.ICON_AND_DESC,
                     top_bar_text="Settings", 
@@ -45,6 +47,7 @@ class ThemeSettingsMenuCommon(ABC):
             if(selected.get_input() in control_options):
                 selected.get_selection().get_value()(selected.get_input())
                 self.selection_made()
+                reload_view = True
             elif(ControllerInput.B == selected.get_input()):
                 selected = None
 

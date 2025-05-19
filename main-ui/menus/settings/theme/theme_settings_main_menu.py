@@ -3,6 +3,7 @@ from controller.controller_inputs import ControllerInput
 from menus.settings.theme.theme_settings_menu_common import ThemeSettingsMenuCommon
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
+from views.view_type import ViewType
 
 
 class ThemeSettingsMainMenu(ThemeSettingsMenuCommon):
@@ -20,13 +21,14 @@ class ThemeSettingsMainMenu(ThemeSettingsMenuCommon):
             )
         )
 
-        option_list.append(
-            self.build_numeric_entry(
-                primary_text="Main Menu Columns",
-                get_value_func=Theme.get_main_menu_column_count,
-                set_value_func=Theme.set_main_menu_column_count
+        if(ViewType.GRID == Theme.get_view_type_for_main_menu()):
+            option_list.append(
+                self.build_numeric_entry(
+                    primary_text="Main Menu Columns",
+                    get_value_func=Theme.get_main_menu_column_count,
+                    set_value_func=Theme.set_main_menu_column_count
+                )
             )
-        )
         
         option_list.append(
             self.build_column_enabled_entry(
