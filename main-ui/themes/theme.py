@@ -622,4 +622,8 @@ class Theme():
         cls._data["settingsEnabled"] = value
         cls.save_changes()
 
+    @classmethod
+    def get_main_menu_option_ordering(cls):
+        return cls._data.get("mainMenuOrdering", ["Recent", "Favorite", "Game", "App", "Setting"])
+
     

@@ -22,6 +22,13 @@ class MainMenu:
         self.settings_menu = BasicSettingsMenu()
         self.popup_menu = MainMenuPopup()
 
+    def reorder_options(self,ordering, objects):
+        # Create a lookup map for ordering priority
+        order_map = {text: index for index, text in enumerate(ordering)}
+        
+        # Sort objects based on the index of their primary text in the ordering list
+        return sorted(objects, key=lambda obj: order_map.get(obj.get_primary_text(), float('inf')))
+
     def build_options(self):
         image_text_list = []
         if (Theme.get_recents_enabled()):
@@ -83,7 +90,9 @@ class MainMenu:
                     value="Setting"
                 )
             )
-        return image_text_list
+
+            
+        return self.reorder_options(Theme.get_main_menu_option_ordering(),image_text_list)
 
     def build_main_menu_view(self, options, selected):
         return ViewCreator.create_view(
