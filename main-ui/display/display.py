@@ -82,6 +82,9 @@ class Display:
     @classmethod
     def init(cls):
         cls._init_display()
+        #Outside init_fonts as it should only ever be called once
+        if sdl2.sdlttf.TTF_Init() == -1:
+            raise RuntimeError("Failed to initialize SDL_ttf")
         cls.init_fonts()
         cls.render_canvas = sdl2.SDL_CreateTexture(
             cls.renderer.renderer,
@@ -128,6 +131,12 @@ class Display:
 
     @classmethod
     def deinit_display(cls):
+        if cls.render_canvas:
+            sdl2.SDL_DestroyTexture(cls.render_canvas)
+            cls.render_canvas = None
+        if cls.bg_canvas:
+            sdl2.SDL_DestroyTexture(cls.bg_canvas)
+            cls.bg_canvas = None
         if cls.renderer is not None:
             sdl2.SDL_DestroyRenderer(cls.renderer.sdlrenderer)
             cls.renderer = None
@@ -139,6 +148,13 @@ class Display:
         cls._text_texture_cache.clear_cache()
         cls._image_texture_cache.clear_cache()
         sdl2.SDL_QuitSubSystem(sdl2.SDL_INIT_VIDEO)
+
+    @classmethod
+    def clear_text_cache(cls):
+        PyUiLogger.get_logger().debug("Clearing text cache")    
+        cls._text_texture_cache.clear_cache()
+        cls.deinit_fonts()
+        cls.init_fonts()
 
     @classmethod
     def deinit_fonts(cls):
@@ -187,9 +203,6 @@ class Display:
 
     @classmethod
     def _load_font(cls, font_purpose):
-        if sdl2.sdlttf.TTF_Init() == -1:
-            raise RuntimeError("Failed to initialize SDL_ttf")
-
         font_path = Theme.get_font(font_purpose)
         font_size = Theme.get_font_size(font_purpose)
 
@@ -206,6 +219,10 @@ class Display:
 
     @classmethod
     def lock_current_image_as_bg(cls):
+        if cls.bg_canvas:
+            sdl2.SDL_DestroyTexture(cls.bg_canvas)
+            cls.bg_canvas = None
+    
         cls.bg_canvas = cls.render_canvas
         cls.render_canvas = sdl2.SDL_CreateTexture(
             cls.renderer.renderer,
