@@ -23,9 +23,6 @@ class MainMenu:
         self.popup_menu = MainMenuPopup()
 
     def build_options(self):
-        # TODO make this user config driven
-        # first_entry = "Favorite"
-
         image_text_list = []
         if (Theme.get_recents_enabled()):
             image_text_list.append(
@@ -120,6 +117,6 @@ class MainMenu:
                         self.settings_menu.show_menu()
                 elif(ControllerInput.MENU == selected.get_input()):
                     self.popup_menu.run_popup_menu_selection()
-                    
+
                 view.set_options(self.build_options())  
                 view =  self.build_main_menu_view(image_text_list, selected)        

@@ -31,6 +31,7 @@ import psutil
 class MiyooFlip(DeviceCommon):
     
     def __init__(self):
+        PyUiLogger.get_logger().info("Initializing Miyoo Flip")
         self.path = self
         self.sdl_button_to_input = {
             sdl2.SDL_CONTROLLER_BUTTON_A: ControllerInput.B,
@@ -67,6 +68,7 @@ class MiyooFlip(DeviceCommon):
         threading.Thread(target=self.monitor_wifi, daemon=True).start()
         self.hardware_poller = MiyooFlipPoller(self)
         threading.Thread(target=self.hardware_poller.continuously_monitor, daemon=True).start()
+
         if(PyUiConfig.enable_button_watchers()):
             #/dev/miyooio if we want to get rid of miyoo_inputd
             # debug in terminal: hexdump  /dev/miyooio

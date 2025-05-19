@@ -17,6 +17,9 @@ class ThemeSettingsMenuCommon(ABC):
     def build_options_list(self) -> list[GridOrListEntry]:
         pass
 
+    def selection_made(self):
+        pass
+
     def show_theme_options_menu(self):
         selected = Selection(None, None, 0)
         list_view = None
@@ -41,9 +44,36 @@ class ThemeSettingsMenuCommon(ABC):
 
             if(selected.get_input() in control_options):
                 selected.get_selection().get_value()(selected.get_input())
+                self.selection_made()
             elif(ControllerInput.B == selected.get_input()):
                 selected = None
 
+    def build_column_enabled_entry(self, primary_text, get_value_func, set_value_func) -> GridOrListEntry:
+
+        return GridOrListEntry(
+            primary_text=primary_text,
+            value_text="<    " + str(get_value_func()) + "    >",
+            image_path=None,
+            image_path_selected=None,
+            description=None,
+            icon=None,
+            value=lambda input: self.change_enabled_disabled(
+                input, get_value_func, set_value_func)
+        )
+    
+    def build_numeric_entry(self, primary_text, get_value_func, set_value_func) -> GridOrListEntry:
+
+        return GridOrListEntry(
+            primary_text=primary_text,
+            value_text="<    " + str(get_value_func()) + "    >",
+            image_path=None,
+            image_path_selected=None,
+            description=None,
+            icon=None,
+            value=lambda input: self.change_numeric(
+                input, get_value_func, set_value_func)
+        )
+    
 
     def change_view_type(self, input, get_view_type_func, set_view_type_func):
         if input == ControllerInput.DPAD_LEFT:
@@ -55,7 +85,6 @@ class ThemeSettingsMenuCommon(ABC):
 
         set_view_type_func(next_view_type)
 
-
     def change_enabled_disabled(self, input, get_value_func, set_value_func):
         value = get_value_func()
 
@@ -63,6 +92,18 @@ class ThemeSettingsMenuCommon(ABC):
             value = not get_value_func()
         elif input == ControllerInput.DPAD_RIGHT:
             value = not get_value_func()
+        else:
+            return  # No change for other inputs
+
+        set_value_func(value)
+
+    def change_numeric(self, input, get_value_func, set_value_func):
+        value = get_value_func()
+
+        if input == ControllerInput.DPAD_LEFT and value > 1:
+            value-=1
+        elif input == ControllerInput.DPAD_RIGHT:
+            value+=1
         else:
             return  # No change for other inputs
 

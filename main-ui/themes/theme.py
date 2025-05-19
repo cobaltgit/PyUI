@@ -268,32 +268,69 @@ class Theme():
         try:
             match font_purpose:
                 case FontPurpose.TOP_BAR_TEXT:
-                    return cls._data["list"].get("size", 24)
+                    return cls._data.get("topBarFontSize", cls._data["list"].get("size", 24))
                 case FontPurpose.BATTERY_PERCENT:
-                    return cls._data["list"].get("size", 24)
+                    return cls._data.get("batteryPercentFontSize", cls._data["list"].get("size", 24))
                 case FontPurpose.ON_SCREEN_KEYBOARD:
                     return cls._data["list"].get("size", 24)
                 case FontPurpose.GRID_ONE_ROW:
-                    return cls._data["grid"].get("grid1x4", cls._data["grid"].get("size",25))
+                    return cls._data.get("gridSingleRowFontSize", cls._data["grid"].get("grid1x4", cls._data["grid"].get("size",25)))
                 case FontPurpose.GRID_MULTI_ROW:
-                    return cls._data["grid"].get("grid3x4", cls._data["grid"].get("size",18))
+                    return cls._data.get("gridMultiRowFontSize", cls._data["grid"].get("grid3x4", cls._data["grid"].get("size",18)))
                 case FontPurpose.LIST:
-                    return cls._data["list"].get("size", 24)
+                    return cls._data.get("listFontSize",cls._data["list"].get("size", 24))
                 case FontPurpose.DESCRIPTIVE_LIST_TITLE:
-                    return cls._data["list"].get("size", 24)
+                    return cls._data.get("descListFontSize",cls._data["list"].get("size", 24))
                 case FontPurpose.MESSAGE:
-                    return cls._data["list"].get("size", 24)
+                    return cls._data.get("messageFontSize",cls._data["list"].get("size", 24))
                 case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
-                    return cls._data["grid"].get("grid3x4", cls._data["grid"].get("size",18))
+                    return cls._data.get("descriptionFontSize",cls._data["grid"].get("grid3x4", cls._data["grid"].get("size",18)))
                 case FontPurpose.LIST_INDEX:
-                    return cls._data.currentpage.get("size", 22)
+                    return cls._data.get("indexSelectedFontSize",cls._data.currentpage.get("size", 22))
                 case FontPurpose.LIST_TOTAL:
-                    return cls._data.total.get("size", 22)
+                    return cls._data.get("indexTotalSize",cls._data.total.get("size", 22))
                 case _:
                     return cls._data["list"]["font"]
         except Exception as e:
             PyUiLogger.get_logger().error(f"get_font_size error occurred: {e}")
             return 20
+
+
+    @classmethod
+    def set_font_size(cls, font_purpose: FontPurpose, size):
+        PyUiLogger.get_logger().debug(f"set_font_size: {font_purpose} {size}")
+        try:
+            match font_purpose:
+                case FontPurpose.TOP_BAR_TEXT:
+                    cls._data["topBarFontSize"] = size
+                case FontPurpose.BATTERY_PERCENT:
+                    cls._data["batteryPercentFontSize"] = size
+                case FontPurpose.ON_SCREEN_KEYBOARD:
+                    pass
+                case FontPurpose.GRID_ONE_ROW:
+                    cls._data["gridSingleRowFontSize"] = size
+                case FontPurpose.GRID_MULTI_ROW:
+                    cls._data["gridMultiRowFontSize"] = size
+                case FontPurpose.LIST:
+                    cls._data["listFontSize"] = size
+                case FontPurpose.DESCRIPTIVE_LIST_TITLE:
+                    cls._data["descListFontSize"] = size
+                case FontPurpose.MESSAGE:
+                    cls._data["messageFontSize"] = size
+                case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
+                    cls._data["descriptionFontSize"] = size
+                case FontPurpose.LIST_INDEX:
+                    cls._data["indexSelectedFontSize"] = size
+                case FontPurpose.LIST_TOTAL:
+                    cls._data["indexTotalSize"] = size
+                case _:
+                    PyUiLogger.get_logger().error(
+                        f"set_font_size: Unknown font purpose {font_purpose}")
+                
+            cls.save_changes()
+        except Exception as e:
+            PyUiLogger.get_logger().error(f"get_font_size error occurred: {e}")
+
 
     @classmethod
     def text_color(cls, font_purpose : FontPurpose):
