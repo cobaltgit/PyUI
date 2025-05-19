@@ -251,7 +251,7 @@ class Display:
             cls.bg_canvas = None
 
     @classmethod
-    def clear(cls, screen):
+    def clear(cls, screen, hide_top_bar_icons = False):
         cls.screen = screen
         cls._check_for_bg_change()
 
@@ -261,7 +261,7 @@ class Display:
             sdl2.SDL_RenderCopy(cls.renderer.sdlrenderer, cls.background_texture, None, None)
 
         if not Theme.render_top_and_bottom_bar_last():
-            cls.top_bar.render_top_bar(cls.screen)
+            cls.top_bar.render_top_bar(cls.screen,hide_top_bar_icons)
             cls.bottom_bar.render_bottom_bar()
 
     @staticmethod
