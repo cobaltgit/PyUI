@@ -286,9 +286,9 @@ class Theme():
                 case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
                     return cls._data.get("descriptionFontSize",cls._data["grid"].get("grid3x4", cls._data["grid"].get("size",18)))
                 case FontPurpose.LIST_INDEX:
-                    return cls._data.get("indexSelectedFontSize",cls._data.currentpage.get("size", 22))
+                    return cls._data.get("indexSelectedFontSize",cls._data["list"].get("size", 20))
                 case FontPurpose.LIST_TOTAL:
-                    return cls._data.get("indexTotalSize",cls._data.total.get("size", 22))
+                    return cls._data.get("indexTotalSize",cls._data["list"].get("size", 20))
                 case _:
                     return cls._data["list"]["font"]
         except Exception as e:
