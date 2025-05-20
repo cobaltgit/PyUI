@@ -688,12 +688,21 @@ class Theme():
 
     @classmethod
     def get_carousel_game_select_shrink_further_away(cls):
-        return cls._data.get("carouselGameSelectShrinkFurtherAway", True)
+        return cls._data.get("carouselGameSelectShrinkFurtherAway", False)
     
     @classmethod
     def set_carousel_game_select_shrink_further_away(cls, value):
         cls._data["carouselGameSelectShrinkFurtherAway"] = value
         cls.save_changes()
+
+    @classmethod
+    def get_carousel_game_select_sides_hang_off(cls):
+        return cls._data.get("carouselGameSelectSidesHangOff", True)
+
+    @classmethod
+    def set_carousel_game_select_sides_hang_off(cls, value):
+        cls._data["carouselGameSelectSidesHangOff"] = value
+        cls.save_changes()    
 
     @classmethod
     def get_game_select_img_height(cls):

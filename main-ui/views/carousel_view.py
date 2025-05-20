@@ -14,8 +14,11 @@ from views.view import View
 class CarouselView(View):
     def __init__(self,top_bar_text, options: List[GridOrListEntry], cols : int, 
                   selected_index=0, show_grid_text=False,  
-                  set_top_bar_text_to_selection=False, resize_type=None,
-                  selected_entry_width_percent=None, shrink_further_away = None):
+                  set_top_bar_text_to_selection=False, 
+                  resize_type=None,
+                  selected_entry_width_percent=None, 
+                  shrink_further_away = None,
+                  sides_hang_off_edge = None):
         super().__init__()
         self.resize_type = resize_type
         self.top_bar_text = top_bar_text
@@ -25,6 +28,8 @@ class CarouselView(View):
         self.show_grid_text = show_grid_text
         self.selected_entry_width_percent = selected_entry_width_percent
         self.shrink_further_away = shrink_further_away
+        self.sides_hang_off_edge = sides_hang_off_edge
+
         if(self.selected_entry_width_percent is None):
             self.selected_entry_width_percent = 40
 
@@ -116,10 +121,16 @@ class CarouselView(View):
             return left + mid + right
         else:
             k = self.cols // 2
-            secondary_width_percent = (100-self.selected_entry_width_percent) // (self.cols-1)
+            if(self.sides_hang_off_edge):
+                secondary_width_percent = (100-self.selected_entry_width_percent) // (self.cols-2)
+            else:
+                secondary_width_percent = (100-self.selected_entry_width_percent) // (self.cols-1)
+
             mid = [self.selected_entry_width_percent]
+
             left = [secondary_width_percent for i in range(k)]
             right = [secondary_width_percent for i in range(k)]
+
             return left + mid + right
 
 
@@ -142,6 +153,9 @@ class CarouselView(View):
 
         # x_offset[0] = 0; for i>0, sum of widths[0] through widths[i-1]
         x_offsets = [0] + [sum(widths[:i]) for i in range(1, len(widths))]
+        if(self.sides_hang_off_edge):
+            x_offsets = [x - widths[0]//2 for x in x_offsets]
+
 
         #Center the x_offset in its spot
         x_offsets = [x + w // 2 for x, w in zip(x_offsets, widths)]

@@ -11,7 +11,6 @@ class ThemeSettingsGameSelectMenu(ThemeSettingsMenuCommon):
     def __init__(self):
         super().__init__()
 
-
     def build_options_list(self) -> list[GridOrListEntry]:
         option_list = []
         option_list.append(
@@ -82,7 +81,6 @@ class ThemeSettingsGameSelectMenu(ThemeSettingsMenuCommon):
                                               Theme.set_set_top_bar_text_to_game_selection)
         )
         return option_list
-    
 
     def build_carousel_specific_options(self):
         option_list = []
@@ -100,7 +98,13 @@ class ThemeSettingsGameSelectMenu(ThemeSettingsMenuCommon):
                 set_value_func=Theme.set_carousel_game_select_primary_img_width
             )
         )
-        if(Theme.get_game_select_col_count() > 3):
+        option_list.append(
+            self.build_enabled_disabled_entry(
+                "TopBar = GameName",
+                Theme.get_set_top_bar_text_to_game_selection,
+                Theme.set_set_top_bar_text_to_game_selection)
+        )
+        if (Theme.get_game_select_col_count() > 3):
             option_list.append(
                 self.build_enabled_disabled_entry(
                     primary_text="Shrink Further Away",
@@ -108,9 +112,12 @@ class ThemeSettingsGameSelectMenu(ThemeSettingsMenuCommon):
                     set_value_func=Theme.set_carousel_game_select_shrink_further_away
                 )
             )
-        option_list.append(
-            self.build_enabled_disabled_entry("TopBar = GameName",
-                                              Theme.get_set_top_bar_text_to_game_selection,
-                                              Theme.set_set_top_bar_text_to_game_selection)
-        )
+
+        if (not Theme.get_carousel_game_select_shrink_further_away()):
+            option_list.append(
+                self.build_enabled_disabled_entry(
+                    "Sides Hang Off",
+                    Theme.get_carousel_game_select_sides_hang_off,
+                    Theme.set_carousel_game_select_sides_hang_off)
+            )
         return option_list
