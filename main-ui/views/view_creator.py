@@ -5,6 +5,7 @@ from display.display import Display
 from display.render_mode import RenderMode
 from display.resize_type import ResizeType
 from themes.theme import Theme
+from views.carousel_view import CarouselView
 from views.descriptive_list_view import DescriptiveListView
 from views.grid_or_list_entry import GridOrListEntry
 from views.grid_view import GridView
@@ -152,6 +153,18 @@ class ViewCreator:
                     cols=cols,
                     rows=rows,
                     selected_bg=grid_selected_bg,
+                    selected_index=selected_index,
+                    show_grid_text=show_grid_text,
+                    resized_width=grid_resized_width,
+                    resized_height=grid_resized_height,
+                    set_top_bar_text_to_selection=set_top_bar_text_to_selection,
+                    resize_type=grid_resize_type
+                )
+            case ViewType.CAROUSEL:
+                return CarouselView(
+                    top_bar_text=top_bar_text,
+                    options=options,
+                    cols=cols,
                     selected_index=selected_index,
                     show_grid_text=show_grid_text,
                     resized_width=grid_resized_width,
