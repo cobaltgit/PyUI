@@ -316,6 +316,9 @@ class TrimUIBrick(DeviceCommon):
     def change_volume(self, amount):
         self._set_volume(self.get_volume() + amount)
 
+    def get_display_volume(self):
+        return self.get_volume() // 5
+
     def get_volume(self):
         try:
             output = subprocess.check_output(
@@ -719,3 +722,5 @@ class TrimUIBrick(DeviceCommon):
     
     def launch_stock_os_menu(self):
         pass
+
+    

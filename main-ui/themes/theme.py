@@ -214,7 +214,12 @@ class Theme():
             return cls._asset("icon-wifi-signal-04.png")
         else:
             return cls._asset("icon-wifi-locked.png")
-        
+
+    @classmethod
+    def get_volume_indicator(cls, volume):
+        return cls._asset(f"icon-volume-{volume:02d}.png")
+
+
     @classmethod
     def system(cls, system):
         return os.path.join(cls._path, cls._icon_folder, system.lower() + ".png")

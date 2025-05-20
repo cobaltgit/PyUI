@@ -384,11 +384,17 @@ class MiyooFlip(DeviceCommon):
         self.system_config.reload_config()
         self.system_config.set_volume(volume // 5)
         self.system_config.save_config()
+        return volume // 5
 
 
     def change_volume(self, amount):
-        self._set_volume(self.get_volume() + amount)
+        from display.display import Display
+        volume_level = self._set_volume(self.get_volume() + amount)
+        Display.volume_changed(volume_level)
 
+    def get_display_volume(self):
+        return self.get_volume() // 5
+    
     def get_volume(self):
         try:
             output = subprocess.check_output(
@@ -505,13 +511,16 @@ class MiyooFlip(DeviceCommon):
 
     def key_down(self, key_code):
         if(116 == key_code):
+            PyUiLogger.get_logger().debug(f"POWER_BUTTON")
             self.sleep()
             return ControllerInput.POWER_BUTTON
         if(115 == key_code):
-            self.change_volume(10)
+            PyUiLogger.get_logger().debug(f"VOLUME_UP")
+            self.change_volume(5)
             return ControllerInput.VOLUME_UP
         elif(114 == key_code):
-            self.change_volume(-10)
+            PyUiLogger.get_logger().debug(f"VOLUME_DOWN")
+            self.change_volume(-5)
             return ControllerInput.VOLUME_DOWN
         else:
             PyUiLogger.get_logger().debug(f"Unrecognized keycode {key_code}")

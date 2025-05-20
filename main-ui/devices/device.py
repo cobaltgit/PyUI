@@ -211,6 +211,10 @@ class Device:
         return Device._impl.get_volume()
 
     @staticmethod
+    def get_display_volume():
+        return Device._impl.get_display_volume()
+
+    @staticmethod
     def power_off_cmd():
         return Device._impl.power_off_cmd
 
