@@ -32,10 +32,11 @@ class CarouselView(View):
         self.selected = selected_index
         self.toggles = [False] * len(options)
 
-        self.cols = 3
+        cols = 5
+        self.cols = cols
         self.current_left = len(options)-(cols-1)//2
         self.current_right = (cols-1)//2
-
+        self.correct_selected_for_off_list()
 
         self.font_purpose = FontPurpose.GRID_ONE_ROW
 
@@ -45,25 +46,28 @@ class CarouselView(View):
         self.options = options
 
     def correct_selected_for_off_list(self):
+        print(f"before : current_left={self.current_left},current_right={self.current_right}")
         if(self.selected < 0):
-            self.selected = len(self.options)-1
+            self.selected = len(self.options) + self.selected
 
         if(self.current_left < 0):
-            self.current_left = len(self.options)-1
+            self.current_left = len(self.options) + self.current_left
 
         if(self.current_right < 0):
-            self.current_right = len(self.options)-1
+            self.current_right = len(self.options) + self.current_right
 
-        if(self.selected == len(self.options)):
-            self.selected = 0
+        if(self.selected >= len(self.options)):
+            self.selected = self.selected%len(self.options)
 
-        if(self.current_left == len(self.options)):
-            self.current_left = 0
+        if(self.current_left >= len(self.options)):
+            self.current_left = self.current_left%len(self.options)
 
-        if(self.current_right == len(self.options)):
-            self.current_right = 0
+        if(self.current_right >= len(self.options)):
+            self.current_right =  self.current_right%len(self.options)
+        print(f"after : current_left={self.current_left},current_right={self.current_right}")
 
     def get_visible_options(self):
+        print(f"current_left={self.current_left},current_right={self.current_right}")
         n = len(self.options)
         # Normalize into [0, n)
         left = self.current_left % n
