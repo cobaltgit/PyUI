@@ -678,6 +678,24 @@ class Theme():
         cls.save_changes()
 
     @classmethod
+    def get_carousel_game_select_primary_img_width(cls):
+        return cls._data.get("carouselGameSelectPrimaryImgWidth", 40)
+    
+    @classmethod
+    def set_carousel_game_select_primary_img_width(cls, value):
+        cls._data["carouselGameSelectPrimaryImgWidth"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_carousel_game_select_shrink_further_away(cls):
+        return cls._data.get("carouselGameSelectShrinkFurtherAway", True)
+    
+    @classmethod
+    def set_carousel_game_select_shrink_further_away(cls, value):
+        cls._data["carouselGameSelectShrinkFurtherAway"] = value
+        cls.save_changes()
+
+    @classmethod
     def get_game_select_img_height(cls):
         from devices.device import Device
         return cls._data.get("gameSelectImgHeight", int(Device.screen_height() * 300 / 640))

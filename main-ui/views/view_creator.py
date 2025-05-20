@@ -35,7 +35,9 @@ class ViewCreator:
                     grid_resized_height=None,
                     set_top_bar_text_to_selection=False,
                     grid_selected_bg=None,
-                    grid_resize_type=None) -> object:
+                    grid_resize_type=None,
+                    carousel_selected_entry_width_percent=None,
+                    carousel_shrink_further_away=None) -> object:
         match view_type:
             case ViewType.ICON_AND_DESC:
                 selected_bg = Theme.get_list_small_selected_bg()
@@ -167,10 +169,9 @@ class ViewCreator:
                     cols=cols,
                     selected_index=selected_index,
                     show_grid_text=show_grid_text,
-                    resized_width=grid_resized_width,
-                    resized_height=grid_resized_height,
                     set_top_bar_text_to_selection=set_top_bar_text_to_selection,
-                    resize_type=grid_resize_type
+                    selected_entry_width_percent=carousel_selected_entry_width_percent,
+                    shrink_further_away=carousel_shrink_further_away
                 )
 
             case _:

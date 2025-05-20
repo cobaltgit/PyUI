@@ -13,47 +13,43 @@ from views.view import View
 
 class CarouselView(View):
     def __init__(self,top_bar_text, options: List[GridOrListEntry], cols : int, 
-                  selected_index=0, show_grid_text=False, resized_width=None, resized_height=None, 
-                  set_top_bar_text_to_selection=False, resize_type=None):
+                  selected_index=0, show_grid_text=False,  
+                  set_top_bar_text_to_selection=False, resize_type=None,
+                  selected_entry_width_percent=None, shrink_further_away = None):
         super().__init__()
-        self.resized_width = resized_width
-        self.resized_height = resized_height
         self.resize_type = resize_type
         self.top_bar_text = top_bar_text
         self.set_top_bar_text_to_selection = set_top_bar_text_to_selection
         self.options : List[GridOrListEntry] = options 
-
-        self.max_img_height = resized_height
-        if(self.max_img_height is None):
-            self.max_img_height = 0
-            for option in options:           
-                self.max_img_height = max(self.max_img_height, Display.get_image_dimensions(option.get_image_path())[1])
+        self.font_purpose = FontPurpose.GRID_ONE_ROW
+        self.show_grid_text = show_grid_text
+        self.selected_entry_width_percent = selected_entry_width_percent
+        self.shrink_further_away = shrink_further_away
+        if(self.selected_entry_width_percent is None):
+            self.selected_entry_width_percent = 40
 
         self.selected = selected_index
-        self.toggles = [False] * len(options)
+        if(cols < 3):
+            cols = 3
 
-        if(len(self.options) <= 2):
-            self.options.append(self.options[0])
-            self.options.append(self.options[len(self.options)-2])
-            
-        cols = 5
+        while(len(self.options) <= cols):
+            self.options += self.options
+                       
         cols = min(cols, len(options))
         if(cols %2 == 0):
             cols -=1 
+        
+        cols = min(cols, len(options))
+        
         self.cols = cols
         self.current_left = len(options)-(cols-1)//2
         self.current_right = (cols-1)//2
         self.correct_selected_for_off_list()
 
-        self.font_purpose = FontPurpose.GRID_ONE_ROW
-
-        self.show_grid_text = show_grid_text
-     
     def set_options(self, options):
         self.options = options
 
     def correct_selected_for_off_list(self):
-        print(f"before : current_left={self.current_left},current_right={self.current_right}")
         if(self.selected < 0):
             self.selected = len(self.options) + self.selected
 
@@ -71,10 +67,8 @@ class CarouselView(View):
 
         if(self.current_right >= len(self.options)):
             self.current_right =  self.current_right%len(self.options)
-        print(f"after : current_left={self.current_left},current_right={self.current_right}")
 
     def get_visible_options(self):
-        print(f"current_left={self.current_left},current_right={self.current_right}")
         n = len(self.options)
         # Normalize into [0, n)
         left = self.current_left % n
@@ -92,38 +86,42 @@ class CarouselView(View):
                 break
             i = (i + 1) % n  # wrap around
 
-        print(f"visible = {visible_indexes}")
         return visible
 
 
     def get_width_percentages(self) -> List[float]:
-        mid_size = 40.0
-        scale_size = (100.0 - mid_size) //2
-        n = self.cols
-        # 1) If n is even, bump it to odd
-        if n % 2 == 0:
-            n += 1
+        if(self.shrink_further_away):
+            mid_size = self.selected_entry_width_percent
+            scale_size = (100.0 - mid_size) //2
 
-        # half‑width
-        k = n // 2
+            # half‑width
+            k = self.cols // 2
 
-        # the total “raw weight” on one side is 2^0 + 2^1 + … + 2^(k−1) = 2^k − 1
-        total_raw = 2**k - 1
+            # the total “raw weight” on one side is 2^0 + 2^1 + … + 2^(k−1) = 2^k − 1
+            total_raw = 2**k - 1
 
-        # 3) we want the left sum to be exactly 25, so scale factor:
-        scale = scale_size / total_raw
+            # 3) we want the left sum to be exactly 25, so scale factor:
+            scale = scale_size / total_raw
 
-        # 4) left side doubles: 2^0,2^1,…,2^(k−1)
-        left = [(2**i) * scale for i in range(k)]
+            # 4) left side doubles: 2^0,2^1,…,2^(k−1)
+            left = [(2**i) * scale for i in range(k)]
 
-        # 2) middle is 50
-        mid = [mid_size]
+            # 2) middle is 50
+            mid = [mid_size]
 
-        # 5) right side halves from the middle: use the reverse‐doubling sequence
-        #    2^(k−1),2^(k−2),…,2^0, scaled to sum to 25
-        right = [(2**(k - 1 - i)) * scale for i in range(k)]
+            # 5) right side halves from the middle: use the reverse‐doubling sequence
+            #    2^(k−1),2^(k−2),…,2^0, scaled to sum to 25
+            right = [(2**(k - 1 - i)) * scale for i in range(k)]
 
-        return left + mid + right
+            return left + mid + right
+        else:
+            k = self.cols // 2
+            secondary_width_percent = (100-self.selected_entry_width_percent) // (self.cols-1)
+            mid = [self.selected_entry_width_percent]
+            left = [secondary_width_percent for i in range(k)]
+            right = [secondary_width_percent for i in range(k)]
+            return left + mid + right
+
 
 
     def _render(self):
@@ -168,7 +166,7 @@ class CarouselView(View):
                                     y_image_offset,
                                     render_mode,
                                     target_width=widths[x_index],
-                                    target_height=self.resized_height,
+                                    target_height=None,
                                     resize_type=self.resize_type)
             color = Theme.text_color_selected(self.font_purpose) if actual_index == self.selected else Theme.text_color(self.font_purpose)
 
