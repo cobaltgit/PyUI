@@ -32,7 +32,14 @@ class CarouselView(View):
         self.selected = selected_index
         self.toggles = [False] * len(options)
 
+        if(len(self.options) <= 2):
+            self.options.append(self.options[0])
+            self.options.append(self.options[len(self.options)-2])
+            
         cols = 5
+        cols = min(cols, len(options))
+        if(cols %2 == 0):
+            cols -=1 
         self.cols = cols
         self.current_left = len(options)-(cols-1)//2
         self.current_right = (cols-1)//2
@@ -132,10 +139,18 @@ class CarouselView(View):
         x_pad = 10
         usable_width = Device.screen_width()
         image_width_percentages = self.get_width_percentages()
+
         widths = [int(round(percent/100 * usable_width)) for percent in image_width_percentages]
+
         # x_offset[0] = 0; for i>0, sum of widths[0] through widths[i-1]
         x_offsets = [0] + [sum(widths[:i]) for i in range(1, len(widths))]
-        print(f"x_offsets = {x_offsets}")
+
+        #Center the x_offset in its spot
+        x_offsets = [x + w // 2 for x, w in zip(x_offsets, widths)]
+
+        # now handle padding
+        widths = [w - 2*x_pad for w in widths]
+
         
         for visible_index, imageTextPair in enumerate(visible_options):
             
@@ -146,7 +161,7 @@ class CarouselView(View):
             x_offset = x_offsets[x_index]
 
             y_image_offset = Display.get_center_of_usable_screen_height()
-            render_mode = RenderMode.MIDDLE_LEFT_ALIGNED
+            render_mode = RenderMode.MIDDLE_CENTER_ALIGNED
             
             Display.render_image(image_path, 
                                     x_offset, 
