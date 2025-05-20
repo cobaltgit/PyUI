@@ -1,5 +1,6 @@
 
 from controller.controller_inputs import ControllerInput
+from display.resize_type import get_next_resize_type
 from menus.settings.theme.theme_settings_menu_common import ThemeSettingsMenuCommon
 from themes.theme import Theme
 from views.grid_or_list_entry import GridOrListEntry
@@ -20,6 +21,14 @@ class ThemeSettingsGameSelectMenu(ThemeSettingsMenuCommon):
             )
         )
         if (ViewType.GRID == Theme.get_game_selection_view_type()):
+            option_list.append(
+                self.build_enum_entry(
+                    primary_text="Img Mode",
+                    get_value_func=Theme.get_grid_game_selected_resize_type,
+                    set_value_func=Theme.set_grid_game_selected_resize_type,
+                    get_next_enum_type=get_next_resize_type
+                )
+            )
             option_list.append(
                 self.build_numeric_entry(
                     primary_text="Rows",

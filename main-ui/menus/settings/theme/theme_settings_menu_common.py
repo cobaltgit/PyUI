@@ -90,7 +90,7 @@ class ThemeSettingsMenuCommon(ABC):
                 input, get_value_func, set_value_func)
         )
     
-
+    
     def change_view_type(self, input, get_view_type_func, set_view_type_func):
         if input == ControllerInput.DPAD_LEFT:
             next_view_type = get_next_view_type(get_view_type_func(), -1)
@@ -100,6 +100,30 @@ class ThemeSettingsMenuCommon(ABC):
             return  # No change for other inputs
 
         set_view_type_func(next_view_type)
+
+
+    def build_enum_entry(self, primary_text, get_value_func, set_value_func, get_next_enum_type) -> GridOrListEntry:
+
+        return GridOrListEntry(
+            primary_text=primary_text,
+            value_text="<    " + str(get_value_func().name) + "    >",
+            image_path=None,
+            image_path_selected=None,
+            description=None,
+            icon=None,
+            value=lambda input: self.change_enum_type(
+                input, get_value_func, set_value_func, get_next_enum_type)
+        )
+    
+    def change_enum_type(self, input, get_value_func, set_value_func, get_next_enum_type):
+        if input == ControllerInput.DPAD_LEFT:
+            next_view_type = get_next_enum_type(get_value_func(), -1)
+        elif input == ControllerInput.DPAD_RIGHT:
+            next_view_type = get_next_enum_type(get_value_func(), +1)
+        else:
+            return  # No change for other inputs
+
+        set_value_func(next_view_type)
 
     def change_enabled_disabled(self, input, get_value_func, set_value_func):
         value = get_value_func()

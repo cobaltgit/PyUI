@@ -522,8 +522,8 @@ class Theme():
 
     @classmethod
     def get_grid_game_selected_resize_type(cls):
-        view_type_str = cls._data.get("gameSelectGridResizeType", "ZOOM")
-        return getattr(ResizeType, view_type_str, ResizeType.ZOOM)
+        view_type_str = cls._data.get("gameSelectGridResizeType", "FIT")
+        return getattr(ResizeType, view_type_str, ResizeType.FIT)
 
     @classmethod
     def set_grid_game_selected_resize_type(cls, view_type):

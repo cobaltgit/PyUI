@@ -315,21 +315,21 @@ class Display:
         # Adjust position based on render mode
         adj_x = x
         adj_y = y
-
-        if XRenderOption.CENTER == render_mode.x_mode:
-            adj_x = x - (scale_width or render_w) // 2
-        elif XRenderOption.RIGHT == render_mode.x_mode:
-            adj_x = x - (scale_width or render_w)
-
-        if YRenderOption.CENTER == render_mode.y_mode:
-            adj_y = y - (scale_height or render_h) // 2
-        elif YRenderOption.BOTTOM == render_mode.y_mode:
-            adj_y = y - (scale_height or render_h)
-
-        adj_x = int(adj_x)
-        adj_y = int(adj_y)
-
+                
         if resize_type == ResizeType.ZOOM and scale_width and scale_height:
+
+            if XRenderOption.CENTER == render_mode.x_mode:
+                adj_x = x - (scale_width or render_w) // 2
+            elif XRenderOption.RIGHT == render_mode.x_mode:
+                adj_x = x - (scale_width or render_w)
+
+            if YRenderOption.CENTER == render_mode.y_mode:
+                adj_y = y - (scale_height or render_h) // 2
+            elif YRenderOption.BOTTOM == render_mode.y_mode:
+                adj_y = y - (scale_height or render_h)
+
+            adj_x = int(adj_x)
+            adj_y = int(adj_y)
             # Calculate cropping to center the zoomed image
             src_w = int(scale_width * (orig_w / render_w))
             src_h = int(scale_height * (orig_h / render_h))
@@ -339,27 +339,39 @@ class Display:
             src_rect = sdl2.SDL_Rect(src_x, src_y, src_w, src_h)
             dst_rect = sdl2.SDL_Rect(adj_x, adj_y, scale_width, scale_height)
 
-            PyUiLogger.get_logger().info(f"Rendered (ZOOM) {texture_id} at {adj_x}, {adj_y} with cropped source {src_x},{src_y},{src_w}x{src_h} to fit {scale_width}x{scale_height}")
             sdl2.SDL_RenderCopy(cls.renderer.renderer, texture, src_rect, dst_rect)
 
             return scale_width, scale_height
-
-        # Handle regular FIT or uncropped draw
-        if crop_w is None and crop_h is None:
-            rect = sdl2.SDL_Rect(adj_x, adj_y, render_w, render_h)
-            cls._log(f"Rendered {texture_id} at {adj_x}, {adj_y} with dimensions {render_w}x{render_h}")
-            sdl2.SDL_RenderCopy(cls.renderer.renderer, texture, None, rect)
         else:
-            if crop_w is None or crop_w > orig_w:
-                crop_w = orig_w
-            if crop_h is None or crop_h > orig_h:
-                crop_h = orig_h
+                
+            if XRenderOption.CENTER == render_mode.x_mode:
+                adj_x = x - (render_w) // 2
+            elif XRenderOption.RIGHT == render_mode.x_mode:
+                adj_x = x - (render_w)
 
-            src_rect = sdl2.SDL_Rect(0, 0, crop_w, crop_h)
-            dst_rect = sdl2.SDL_Rect(adj_x, adj_y, crop_w, crop_h)
-            sdl2.SDL_RenderCopy(cls.renderer.renderer, texture, src_rect, dst_rect)
+            if YRenderOption.CENTER == render_mode.y_mode:
+                adj_y = y - (render_h) // 2
+            elif YRenderOption.BOTTOM == render_mode.y_mode:
+                adj_y = y - (render_h)
 
-        return render_w, render_h
+            adj_x = int(adj_x)
+            adj_y = int(adj_y)
+
+            # Handle regular FIT or uncropped draw
+            if crop_w is None and crop_h is None:
+                rect = sdl2.SDL_Rect(adj_x, adj_y, render_w, render_h)
+                sdl2.SDL_RenderCopy(cls.renderer.renderer, texture, None, rect)
+            else:
+                if crop_w is None or crop_w > orig_w:
+                    crop_w = orig_w
+                if crop_h is None or crop_h > orig_h:
+                    crop_h = orig_h
+
+                src_rect = sdl2.SDL_Rect(0, 0, crop_w, crop_h)
+                dst_rect = sdl2.SDL_Rect(adj_x, adj_y, crop_w, crop_h)
+                sdl2.SDL_RenderCopy(cls.renderer.renderer, texture, src_rect, dst_rect)
+
+            return render_w, render_h
 
 
     @classmethod

@@ -146,7 +146,6 @@ class ViewCreator:
                     grid_selected_bg = None
                 elif(grid_selected_bg is None):
                     grid_selected_bg = Theme.get_grid_bg(rows, cols, use_mutli_row_grid_select_as_backup_for_single_row_grid_select)
-                print(f"grid_resize_type = {grid_resize_type}, grid_selected_bg={grid_selected_bg}")
                 return GridView(
                     top_bar_text=top_bar_text,
                     options=options,
