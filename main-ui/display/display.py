@@ -303,6 +303,10 @@ class Display:
     def _render_surface_texture(cls, x, y, texture, surface, render_mode: RenderMode, texture_id,
                                 scale_width=None, scale_height=None, crop_w=None, crop_h=None,
                                 resize_type=ResizeType.FIT):
+        #If resize_type is none set it to fit for now,
+        #Need to push this further up stream though
+        if(resize_type is None):
+            resize_type=ResizeType.FIT
         
         orig_w = surface.contents.w
         orig_h = surface.contents.h
