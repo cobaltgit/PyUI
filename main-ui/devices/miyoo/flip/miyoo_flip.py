@@ -443,17 +443,17 @@ class MiyooFlip(DeviceCommon):
     def fix_sleep_sound_bug(self):
         self.system_config.reload_config()
         proper_volume = self.system_config.get_volume()
+        PyUiLogger.get_logger().info(f"Restoring volume to {proper_volume*5}")
         ProcessRunner.run(["amixer", "cset","numid=2", "0"])
-        time.sleep(0.2)  
         ProcessRunner.run(["amixer", "cset","numid=5", "0"])
-        time.sleep(0.2)  
         if(self.are_headphones_plugged_in()):
             ProcessRunner.run(["amixer", "cset","numid=2", "3"])
+        elif(0 == proper_volume):
+            ProcessRunner.run(["amixer", "cset","numid=2", "0"])
         else:
             ProcessRunner.run(["amixer", "cset","numid=2", "2"])
-        time.sleep(0.2)  
         ProcessRunner.run(["amixer", "cset","numid=5", str(proper_volume*5)])
-
+        self._set_volume(proper_volume)
 
     def run_game(self, rom_info: RomInfo) -> subprocess.Popen:
         RecentsManager.add_game(rom_info)
