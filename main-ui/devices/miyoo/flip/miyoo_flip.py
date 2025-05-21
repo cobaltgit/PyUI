@@ -909,6 +909,13 @@ class MiyooFlip(DeviceCommon):
         from themes.theme import Theme
         if os.path.exists(file_path):
             os.remove(file_path)
+            Display.clear("Stick Calibration")
+            Display.render_text_centered(f"Removing old calibration file and rebooting",self.screen_width//2, self.screen_height//2,Theme.text_color_selected(FontPurpose.LIST), purpose=FontPurpose.LIST)
+            Display.render_text_centered(f"Then try again",self.screen_width//2, self.screen_height//2 + 50,Theme.text_color_selected(FontPurpose.LIST), purpose=FontPurpose.LIST)
+            Display.present()
+            time.sleep(5)
+            self.run_app([self.reboot_cmd])
+
         Display.clear("Stick Calibration")
         Display.render_text_centered(f"Rotate {stick_name}",self.screen_width//2, self.screen_height//2,Theme.text_color_selected(FontPurpose.LIST), purpose=FontPurpose.LIST)
         Display.present()
