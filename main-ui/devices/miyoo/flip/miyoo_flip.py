@@ -443,7 +443,14 @@ class MiyooFlip(DeviceCommon):
     def fix_sleep_sound_bug(self):
         self.system_config.reload_config()
         proper_volume = self.system_config.get_volume()
+        ProcessRunner.run(["amixer", "cset","numid=2", "0"])
+        time.sleep(0.2)  
         ProcessRunner.run(["amixer", "cset","numid=5", "0"])
+        time.sleep(0.2)  
+        if(self.are_headphones_plugged_in()):
+            ProcessRunner.run(["amixer", "cset","numid=2", "3"])
+        else:
+            ProcessRunner.run(["amixer", "cset","numid=2", "2"])
         time.sleep(0.2)  
         ProcessRunner.run(["amixer", "cset","numid=5", str(proper_volume*5)])
 
