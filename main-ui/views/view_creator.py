@@ -7,6 +7,7 @@ from display.resize_type import ResizeType
 from themes.theme import Theme
 from views.carousel_view import CarouselView
 from views.descriptive_list_view import DescriptiveListView
+from views.empty_view import EmptyView
 from views.grid_or_list_entry import GridOrListEntry
 from views.grid_view import GridView
 from views.image_list_view import ImageListView
@@ -39,6 +40,10 @@ class ViewCreator:
                     carousel_selected_entry_width_percent=None,
                     carousel_shrink_further_away=None,
                     carousel_sides_hang_off_edge=None) -> object:
+        
+        if(len(options) == 0):
+            return EmptyView()
+
         match view_type:
             case ViewType.ICON_AND_DESC:
                 selected_bg = Theme.get_list_small_selected_bg()
