@@ -453,7 +453,8 @@ class MiyooFlip(DeviceCommon):
             PyUiLogger.get_logger().error(f"Failed to delete file: {e}")
 
     def fix_sleep_sound_bug(self):
-        self.system_config.reload_config()
+        #Don't reload as there is a bug where it gets set to 1/0
+        # self.system_config.reload_config()
         proper_volume = self.system_config.get_volume()
         PyUiLogger.get_logger().info(f"Restoring volume to {proper_volume*5}")
         ProcessRunner.run(["amixer", "cset","numid=2", "0"])
