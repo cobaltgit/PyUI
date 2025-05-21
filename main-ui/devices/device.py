@@ -242,4 +242,8 @@ class Device:
     def launch_stock_os_menu():
         return Device._impl.launch_stock_os_menu()
     
+    @staticmethod  
+    def calibrate_sticks():
+        return Device._impl.calibrate_sticks()
+    
     
