@@ -764,5 +764,22 @@ class Theme():
         cls._data["gridMultiRowSelBgResizePadHeight"] = value
         cls.save_changes()
 
+    @classmethod
+    def get_top_bar_initial_x_offset(cls):
+        return cls._data.get("topBarInitialXOffset", 20)
 
+    @classmethod
+    def set_top_bar_initial_x_offset(cls, value):
+        cls._data["topBarInitialXOffset"] = value
+        cls.save_changes()
+    
+    @classmethod
+    def get_system_select_grid_img_y_offset(cls):
+        return cls._data.get("systemSelectGridImageYOffset", 0)
+    
+    @classmethod
+    def set_system_select_grid_img_y_offset(cls, value):
+        cls._data["systemSelectGridImageYOffset"] = value
+        cls.save_changes()
+    
     

@@ -16,12 +16,13 @@ from views.view import View
 class GridView(View):
     def __init__(self,top_bar_text, options: List[GridOrListEntry], cols : int, rows: int,selected_bg : str = None,
                   selected_index=0, show_grid_text=True, resized_width=None, resized_height=None, 
-                  set_top_bar_text_to_selection=False, resize_type=None):
+                  set_top_bar_text_to_selection=False, resize_type=None,image_y_offset=0):
         super().__init__()
         self.resized_width = resized_width
         self.resized_height = resized_height
         self.resize_type = resize_type
         self.top_bar_text = top_bar_text
+        self.image_y_offset = image_y_offset
         self.set_top_bar_text_to_selection = set_top_bar_text_to_selection
         self.options : List[GridOrListEntry] = options 
 
@@ -131,7 +132,7 @@ class GridView(View):
             
             Display.render_image(image_path, 
                                     x_offset, 
-                                    y_image_offset,
+                                    y_image_offset + self.image_y_offset,
                                     render_mode,
                                     target_width=self.resized_width,
                                     target_height=self.resized_height,

@@ -103,3 +103,30 @@ class PyUiConfig:
         os.environ['TZ'] = tz
         time.tzset()  
         cls.save()
+
+    @classmethod
+    def show_clock(cls):
+        return cls.get("showClock",True)
+
+    @classmethod
+    def set_show_clock(cls, value):
+        cls._data["showClock"] = value
+        cls.save()
+
+    @classmethod
+    def use_24_hour_clock(cls):
+        return cls.get("use24HourClock",False)
+
+    @classmethod
+    def set_use_24_hour_clock(cls, value):
+        cls._data["use24HourClock"] = value
+        cls.save()
+
+    @classmethod
+    def show_am_pm(cls):
+        return cls.get("showAmPm",True)
+
+    @classmethod
+    def set_show_am_pm(cls, value):
+        cls._data["showAmPm"] = value
+        cls.save()

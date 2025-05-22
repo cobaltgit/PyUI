@@ -39,7 +39,8 @@ class ViewCreator:
                     grid_resize_type=None,
                     carousel_selected_entry_width_percent=None,
                     carousel_shrink_further_away=None,
-                    carousel_sides_hang_off_edge=None) -> object:
+                    carousel_sides_hang_off_edge=None,
+                    grid_image_y_offset=0) -> object:
         
         if(len(options) == 0):
             return EmptyView()
@@ -166,7 +167,8 @@ class ViewCreator:
                     resized_width=grid_resized_width,
                     resized_height=grid_resized_height,
                     set_top_bar_text_to_selection=set_top_bar_text_to_selection,
-                    resize_type=grid_resize_type
+                    resize_type=grid_resize_type,
+                    image_y_offset=grid_image_y_offset
                 )
             case ViewType.CAROUSEL:
                 return CarouselView(

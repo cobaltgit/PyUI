@@ -5,9 +5,7 @@ from devices.device import Device
 from display.on_screen_keyboard import OnScreenKeyboard
 from menus.settings import settings_menu
 from menus.settings.display_settings_menu import DisplaySettingsMenu
-from menus.settings.timezone_menu import TimezoneMenu
-from utils.logger import PyUiLogger
-from utils.py_ui_config import PyUiConfig
+from menus.settings.time_settings_menu import TimeSettingsMenu
 from views.grid_or_list_entry import GridOrListEntry
 
 
@@ -20,10 +18,14 @@ class ExtraSettingsMenu(settings_menu.SettingsMenu):
         if(ControllerInput.A == input):
             Device.run_app(Device.reboot_cmd())
 
-
     def launch_display_settings(self,input):
         if(ControllerInput.A == input):
             DisplaySettingsMenu().show_menu()
+
+
+    def launch_time_settings(self,input):
+        if(ControllerInput.A == input):
+            TimeSettingsMenu().show_menu()
 
     def launch_stock_os_menu(self,input):
         if(ControllerInput.A == input):
@@ -32,12 +34,6 @@ class ExtraSettingsMenu(settings_menu.SettingsMenu):
     def calibrate_sticks(self,input):
         if(ControllerInput.A == input):
             Device.calibrate_sticks()
-
-    def set_timezone(self,input):
-        if(ControllerInput.A == input):
-            tz = TimezoneMenu().ask_user_for_timezone()
-            if(tz is not None):
-                PyUiConfig.set_timezone(tz)
 
 
     def build_options_list(self):
@@ -54,18 +50,20 @@ class ExtraSettingsMenu(settings_menu.SettingsMenu):
                         value=self.launch_display_settings
                     )
             )
+        
         option_list.append(
                 GridOrListEntry(
-                        primary_text="Set Timezone",
+                        primary_text="Time Settings",
                         value_text=None,
                         image_path=None,
                         image_path_selected=None,
                         description=None,
                         icon=None,
-                        value=self.set_timezone
+                        value=self.launch_time_settings
                     )
             )
-                    
+        
+        
         option_list.append(
                 GridOrListEntry(
                         primary_text="Calibrate Analog Sticks",
