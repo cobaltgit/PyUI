@@ -41,11 +41,11 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         
     def volume_adjust(self, input: ControllerInput):
         if(ControllerInput.DPAD_LEFT == input):
-            Device.change_volume(-10)
+            Device.change_volume(-5)
         elif(ControllerInput.L1 == input):
             Device.change_volume(-1)
         elif(ControllerInput.DPAD_RIGHT == input):
-            Device.change_volume(+10)
+            Device.change_volume(+5)
         elif(ControllerInput.R1 == input):
             Device.change_volume(+1)
 

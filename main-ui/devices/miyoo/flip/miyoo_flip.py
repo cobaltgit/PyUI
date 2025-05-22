@@ -31,7 +31,9 @@ from utils.py_ui_config import PyUiConfig
 import psutil
 
 class MiyooFlip(DeviceCommon):
-    
+    OUTPUT_MIXER = 2
+    SOUND_DISABLED = 0
+
     def __init__(self):
         PyUiLogger.get_logger().info("Initializing Miyoo Flip")
         self.path = self
@@ -407,19 +409,40 @@ class MiyooFlip(DeviceCommon):
 
     def get_display_volume(self):
         return self.get_volume() // 5
-    
-    def get_volume(self):
-        try:
-            output = subprocess.check_output(
-                ["amixer", "cget", "name='SPK Volume'"],
-                text=True
-            )
-            match = re.search(r": values=(\d+)", output)
+        
+    def get_current_mixer_value(self, numid):
+        # Run the amixer command and capture output
+        result = subprocess.run(
+            ['amixer', 'cget', f'numid={numid}'],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        output = result.stdout
+        
+        # Find the line containing ': values=' and extract the number
+        for line in reversed(output.splitlines()):
+            match = re.search(r': values=(\d+)', line)
             if match:
                 return int(match.group(1))
+        return None
+
+    def get_volume(self):
+        try:
+            current_mixer = self.get_current_mixer_value(MiyooFlip.OUTPUT_MIXER)
+            if(MiyooFlip.SOUND_DISABLED == current_mixer):
+                return 0
             else:
-                PyUiLogger.get_logger().info("Volume value not found in amixer output.")
-                return 0 # ???
+                output = subprocess.check_output(
+                    ["amixer", "cget", "name='SPK Volume'"],
+                    text=True
+                )
+                match = re.search(r": values=(\d+)", output)
+                if match:
+                    return int(match.group(1))
+                else:
+                    PyUiLogger.get_logger().info("Volume value not found in amixer output.")
+                    return 0 # ???
         except subprocess.CalledProcessError as e:
             PyUiLogger.get_logger().error(f"Command failed: {e}")
             return 0 # ???
