@@ -43,11 +43,11 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         if(ControllerInput.DPAD_LEFT == input):
             Device.change_volume(-5)
         elif(ControllerInput.L1 == input):
-            Device.change_volume(-1)
+            Device.change_volume(-5)
         elif(ControllerInput.DPAD_RIGHT == input):
             Device.change_volume(+5)
         elif(ControllerInput.R1 == input):
-            Device.change_volume(+1)
+            Device.change_volume(+5)
 
     def show_wifi_menu(self, input):
         if(ControllerInput.DPAD_LEFT == input or ControllerInput.DPAD_RIGHT == input):
@@ -130,7 +130,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         option_list.append(
                 GridOrListEntry(
                         primary_text="Volume",
-                        value_text="<    " + str(Device.get_volume()) + "    >",
+                        value_text="<    " + str(Device.get_volume()//5) + "    >",
                         image_path=None,
                         image_path_selected=None,
                         description=None,
