@@ -7,6 +7,7 @@ from menus.settings import settings_menu
 from menus.settings.advance_settings_menu import AdvanceSettingsMenu
 from menus.settings.bluetooth_menu import BluetoothMenu
 from menus.settings.theme.theme_settings_menu import ThemeSettingsMenu
+from menus.settings.timezone_menu import TimezoneMenu
 from menus.settings.wifi_menu import WifiMenu
 from themes.theme import Theme
 from utils.py_ui_config import PyUiConfig
@@ -110,6 +111,12 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         if(ControllerInput.A == input):
             Device.calibrate_sticks()
 
+    def set_timezone(self,input):
+        if(ControllerInput.A == input):
+            tz = TimezoneMenu().ask_user_for_timezone()
+            if(tz is not None):
+                PyUiConfig.set_timezone(tz)
+
     def build_options_list(self):
         option_list = []
         option_list.append(
@@ -191,6 +198,18 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
                         description=None,
                         icon=None,
                         value=self.launch_stock_os_menu
+                    )
+            )
+                    
+        option_list.append(
+                GridOrListEntry(
+                        primary_text="Set Timezone",
+                        value_text=None,
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.set_timezone
                     )
             )
                     
