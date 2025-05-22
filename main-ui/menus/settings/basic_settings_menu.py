@@ -6,6 +6,7 @@ from display.display import Display
 from menus.settings import settings_menu
 from menus.settings.advance_settings_menu import AdvanceSettingsMenu
 from menus.settings.bluetooth_menu import BluetoothMenu
+from menus.settings.display_settings_menu import DisplaySettingsMenu
 from menus.settings.theme.theme_settings_menu import ThemeSettingsMenu
 from menus.settings.timezone_menu import TimezoneMenu
 from menus.settings.wifi_menu import WifiMenu
@@ -102,6 +103,10 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
     def launch_advance_settings(self,input):
         if(ControllerInput.A == input):
             self.advance_settings_menu.show_menu()
+
+    def launch_display_settings(self,input):
+        if(ControllerInput.A == input):
+            DisplaySettingsMenu().show_menu()
 
     def launch_stock_os_menu(self,input):
         if(ControllerInput.A == input):
@@ -234,6 +239,18 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
                         description=None,
                         icon=None,
                         value=self.launch_advance_settings
+                    )
+            )
+            
+        option_list.append(
+                GridOrListEntry(
+                        primary_text="Display Settings",
+                        value_text=None,
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.launch_display_settings
                     )
             )
 
