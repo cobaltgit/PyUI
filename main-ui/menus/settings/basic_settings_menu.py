@@ -1,14 +1,18 @@
 
 import os
+import re
+import subprocess
 from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
+from display.on_screen_keyboard import OnScreenKeyboard
 from menus.settings import settings_menu
 from menus.settings.advance_settings_menu import AdvanceSettingsMenu
 from menus.settings.bluetooth_menu import BluetoothMenu
 from menus.settings.theme.theme_settings_menu import ThemeSettingsMenu
 from menus.settings.wifi_menu import WifiMenu
 from themes.theme import Theme
+from utils.logger import PyUiLogger
 from utils.py_ui_config import PyUiConfig
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
@@ -106,6 +110,26 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         if(ControllerInput.A == input):
             Device.launch_stock_os_menu()
 
+    def set_time(self,input):
+        if(ControllerInput.A == input):
+            time = OnScreenKeyboard().get_input("Enter the time HH:MM (24-Hour)")
+            PyUiLogger.get_logger().info(f"User entered {time}")
+            self.set_system_time_hhmm(time)
+            
+    def set_system_time_hhmm(self, time_str: str):
+        # Verify format HH:MM (24-hour)
+        if re.match(r"^(?:[01]\d|2[0-3]):[0-5]\d$", time_str):        
+            # Append seconds as ":00"
+            time_with_seconds = time_str + ":00"
+            
+            try:
+                subprocess.run(['date', '+%T', '-s', time_with_seconds], check=True)
+                PyUiLogger.get_logger().info(f"System time set to {time_with_seconds}")
+            except Exception as e:
+                PyUiLogger.get_logger().error(f"Failed to set system time: {e}")
+        else:
+            PyUiLogger.get_logger().error(f"Invalid time format : {time_str}")
+
     def calibrate_sticks(self,input):
         if(ControllerInput.A == input):
             Device.calibrate_sticks()
@@ -191,6 +215,18 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
                         description=None,
                         icon=None,
                         value=self.launch_stock_os_menu
+                    )
+            )
+            
+        option_list.append(
+                GridOrListEntry(
+                        primary_text="Set Time",
+                        value_text=None,
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.set_time
                     )
             )
         
