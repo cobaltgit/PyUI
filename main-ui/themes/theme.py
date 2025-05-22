@@ -427,7 +427,7 @@ class Theme():
 
     @classmethod
     def get_descriptive_list_icon_offset_x(cls):
-        return cls._data.get("descriptiveListIconOffsetX", 5)
+        return cls._data.get("descriptiveListIconOffsetX", 10)
 
     @classmethod
     def get_descriptive_list_icon_offset_y(cls):
@@ -439,7 +439,7 @@ class Theme():
 
     @classmethod
     def get_descriptive_list_text_from_icon_offset(cls):
-        return cls._data.get("descriptiveListTextFromIconOffset", 5)
+        return cls._data.get("descriptiveListTextFromIconOffset", 10)
 
     @classmethod
     def get_grid_multirow_text_offset_y(cls):
