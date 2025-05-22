@@ -47,6 +47,13 @@ class ThemeSettingsSystemSelectMenu(ThemeSettingsMenuCommon):
                                         -sys.maxsize - 1,
                                         sys.maxsize)
             )
+            option_list.append(
+                self.build_numeric_entry("Sel Icon BG Y Offset", 
+                                        Theme.get_system_select_grid_selected_img_bg_y_offset, 
+                                        Theme.set_system_select_grid_selected_img_bg_y_offset,
+                                        -sys.maxsize - 1,
+                                        sys.maxsize)
+            )
             
             
         return option_list

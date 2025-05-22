@@ -782,4 +782,15 @@ class Theme():
         cls._data["systemSelectGridImageYOffset"] = value
         cls.save_changes()
     
+    @classmethod
+    def get_system_select_grid_selected_img_bg_y_offset(cls):
+        return cls._data.get("systemSelectGridImageBgYOffset", cls.get_system_select_grid_img_y_offset())
+    
+    @classmethod
+    def set_system_select_grid_selected_img_bg_y_offset(cls, value):
+        cls._data["systemSelectGridImageBgYOffset"] = value
+        cls.save_changes()
+    
+
+    
     

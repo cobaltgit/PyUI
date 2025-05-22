@@ -102,7 +102,8 @@ class GameSystemSelectMenu:
                 use_mutli_row_grid_select_as_backup_for_single_row_grid_select=Theme.get_system_select_show_sel_bg_grid_mode(),
                 hide_grid_bg=not Theme.get_system_select_show_sel_bg_grid_mode(),
                 show_grid_text=Theme.get_system_select_show_text_grid_mode(),
-                grid_image_y_offset=Theme.get_system_select_grid_img_y_offset()
+                grid_image_y_offset=Theme.get_system_select_grid_img_y_offset(),
+                grid_selected_image_bg_y_offset=Theme.get_system_select_grid_selected_img_bg_y_offset(),
             )
         else:
             view.set_options(systems_list)
