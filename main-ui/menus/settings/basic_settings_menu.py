@@ -4,7 +4,7 @@ from controller.controller_inputs import ControllerInput
 from devices.device import Device
 from display.display import Display
 from menus.settings import settings_menu
-from menus.settings.advance_settings_menu import AdvanceSettingsMenu
+from menus.settings.extra_settings_menu import ExtraSettingsMenu
 from menus.settings.bluetooth_menu import BluetoothMenu
 from menus.settings.display_settings_menu import DisplaySettingsMenu
 from menus.settings.theme.theme_settings_menu import ThemeSettingsMenu
@@ -23,7 +23,6 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         super().__init__()
         self.wifi_menu = WifiMenu()
         self.bt_menu = BluetoothMenu()
-        self.advance_settings_menu = AdvanceSettingsMenu()
         self.anything_theme_related_changed = False
 
     def shutdown(self, input: ControllerInput):
@@ -100,27 +99,9 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         PyUiConfig.save()      
         self.theme_changed = True
 
-    def launch_advance_settings(self,input):
+    def launch_extra_settings(self,input):
         if(ControllerInput.A == input):
-            self.advance_settings_menu.show_menu()
-
-    def launch_display_settings(self,input):
-        if(ControllerInput.A == input):
-            DisplaySettingsMenu().show_menu()
-
-    def launch_stock_os_menu(self,input):
-        if(ControllerInput.A == input):
-            Device.launch_stock_os_menu()
-
-    def calibrate_sticks(self,input):
-        if(ControllerInput.A == input):
-            Device.calibrate_sticks()
-
-    def set_timezone(self,input):
-        if(ControllerInput.A == input):
-            tz = TimezoneMenu().ask_user_for_timezone()
-            if(tz is not None):
-                PyUiConfig.set_timezone(tz)
+            ExtraSettingsMenu().show_menu()
 
     def build_options_list(self):
         option_list = []
@@ -196,61 +177,13 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
             
         option_list.append(
                 GridOrListEntry(
-                        primary_text="Stock OS Menu",
+                        primary_text="Extra Settings",
                         value_text=None,
                         image_path=None,
                         image_path_selected=None,
                         description=None,
                         icon=None,
-                        value=self.launch_stock_os_menu
-                    )
-            )
-                    
-        option_list.append(
-                GridOrListEntry(
-                        primary_text="Set Timezone",
-                        value_text=None,
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.set_timezone
-                    )
-            )
-                    
-        option_list.append(
-                GridOrListEntry(
-                        primary_text="Calibrate Analog Sticks",
-                        value_text=None,
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.calibrate_sticks
-                    )
-            )
-            
-        option_list.append(
-                GridOrListEntry(
-                        primary_text="Advanced Settings",
-                        value_text=None,
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.launch_advance_settings
-                    )
-            )
-            
-        option_list.append(
-                GridOrListEntry(
-                        primary_text="Display Settings",
-                        value_text=None,
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.launch_display_settings
+                        value=self.launch_extra_settings
                     )
             )
 
