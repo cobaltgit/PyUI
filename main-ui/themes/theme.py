@@ -379,9 +379,9 @@ class Theme():
                 case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
                     return cls.hex_to_color(cls._data["grid"]["color"])
                 case FontPurpose.LIST_INDEX:
-                    return cls.hex_to_color(cls._data.currentpage["color"])
+                    return cls.hex_to_color(cls._data["currentpage"]["color"])
                 case FontPurpose.LIST_TOTAL:
-                    return cls.hex_to_color(cls._data.total["color"])
+                    return cls.hex_to_color(cls._data["total"]["color"])
                 case _:
                     return cls.hex_to_color(cls._data["grid"]["color"])
         except Exception as e:
@@ -404,9 +404,9 @@ class Theme():
                 case FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION:
                     return cls.hex_to_color(cls._data["grid"]["selectedcolor"])
                 case FontPurpose.LIST_INDEX:
-                    return cls.hex_to_color(cls._data.currentpage["selectedcolor"])
+                    return cls.hex_to_color(cls._data["currentpage"]["color"])
                 case FontPurpose.LIST_TOTAL:
-                    return cls.hex_to_color(cls._data.total["color"])
+                    return cls.hex_to_color(cls._data["total"]["color"])
                 case FontPurpose.ON_SCREEN_KEYBOARD:
                     return cls.hex_to_color(cls._data["grid"]["selectedcolor"])
                 case _:
