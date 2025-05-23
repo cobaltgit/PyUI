@@ -263,7 +263,7 @@ class Controller:
                         Controller.non_sdl_input = None
                         Controller.special_non_sdl_event = False
                         PyUiLogger.get_logger().info(f"Ending special non sdl event : {controller_input}")
-                        Controller.last_press_time_map.pop(controller_input,None)
+
             else:
                 if(not Controller.is_check_for_hotkey):
                     Device.special_input(controller_input, 0)
@@ -275,12 +275,5 @@ class Controller:
                 last_press_time_length = time.time() - Controller.last_press_time_map[controller_input]
                 if(last_press_time_length < TRIGGER_TIME_FOR_HOLD_BUTTONS):
                     Device.special_input(controller_input, 0)
-                else:
-                    PyUiLogger.get_logger().info(f"Starting special non sdl event : {controller_input}")
-                    Controller.special_non_sdl_event = True
-                    Controller.render_required_callback = lambda ci=controller_input, lpt=last_press_time_length: Device.special_input(ci, lpt)
-                    Controller.non_sdl_input = None
-                    Controller.special_non_sdl_event = False
-                    PyUiLogger.get_logger().info(f"Ending special non sdl event : {controller_input}")
 
             Controller.last_press_time_map.pop(controller_input,None)

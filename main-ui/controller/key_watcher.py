@@ -14,48 +14,58 @@ EVENT_FORMAT = 'llHHI'
 EVENT_SIZE = struct.calcsize(EVENT_FORMAT)
 EV_KEY = 0x01  # Event type for keyboard
 KEY_PRESS = 1
+KEY_RELEASE = 0
 KEY_REPEAT = 2
-
 
 class KeyWatcher:
 
     def __init__(self, event_path):
         self.event_path = event_path
-
+        self.held_keys = {}  # Maps keycode -> last seen time
+        self.repeat_interval = 0.2  # seconds
+        try:
+            self.fd = os.open(self.event_path, os.O_RDONLY | os.O_NONBLOCK)
+        except OSError as e:
+            print(f"Error opening {self.event_path}: {e}")
+            return (None, None)
 
     def read_keyboard_input(self, timeout=1.0):
         """
-        Polls for a single key event from a Linux input device (e.g., keyboard).
-
-        Args:
-            timeout (float): Time in seconds to wait before giving up.
+        Polls for a single key event or simulates a repeat if a key is held.
 
         Returns:
-            tuple or None: (keycode, is_down) where is_down is True for key press/repeat,
-                        False for key release. Returns None on timeout or error.
+            tuple: (keycode, is_down)
         """
-        try:
-            fd = os.open(self.event_path, os.O_RDONLY | os.O_NONBLOCK)
-        except OSError as e:
-            print(f"Error opening {self.event_path}: {e}")
-            return None
+        now = time.time()
+
 
         try:
-            rlist, _, _ = select.select([fd], [], [], timeout)
+            rlist, _, _ = select.select([self.fd], [], [], timeout)
             if rlist:
-                data = os.read(fd, EVENT_SIZE)
+                data = os.read(self.fd, EVENT_SIZE)
                 if len(data) == EVENT_SIZE:
                     _, _, event_type, code, value = struct.unpack(EVENT_FORMAT, data)
                     if event_type == EV_KEY:
-                        is_down = value in (KEY_PRESS, KEY_REPEAT)
-                        return (code, is_down)
+                        if value == KEY_PRESS:
+                            self.held_keys[code] = now
+                            return (code, True)
+                        elif value == KEY_REPEAT:
+                            self.held_keys[code] = now
+                            return (code, True)
+                        elif value == KEY_RELEASE:
+                            self.held_keys.pop(code, None)
+                            return (code, False)
         except Exception as e:
             print(f"Error reading input: {e}")
-        finally:
-            os.close(fd)
 
-        return (None,None)
+        # Simulate repeat for held keys
+        for code, last_time in list(self.held_keys.items()):
+            if now - last_time >= self.repeat_interval:
+                self.held_keys[code] = now
+                return (code, True)
     
+        return (None, None)
+        
     def poll_keyboard(self):
         last_recorded_time = 0
         while(True):
