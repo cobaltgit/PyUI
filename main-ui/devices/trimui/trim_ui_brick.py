@@ -785,14 +785,8 @@ class TrimUIBrick(DeviceCommon):
     def launch_stock_os_menu(self):
         pass
 
-    
     def calibrate_sticks(self):
-        from display.display import Display
-        from themes.theme import Theme
-        
-        Display.clear("Stick Calibration")
-        Display.render_text_centered("No Analog Sticks Detected",self.screen_width//2, self.screen_height//2,Theme.text_color_selected(FontPurpose.LIST))
-        Display.present()
-        time.sleep(2)
+        pass
 
-
+    def supports_analog_calibration(self):
+        return False

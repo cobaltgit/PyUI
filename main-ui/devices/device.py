@@ -251,6 +251,10 @@ class Device:
         return Device._impl.launch_stock_os_menu()
     
     @staticmethod  
+    def supports_analog_calibration():
+        return Device._impl.supports_analog_calibration()
+    
+    @staticmethod  
     def calibrate_sticks():
         return Device._impl.calibrate_sticks()
     

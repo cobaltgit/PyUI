@@ -976,3 +976,8 @@ class MiyooFlip(DeviceCommon):
                                 stdout=subprocess.DEVNULL,
                                 stderr=subprocess.DEVNULL)
         Controller.re_init_controller()
+
+
+    def supports_analog_calibration(self):
+        return True
+    
