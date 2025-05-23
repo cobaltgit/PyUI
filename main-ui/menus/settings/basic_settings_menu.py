@@ -27,7 +27,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
 
     def shutdown(self, input: ControllerInput):
         if(ControllerInput.A == input):
-           Device.run_app(Device.power_off_cmd())
+           Device.prompt_power_down()
     
     def reboot(self, input: ControllerInput):
         if(ControllerInput.A == input):
