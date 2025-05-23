@@ -9,6 +9,7 @@ import threading
 import time
 from apps.miyoo.miyoo_app_finder import MiyooAppFinder
 from controller.controller_inputs import ControllerInput
+from controller.key_watcher import KeyWatcher
 from devices.charge.charge_status import ChargeStatus
 from devices.device_common import DeviceCommon
 import os
@@ -25,6 +26,8 @@ import sdl2
 from utils import throttle
 from utils.logger import PyUiLogger
 import psutil
+
+from utils.py_ui_config import PyUiConfig
 
 class TrimUIBrick(DeviceCommon):
     
@@ -60,6 +63,15 @@ class TrimUIBrick(DeviceCommon):
         self._set_brightness_to_config()
         self.ensure_wpa_supplicant_conf()
         threading.Thread(target=self.monitor_wifi, daemon=True).start()
+        if(PyUiConfig.enable_button_watchers()):
+            from controller.controller import Controller
+            #/dev/miyooio if we want to get rid of miyoo_inputd
+            # debug in terminal: hexdump  /dev/miyooio
+            self.volume_key_watcher = KeyWatcher("/dev/input/event3")
+            Controller.add_button_watcher(self.volume_key_watcher.poll_keyboard)
+            volume_key_polling_thread = threading.Thread(target=self.volume_key_watcher.poll_keyboard, daemon=True)
+            volume_key_polling_thread.start()
+
 
     def ensure_wpa_supplicant_conf(self):
         conf_path = Path("/userdata/cfg/wpa_supplicant.conf")
@@ -432,11 +444,27 @@ class TrimUIBrick(DeviceCommon):
         return mapping
     
     def map_key(self, key_code):
-        PyUiLogger.get_logger().error(f"Received key_down key_code = {key_code}")
-        return None
+        if(116 == key_code):
+            return ControllerInput.POWER_BUTTON
+        if(115 == key_code):
+            return ControllerInput.VOLUME_UP
+        elif(114 == key_code):
+            return ControllerInput.VOLUME_DOWN
+        else:
+            PyUiLogger.get_logger().debug(f"Unrecognized keycode {key_code}")
+            return None
+
     
     def special_input(self, controller_input, length_in_seconds):
-        PyUiLogger.get_logger().error(f"Received special input = {controller_input}")
+        if(ControllerInput.POWER_BUTTON == controller_input):
+            if(length_in_seconds < 1):
+                self.sleep()
+            else:
+                self.prompt_power_down()
+        elif(ControllerInput.VOLUME_UP == controller_input):
+            self.change_volume(5)
+        elif(ControllerInput.VOLUME_DOWN == controller_input):
+            self.change_volume(-5)
 
     def map_analog_input(self, sdl_axis, sdl_value):
         PyUiLogger.get_logger().error(f"Received analog input axis = {sdl_axis}, value = {sdl_value}")
