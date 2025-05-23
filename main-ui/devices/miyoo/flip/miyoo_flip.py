@@ -583,9 +583,30 @@ class MiyooFlip(DeviceCommon):
             #)
             return None
 
-    def special_input(self, controller_input):
+    def prompt_power_down(self):
+        from display.display import Display
+        from themes.theme import Theme
+        from controller.controller import Controller
+        while(True):
+            PyUiLogger.get_logger().info("Prompting for shutdown")
+            Display.clear("Power")
+            Display.render_text_centered(f"Would you like to power down?",self.screen_width//2, self.screen_height//2,Theme.text_color_selected(FontPurpose.LIST), purpose=FontPurpose.LIST)
+            Display.render_text_centered(f"A = Power Down, X = Reboot, B = Cancel",self.screen_width //2, self.screen_height//2+100,Theme.text_color_selected(FontPurpose.LIST), purpose=FontPurpose.LIST)
+            Display.present()
+            if(Controller.get_input()):
+                if(Controller.last_input() == ControllerInput.A):
+                    self.run_app([self.power_off_cmd])
+                elif(Controller.last_input() == ControllerInput.X):
+                    self.run_app([self.reboot_cmd])
+                elif(Controller.last_input() == ControllerInput.B):
+                    return
+
+    def special_input(self, controller_input, length_in_seconds):
         if(ControllerInput.POWER_BUTTON == controller_input):
-            self.sleep()
+            if(length_in_seconds < 1):
+                self.sleep()
+            else:
+                self.prompt_power_down()
         elif(ControllerInput.VOLUME_UP == controller_input):
             self.change_volume(5)
         elif(ControllerInput.VOLUME_DOWN == controller_input):

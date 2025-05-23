@@ -134,7 +134,7 @@ class DeviceCommon(ABC):
         pass
 
     @abstractmethod
-    def special_input(self, key_code):   
+    def special_input(self, key_code, length_in_seconds):   
         pass
 
     @abstractmethod

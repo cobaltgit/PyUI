@@ -135,8 +135,8 @@ class Device:
         return Device._impl.map_analog_input(sdl_axis, sdl_value)
 
     @staticmethod
-    def special_input(key_code):
-        return Device._impl.special_input(key_code)
+    def special_input(key_code, length_in_seconds):
+        return Device._impl.special_input(key_code, length_in_seconds)
 
     @staticmethod
     def map_key(key_code):
