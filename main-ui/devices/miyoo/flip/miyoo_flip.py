@@ -37,6 +37,8 @@ class MiyooFlip(DeviceCommon):
     def __init__(self):
         PyUiLogger.get_logger().info("Initializing Miyoo Flip")
         self.path = self
+        
+        
         self.sdl_button_to_input = {
             sdl2.SDL_CONTROLLER_BUTTON_A: ControllerInput.B,
             sdl2.SDL_CONTROLLER_BUTTON_B: ControllerInput.A,
@@ -54,6 +56,7 @@ class MiyooFlip(DeviceCommon):
             sdl2.SDL_CONTROLLER_BUTTON_START: ControllerInput.START,
             sdl2.SDL_CONTROLLER_BUTTON_BACK: ControllerInput.SELECT,
         }
+        
         os.environ["SDL_VIDEODRIVER"] = "KMSDRM"
         os.environ["SDL_RENDER_DRIVER"] = "kmsdrm"
         
@@ -73,9 +76,11 @@ class MiyooFlip(DeviceCommon):
         threading.Thread(target=self.hardware_poller.continuously_monitor, daemon=True).start()
 
         if(PyUiConfig.enable_button_watchers()):
+            from controller.controller import Controller
             #/dev/miyooio if we want to get rid of miyoo_inputd
             # debug in terminal: hexdump  /dev/miyooio
             self.volume_key_watcher = KeyWatcher("/dev/input/event0")
+            Controller.add_button_watcher(self.volume_key_watcher.poll_keyboard)
             volume_key_polling_thread = threading.Thread(target=self.volume_key_watcher.poll_keyboard, daemon=True)
             volume_key_polling_thread.start()
             self.power_key_watcher = KeyWatcher("/dev/input/event2")
