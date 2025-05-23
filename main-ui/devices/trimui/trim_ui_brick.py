@@ -71,6 +71,9 @@ class TrimUIBrick(DeviceCommon):
             Controller.add_button_watcher(self.volume_key_watcher.poll_keyboard)
             volume_key_polling_thread = threading.Thread(target=self.volume_key_watcher.poll_keyboard, daemon=True)
             volume_key_polling_thread.start()
+            self.power_key_watcher = KeyWatcher("/dev/input/event1")
+            power_key_polling_thread = threading.Thread(target=self.power_key_watcher.poll_keyboard, daemon=True)
+            power_key_polling_thread.start()
 
 
     def ensure_wpa_supplicant_conf(self):
@@ -161,7 +164,6 @@ class TrimUIBrick(DeviceCommon):
                     self.run_app([self.reboot_cmd])
                 elif(Controller.last_input() == ControllerInput.B):
                     return
-
 
     @property
     def power_off_cmd(self):
@@ -385,6 +387,13 @@ class TrimUIBrick(DeviceCommon):
 
     def fix_sleep_sound_bug(self):
         pass
+
+    def sleep(self):
+        try:
+            with open("/sys/power/state", "w") as f:
+                f.write("mem")  
+        except Exception as e:
+            PyUiLogger.get_logger().error(f"Failure attempting to sleep: {e}")
 
 
     def run_game(self, rom_info):
