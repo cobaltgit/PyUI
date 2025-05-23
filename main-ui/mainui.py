@@ -84,6 +84,8 @@ def main():
 
     Theme.init(selected_theme, Device.screen_width(), Device.screen_height())
     Display.init()
+    #2nd init is just to allow scaling if needed
+    Theme.init(selected_theme, Device.screen_width(), Device.screen_height())
     Controller.init()
     main_menu = MainMenu()
 
