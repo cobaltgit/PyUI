@@ -231,6 +231,10 @@ class Theme():
     @classmethod
     def _grid_multi_row_selected_bg(cls):
         return cls._asset("bg-game-item-f.png")
+    
+    @classmethod
+    def _grid_multi_row_unselected_bg(cls):
+        return cls._asset("bg-game-item-n.png")
 
     @classmethod
     def _grid_single_row_selected_bg(cls):
@@ -442,8 +446,8 @@ class Theme():
         return cls._data.get("descriptiveListTextFromIconOffset", 10)
 
     @classmethod
-    def get_grid_multirow_text_offset_y(cls):
-        return cls._data.get("gridMultirowTextOffsetY", -25)
+    def get_grid_multirow_text_offset_y_percent(cls):
+        return cls._data.get("gridMultirowTextOffsetYPercent", -15)
 
     @classmethod
     def get_system_select_show_sel_bg_grid_mode(cls):
@@ -504,6 +508,15 @@ class Theme():
                 return cls._grid_multi_row_selected_bg()
             else:
                 return None
+                        
+    @classmethod
+    def get_grid_bg_unselected(cls, rows, cols, use_multi_row_select_as_backup = False):
+        # TODO better handle this dynamically
+        if rows > 1:
+            return cls._grid_multi_row_unselected_bg()
+        else:
+            #TODO?
+            return None
 
     @classmethod
     def get_view_type_for_main_menu(cls):
@@ -738,15 +751,6 @@ class Theme():
         cls.save_changes()
 
     @classmethod
-    def get_grid_multi_row_extra_y_pad(cls):
-        return cls._data.get("gridMultiRowExtraYPad", 17)
-    
-    @classmethod
-    def set_grid_multi_row_extra_y_pad(cls, value):
-        cls._data["gridMultiRowExtraYPad"] = value
-        cls.save_changes()
-
-    @classmethod
     def get_grid_multi_row_sel_bg_resize_pad_width(cls):
         return cls._data.get("gridMultiRowSelBgResizePadWidth", 20)
     
@@ -774,23 +778,9 @@ class Theme():
         cls.save_changes()
     
     @classmethod
-    def get_system_select_grid_img_y_offset(cls):
-        return cls._data.get("systemSelectGridImageYOffset", 0)
-    
-    @classmethod
-    def set_system_select_grid_img_y_offset(cls, value):
-        cls._data["systemSelectGridImageYOffset"] = value
-        cls.save_changes()
-    
-    @classmethod
-    def get_system_select_grid_selected_img_bg_y_offset(cls):
-        return cls._data.get("systemSelectGridImageBgYOffset", cls.get_system_select_grid_img_y_offset())
-    
-    @classmethod
-    def set_system_select_grid_selected_img_bg_y_offset(cls, value):
-        cls._data["systemSelectGridImageBgYOffset"] = value
-        cls.save_changes()
-    
+    def get_system_select_grid_img_y_offset(cls, text_height):
+        default_height = -25
+        if(0 != text_height):
+            default_height = -1 * text_height        
 
-    
-    
+        return cls._data.get("systemSelectGridImageYOffset", default_height)

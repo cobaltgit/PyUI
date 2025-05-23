@@ -40,20 +40,6 @@ class ThemeSettingsSystemSelectMenu(ThemeSettingsMenuCommon):
                                         Theme.get_system_select_show_sel_bg_grid_mode, 
                                         Theme.set_system_select_show_sel_bg_grid_mode)
             )
-            option_list.append(
-                self.build_numeric_entry("Icon Y Offset", 
-                                        Theme.get_system_select_grid_img_y_offset, 
-                                        Theme.set_system_select_grid_img_y_offset,
-                                        -sys.maxsize - 1,
-                                        sys.maxsize)
-            )
-            option_list.append(
-                self.build_numeric_entry("Sel Icon BG Y Offset", 
-                                        Theme.get_system_select_grid_selected_img_bg_y_offset, 
-                                        Theme.set_system_select_grid_selected_img_bg_y_offset,
-                                        -sys.maxsize - 1,
-                                        sys.maxsize)
-            )
             
             
         return option_list

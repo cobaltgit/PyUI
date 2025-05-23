@@ -224,6 +224,12 @@ class Display:
             )
 
         line_height = sdl2.sdlttf.TTF_FontHeight(font)
+        surface = sdl2.sdlttf.TTF_RenderUTF8_Blended(font, "A".encode('utf-8'), sdl2.SDL_Color(0, 0, 0))
+        if not surface:
+            line_height = 0
+        else:
+            sdl2.SDL_FreeSurface(surface)
+
         return LoadedFont(font, line_height, font_path)
 
 
