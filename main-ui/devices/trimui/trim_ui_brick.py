@@ -1,6 +1,7 @@
 import array
 import ctypes
 import fcntl
+import math
 from pathlib import Path
 import re
 import socket
@@ -326,16 +327,18 @@ class TrimUIBrick(DeviceCommon):
     def saturation(self):
         return self.system_config.get("colorsaturation")
 
-    def _set_volume(self, volume):
+    def _set_volume(self, user_volume):
+        from display.display import Display
+        volume = math.ceil(user_volume * 255//100)
         if(volume < 0):
             volume = 0
-        elif(volume > 100):
-            volume = 100
+        elif(volume > 256):
+            volume = 255
 
         try:
             
             ProcessRunner.run(
-                ["amixer", "cset", f"name='Soft Volume Master'", str(volume)],
+                ["amixer", "cset", f"numid=17", str(int(volume))],
                 check=True
             )
 
@@ -343,19 +346,31 @@ class TrimUIBrick(DeviceCommon):
             PyUiLogger.get_logger().error(f"Failed to set volume: {e}")
 
         self.system_config.reload_config()
-        self.system_config.set_volume(volume // 5)
+        self.system_config.set_volume(user_volume)
         self.system_config.save_config()
-
+        Display.volume_changed(user_volume)
+        return user_volume
 
     def change_volume(self, amount):
         self._set_volume(self.get_volume() + amount)
 
     def get_display_volume(self):
-        return self.get_volume() // 5
+        return self.get_volume()
 
     def get_volume(self):
-        return 0
-        
+        # Run the command and capture output
+        result = subprocess.run(['amixer', 'cget', 'numid=17'], capture_output=True, text=True)
+        print(f"amixer cget numid=17 returned : {result}")
+        # Search for 'values=' line and extract the first value
+        match = re.search(r'values=(\d+),\d+', result.stdout)
+        if match:
+            volume = int(match.group(1))
+            PyUiLogger().get_logger().info(f"Volume is {volume}")
+            return math.ceil(volume * 100/255)
+        else:
+            PyUiLogger().get_logger().error("Unable to find volume from amixer command")
+            return 0
+
     def convert_game_path_to_miyoo_path(self,original_path):
         # Define the part of the path to be replaced
         base_dir = "/mnt/SDCARD/Roms/"
@@ -471,7 +486,7 @@ class TrimUIBrick(DeviceCommon):
             else:
                 self.prompt_power_down()
         elif(ControllerInput.VOLUME_UP == controller_input):
-            self.change_volume(5)
+            self.change_volume(+5)
         elif(ControllerInput.VOLUME_DOWN == controller_input):
             self.change_volume(-5)
 
