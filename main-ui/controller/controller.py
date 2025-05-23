@@ -73,29 +73,42 @@ class Controller:
 
     @staticmethod
     def still_held_down():
+        #PyUiLogger.get_logger().debug(f"Checking if {Controller.last_input()} is still held down")
         return sdl2.SDL_GameControllerGetButton(Controller.controller, Controller.event.cbutton.button)
 
     @staticmethod
     def get_input(timeout=-2, is_check_for_hotkey=False):
-        if timeout == -2:
+        DEFAULT_TIMEOUT_FLAG = -2
+        INPUT_DEBOUNCE_SECONDS = 0.2
+        POLL_INTERVAL_SECONDS = 0.005
+
+        if timeout == DEFAULT_TIMEOUT_FLAG:
             timeout = Device.input_timeout_default()
 
-        if time.time() - Controller.last_input_time > 0.2:
+        now = time.time()
+        time_since_last_input = now - Controller.last_input_time
+
+        # Clear stale events if enough time has passed
+        if time_since_last_input > INPUT_DEBOUNCE_SECONDS:
             sdl2.SDL_PumpEvents()
             Controller.clear_input_queue()
 
         sdl2.SDL_PumpEvents()
         start_time = time.time()
 
+        # Wait if the input is being held down (anti-repeat logic)
         while Controller.still_held_down() and (time.time() - start_time < Controller.hold_delay):
             sdl2.SDL_PumpEvents()
-            time.sleep(0.005)
+            time.sleep(POLL_INTERVAL_SECONDS)
 
+        was_hotkey = False
         if not Controller.still_held_down():
+            # Reset hold delay and clear any lingering event
             Controller.hold_delay = PyUiConfig.get_turbo_delay_ms()
             Controller._last_event().type = 0
 
-            while True: #break when timeout hit or event happens
+            # Blocking wait for event until timeout
+            while True:
                 elapsed = time.time() - start_time
                 remaining_time = timeout - elapsed
                 if remaining_time <= 0:
@@ -104,23 +117,31 @@ class Controller:
                 ms_remaining = int(remaining_time * 1000)
                 event_available = sdl2.SDL_WaitEventTimeout(byref(Controller.event), ms_remaining)
 
-                if event_available and Controller.last_input() is not None:
-                    if(ControllerInput.MENU == Controller.last_input()):
-                        if(not is_check_for_hotkey and not Controller.check_for_hotkey()):
-                            break
-                        else:
-                            Controller._last_event().type = -1
-                    else:
-                        break
+                if event_available:
+                    last_input = Controller.last_input()
 
-                elif event_available and Controller._last_event().type == sdl2.SDL_CONTROLLERDEVICEADDED:
-                    PyUiLogger.get_logger().info("New controller detected")
-                    Controller.init_controller()
+                    if last_input is not None:
+                        if last_input == ControllerInput.MENU:
+                            if not is_check_for_hotkey and not Controller.check_for_hotkey():
+                                break  # Treat MENU as valid input
+                            else:
+                                was_hotkey = True
+                                while Controller.still_held_down():
+                                    Controller.check_for_hotkey()
+                        else:
+                            break  # Valid non-hotkey input
+
+                    elif Controller._last_event().type == sdl2.SDL_CONTROLLERDEVICEADDED:
+                        PyUiLogger.get_logger().info("New controller detected")
+                        Controller.init_controller()
+        elif(ControllerInput.MENU == Controller.last_input()):
+            was_hotkey = True
+            Controller.check_for_hotkey()
         else:
-            Controller.hold_delay = 0.0
+            Controller.hold_delay = 0.0  # No input was released yet
 
         Controller.last_input_time = time.time()
-        return Controller.last_event_was_controller()
+        return Controller.last_event_was_controller() and not was_hotkey
 
     @staticmethod
     def clear_input_queue():
@@ -184,9 +205,14 @@ class Controller:
         Controller._last_event().type = -1
         if(Controller.get_input(timeout=0.3,is_check_for_hotkey=True)):
             PyUiLogger.get_logger().info(f"Dected hotkey Menu + {Controller.last_input()}")
+            time.sleep(0.3)
+            Controller.event = cached_event
             return True # was
         else:
-            PyUiLogger.get_logger().info(f"Not key found, setting to menu")
             Controller.event = cached_event
             return False
         
+    @staticmethod
+    def non_sdl_input_event(controller_input, is_down):
+        if(is_down):
+            Device.special_input(controller_input)

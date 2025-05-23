@@ -582,22 +582,25 @@ class MiyooFlip(DeviceCommon):
             #    f"(range: min = {min_val}, max = {max_val}, avg = {avg_val:.2f})"
             #)
             return None
-                
-    def key_down(self, key_code):
-        if(116 == key_code):
-            PyUiLogger.get_logger().debug(f"POWER_BUTTON")
+
+    def special_input(self, controller_input):
+        if(ControllerInput.POWER_BUTTON == controller_input):
             self.sleep()
+        elif(ControllerInput.VOLUME_UP == controller_input):
+            self.change_volume(5)
+        elif(ControllerInput.VOLUME_DOWN == controller_input):
+            self.change_volume(-5)
+
+    def map_key(self, key_code):
+        if(116 == key_code):
             return ControllerInput.POWER_BUTTON
         if(115 == key_code):
-            PyUiLogger.get_logger().debug(f"VOLUME_UP")
-            self.change_volume(5)
             return ControllerInput.VOLUME_UP
         elif(114 == key_code):
-            PyUiLogger.get_logger().debug(f"VOLUME_DOWN")
-            self.change_volume(-5)
             return ControllerInput.VOLUME_DOWN
         else:
             PyUiLogger.get_logger().debug(f"Unrecognized keycode {key_code}")
+            return None
 
 
     def get_wifi_connection_quality_info(self) -> WiFiConnectionQualityInfo:
