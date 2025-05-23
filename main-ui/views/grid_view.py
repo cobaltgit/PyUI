@@ -108,8 +108,7 @@ class GridView(View):
             y_index = int(visible_index / self.cols)
             row_spacing = Display.get_usable_screen_height() / self.rows
             row_start_y = y_index * row_spacing
-            bottom_row_y = row_start_y + row_spacing + Display.get_top_bar_height()
-
+            bottom_row_y = row_start_y + row_spacing + Display.get_top_bar_height(False)
             render_mode = RenderMode.MIDDLE_CENTER_ALIGNED
             if(YRenderOption.CENTER == render_mode.y_mode):
                 cell_y = bottom_row_y - row_spacing //2
@@ -125,8 +124,13 @@ class GridView(View):
                 text_height = Display.get_line_height(self.font_purpose)
             else:
                 text_height = 0
-
-            img_offset = Theme.get_system_select_grid_img_y_offset(text_height)
+            
+            if(self.rows == 1):
+                img_offset = 0
+            else:
+                img_offset = Theme.get_system_select_grid_img_y_offset(text_height)
+            print(f"Theme.ignore_top_and_bottom_bar_for_layout()={Theme.ignore_top_and_bottom_bar_for_layout()}, Display.get_top_bar_height()={Display.get_top_bar_height()}")
+            print(f"img_offset = {img_offset}")
 
                 
             bg_offset = 0
@@ -167,7 +171,7 @@ class GridView(View):
 
             if (self.show_grid_text):
                 if(self.rows == 1) : 
-                    y_text = int(Device.screen_height() * 345/480)
+                    y_text = int(Device.screen_height() * 360/480)
                 else:
                     y_text = bottom_row_y - text_height
                 Display.render_text(imageTextPair.get_primary_text(),
