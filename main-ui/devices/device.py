@@ -223,6 +223,10 @@ class Device:
         return Device._impl.power_off_cmd
 
     @staticmethod
+    def prompt_power_down():
+        return Device._impl.prompt_power_down()
+
+    @staticmethod
     def reboot_cmd():
         return Device._impl.reboot_cmd
 

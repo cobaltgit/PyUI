@@ -211,6 +211,10 @@ class DeviceCommon(ABC):
     def power_off_cmd(self):
         pass
     
+    @abstractmethod
+    def prompt_power_down(self):
+        pass
+    
     @property
     @abstractmethod
     def reboot_cmd(self):
