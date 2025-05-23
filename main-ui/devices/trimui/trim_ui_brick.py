@@ -132,6 +132,25 @@ class TrimUIBrick(DeviceCommon):
         icon_size = 140
         return icon_size+int(self.large_grid_x_offset/2)
     
+    def prompt_power_down(self):
+        from display.display import Display
+        from themes.theme import Theme
+        from controller.controller import Controller
+        while(True):
+            PyUiLogger.get_logger().info("Prompting for shutdown")
+            Display.clear("Power")
+            Display.render_text_centered(f"Would you like to power down?",self.screen_width//2, self.screen_height//2,Theme.text_color_selected(FontPurpose.LIST), purpose=FontPurpose.LIST)
+            Display.render_text_centered(f"A = Power Down, X = Reboot, B = Cancel",self.screen_width //2, self.screen_height//2+100,Theme.text_color_selected(FontPurpose.LIST), purpose=FontPurpose.LIST)
+            Display.present()
+            if(Controller.get_input()):
+                if(Controller.last_input() == ControllerInput.A):
+                    self.run_app([self.power_off_cmd])
+                elif(Controller.last_input() == ControllerInput.X):
+                    self.run_app([self.reboot_cmd])
+                elif(Controller.last_input() == ControllerInput.B):
+                    return
+
+
     @property
     def power_off_cmd(self):
         return "poweroff"
@@ -321,21 +340,7 @@ class TrimUIBrick(DeviceCommon):
         return self.get_volume() // 5
 
     def get_volume(self):
-        try:
-            output = subprocess.check_output(
-                ["amixer", "cget", "name='Soft Volume Master'"],
-                text=True
-            )
-            match = re.search(r": values=(\d+)", output)
-            if match:
-                return int(match.group(1))
-            else:
-                PyUiLogger.get_logger().info("Volume value not found in amixer output.")
-                return 0 # ???
-            pass
-        except subprocess.CalledProcessError as e:
-            PyUiLogger.get_logger().error(f"Command failed: {e}")
-            return 0 # ???
+        return 0
         
     def convert_game_path_to_miyoo_path(self,original_path):
         # Define the part of the path to be replaced
