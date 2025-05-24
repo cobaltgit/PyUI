@@ -238,10 +238,8 @@ class TrimUIBrick(DeviceCommon):
                 # Perform ioctl with pointer to param
                 fcntl.ioctl(fd, DISP_LCD_SET_BRIGHTNESS, param)
                 os.close(fd)
-        except PermissionError:
-            print("Permission denied: try running as root.")
         except Exception as e:
-            print(f"Error setting brightness: {e}")
+            PyUiLogger.get_logger().error(f"Error setting brightness: {e}")
 
     def _set_contrast_to_config(self):
         pass
@@ -360,7 +358,6 @@ class TrimUIBrick(DeviceCommon):
     def get_volume(self):
         # Run the command and capture output
         result = subprocess.run(['amixer', 'cget', 'numid=17'], capture_output=True, text=True)
-        print(f"amixer cget numid=17 returned : {result}")
         # Search for 'values=' line and extract the first value
         match = re.search(r'values=(\d+),\d+', result.stdout)
         if match:
