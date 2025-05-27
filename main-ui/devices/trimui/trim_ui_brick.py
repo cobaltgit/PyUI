@@ -429,7 +429,7 @@ class TrimUIBrick(DeviceCommon):
     def run_app(self, args, dir = None):
         self.fix_sleep_sound_bug()
         PyUiLogger.get_logger().debug(f"About to launch app {args} from dir {dir}")
-        subprocess.run(["bash"] + args, cwd = dir)
+        subprocess.run(args, cwd = dir)
 
     #TODO untested
     def map_analog_axis(self,sdl_input, value, threshold=16000):
