@@ -538,8 +538,8 @@ class Display:
         return 0 if Theme.ignore_top_and_bottom_bar_for_layout() else cls.bottom_bar.get_bottom_bar_height()
 
     @classmethod
-    def get_usable_screen_height(cls):
-        return Device.screen_height() if Theme.ignore_top_and_bottom_bar_for_layout() else Device.screen_height() - cls.get_bottom_bar_height() - cls.get_top_bar_height()
+    def get_usable_screen_height(cls, force_include_top_bar = False):
+        return Device.screen_height() if Theme.ignore_top_and_bottom_bar_for_layout() and not force_include_top_bar else Device.screen_height() - cls.get_bottom_bar_height() - cls.get_top_bar_height()
 
     @classmethod
     def get_center_of_usable_screen_height(cls, force_include_top_bar = False):
