@@ -193,6 +193,9 @@ class Theme():
     def get_popup_menu_selected_bg(cls): return cls._asset("bg-list-s2.png")
     
     @classmethod
+    def get_missing_carousel_image_path(cls): return cls._asset("missing_image.png")
+    
+    @classmethod
     def get_battery_icon(cls, charging, battery_percent):
         if ChargeStatus.CHARGING == charging:
             if battery_percent > 97:

@@ -8,6 +8,7 @@ from display.render_mode import RenderMode
 import sdl2
 from controller.controller import Controller
 from themes.theme import Theme
+from utils.py_ui_config import PyUiConfig
 from views.grid_or_list_entry import GridOrListEntry
 from views.selection import Selection
 from views.view import View
@@ -31,6 +32,7 @@ class CarouselView(View):
         self.shrink_further_away = shrink_further_away
         self.sides_hang_off_edge = sides_hang_off_edge
 
+        self.options_length = len(options)
         if(self.selected_entry_width_percent is None):
             self.selected_entry_width_percent = 40
 
@@ -52,6 +54,9 @@ class CarouselView(View):
         self.current_right = (cols-1)//2
         self.correct_selected_for_off_list()
         self.prev_visible_options = None
+        self.animated_count = 0
+        self.include_index_text = True
+        self.missing_image_path = Theme.get_missing_carousel_image_path()
 
     def set_options(self, options):
         self.options = options
@@ -142,11 +147,34 @@ class CarouselView(View):
         else:
             Display.clear(self.top_bar_text)
 
+    def _render_image(self,
+                      image_path: str, 
+                      x: int, 
+                      y: int, 
+                      render_mode, 
+                      target_width, 
+                      target_height,
+                      resize_type):
+        width, height = Display.render_image(image_path=image_path, 
+                            x=x, 
+                            y=y,
+                            render_mode=render_mode,
+                            target_width=target_width,
+                            target_height=target_height,
+                            resize_type=resize_type)
+        if(0 == width and 0 == height):
+            Display.render_image(image_path=self.missing_image_path, 
+                                x=x, 
+                                y=y,
+                                render_mode=render_mode,
+                                target_width=target_width,
+                                target_height=target_height,
+                                resize_type=resize_type)
     def _render(self):
         self._clear()
         self.correct_selected_for_off_list()
 
-
+        
         #TODO Get hard coded values for padding from theme
         x_pad = 10
         usable_width = Device.screen_width()
@@ -170,9 +198,11 @@ class CarouselView(View):
         widths = [w - 2*x_pad for w in widths]
         
         visible_options: List[GridOrListEntry] = self.get_visible_options()
+
         if(self.prev_visible_options is not None and self.selected != self.prev_selected):
             self.animate_transition()
-        
+        else:
+            self.animated_count = 0
         
         render_mode = RenderMode.MIDDLE_CENTER_ALIGNED
         for visible_index, imageTextPair in enumerate(visible_options):
@@ -180,7 +210,7 @@ class CarouselView(View):
 
             y_image_offset = Display.get_center_of_usable_screen_height()
             
-            Display.render_image(imageTextPair.get_image_path(), 
+            self._render_image(imageTextPair.get_image_path(), 
                                     x_offset, 
                                     y_image_offset,
                                     render_mode,
@@ -191,9 +221,11 @@ class CarouselView(View):
         self.prev_visible_options = visible_options
         self.prev_x_offsets = x_offsets
         self.prev_widths = widths
+        if(self.include_index_text):
+            Display.add_index_text(self.selected%self.options_length + 1, self.options_length)
 
         Display.present()
-        
+
 
     def get_selected_option(self):
         if 0 <= self.selected < len(self.options):
@@ -224,59 +256,69 @@ class CarouselView(View):
 
 
     def animate_transition(self):
+        animation_frames = 10 - self.animated_count*2
+
+
+        if PyUiConfig.animations_enabled() and animation_frames > 1:
+            render_mode = RenderMode.MIDDLE_CENTER_ALIGNED
+            animation_frames = 10
+            frame_duration = 1 / 60.0  # 60 FPS
+            last_frame_time = 0
+
+            diff = (self.selected - self.prev_selected) % (len(self.options) + 1)
+            rotate_left = diff > (len(self.options) + 1) // 2
+
+            for frame in range(animation_frames):
+                self._clear()
+
+                frame_x_offset = []
+                frame_widths = []
+                t = frame / (animation_frames - 1)
+
+                for i in range(len(self.prev_x_offsets)):
+                    start_x_offset = self.prev_x_offsets[i]
+                    start_width = self.prev_widths[i]
+
+                    if rotate_left:
+                        if i < len(self.prev_x_offsets) - 1:
+                            end_x_offset = self.prev_x_offsets[i + 1]
+                            end_width = self.prev_widths[i+1]
+                        else:
+                            # Last item exits to the right
+                            end_x_offset = start_x_offset
+                            end_width = start_width
+                    else:
+                        if i > 0:
+                            end_x_offset = self.prev_x_offsets[i - 1]
+                            end_width = self.prev_widths[i - 1]
+                        else:
+                            # First item exits to the left0+12
+                            end_x_offset = start_x_offset
+                            end_width = start_width
+
+                    new_x_offset = start_x_offset + (end_x_offset - start_x_offset) * t
+                    new_width = start_width + (end_width - start_width) * t
+                    frame_x_offset.append(new_x_offset)         
+                    frame_widths.append(new_width)
+
+                for visible_index, imageTextPair in enumerate(self.prev_visible_options):
+                    x_offset = frame_x_offset[visible_index]
+
+                    y_image_offset = Display.get_center_of_usable_screen_height()
+                    
+                    self._render_image(imageTextPair.get_image_path(), 
+                                            x_offset, 
+                                            y_image_offset,
+                                            render_mode,
+                                            target_width=frame_widths[visible_index],
+                                            target_height=None,
+                                            resize_type=self.resize_type)
+
+                if time.time() - last_frame_time < frame_duration:
+                    time.sleep(frame_duration - (time.time() - last_frame_time))
+                if(self.include_index_text):
+                    Display.add_index_text(self.selected%self.options_length +1, self.options_length)
+                Display.present()
+                last_frame_time = time.time()
         
-        render_mode = RenderMode.MIDDLE_CENTER_ALIGNED
-        animation_frames = 10
-
-        diff = (self.selected - self.prev_selected) % (len(self.options) + 1)
-        rotate_left = diff > (len(self.options) + 1) // 2
-
-        for frame in range(animation_frames):
-            self._clear()
-
-            frame_x_offset = []
-            frame_widths = []
-            t = frame / (animation_frames - 1)
-
-            for i in range(len(self.prev_x_offsets)):
-                start_x_offset = self.prev_x_offsets[i]
-                start_width = self.prev_widths[i]
-
-                if rotate_left:
-                    if i < len(self.prev_x_offsets) - 1:
-                        end_x_offset = self.prev_x_offsets[i + 1]
-                        end_width = self.prev_widths[i+1]
-                    else:
-                        # Last item exits to the right
-                        end_x_offset = start_x_offset
-                        end_width = start_width
-                else:
-                    if i > 0:
-                        end_x_offset = self.prev_x_offsets[i - 1]
-                        end_width = self.prev_widths[i - 1]
-                    else:
-                        # First item exits to the left0+12
-                        end_x_offset = start_x_offset
-                        end_width = start_width
-
-                new_x_offset = start_x_offset + (end_x_offset - start_x_offset) * t
-                new_width = start_width + (end_width - start_width) * t
-                frame_x_offset.append(new_x_offset)         
-                frame_widths.append(new_width)
-
-            for visible_index, imageTextPair in enumerate(self.prev_visible_options):
-                x_offset = frame_x_offset[visible_index]
-
-                y_image_offset = Display.get_center_of_usable_screen_height()
-                
-                Display.render_image(imageTextPair.get_image_path(), 
-                                        x_offset, 
-                                        y_image_offset,
-                                        render_mode,
-                                        target_width=frame_widths[visible_index],
-                                        target_height=None,
-                                        resize_type=self.resize_type)
-
-            Display.present()
-            pass
-
+        self.animated_count += 1
