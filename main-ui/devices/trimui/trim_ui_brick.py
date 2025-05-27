@@ -427,12 +427,9 @@ class TrimUIBrick(DeviceCommon):
             return None
 
     def run_app(self, args, dir = None):
-        PyUiLogger.get_logger().debug(f"About to launch app {args}")
         self.fix_sleep_sound_bug()
-        if(dir is not None):
-            subprocess.run(args, cwd = dir)
-        else:
-            subprocess.run(args, cwd = dir)
+        PyUiLogger.get_logger().debug(f"About to launch app {args} from dir {dir}")
+        subprocess.run(["bash"] + args, cwd = dir)
 
     #TODO untested
     def map_analog_axis(self,sdl_input, value, threshold=16000):
