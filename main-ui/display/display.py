@@ -568,8 +568,8 @@ class Display:
         return width, height
 
     @classmethod
-    def add_index_text(cls, index, total):
-        if(Theme.show_index_text()):
+    def add_index_text(cls, index, total, force_include_index = False):
+        if(force_include_index or Theme.show_index_text()):
             y_padding = max(5, cls.get_bottom_bar_height() // 4)
             y_value = Device.screen_height() - y_padding
             x_padding = 10

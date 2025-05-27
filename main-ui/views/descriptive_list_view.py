@@ -79,3 +79,4 @@ class DescriptiveListView(ListView):
                     FontPurpose.DESCRIPTIVE_LIST_DESCRIPTION)
 
             row_offset_y += self.each_entry_height
+            
