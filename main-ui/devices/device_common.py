@@ -118,7 +118,7 @@ class DeviceCommon(ABC):
         pass
 
     @abstractmethod
-    def run_game(self, path) -> subprocess.Popen:
+    def run_game(self, rom_info) -> subprocess.Popen:
         pass
 
     @abstractmethod

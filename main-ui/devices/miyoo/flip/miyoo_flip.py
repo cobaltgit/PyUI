@@ -498,7 +498,6 @@ class MiyooFlip(DeviceCommon):
         self._set_volume(proper_volume)
 
     def run_game(self, rom_info: RomInfo) -> subprocess.Popen:
-        RecentsManager.add_game(rom_info)
         launch_path = os.path.join(rom_info.game_system.game_system_config.get_emu_folder(),rom_info.game_system.game_system_config.get_launch())
         
         #file_path = /mnt/SDCARD/Roms/FAKE08/Alpine Alpaca.p8

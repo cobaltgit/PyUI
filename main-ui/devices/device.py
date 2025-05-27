@@ -119,8 +119,8 @@ class Device:
         return Device._impl.get_battery_percent()
 
     @staticmethod
-    def run_game(path):
-        return Device._impl.run_game(path)
+    def run_game(rom_info):
+        return Device._impl.run_game(rom_info)
 
     @staticmethod
     def run_app(args, dir=None):
