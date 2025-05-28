@@ -70,8 +70,7 @@ class AppMenu:
                 filepath = selected.get_selection().get_value().get_launch()
                 directory = selected.get_selection().get_value().get_folder()
                 Display.deinit_display()
-                shell = "bash" if which("bash") is not None else "sh"
-                Device.run_app([shell, filepath], directory)
+                Device.run_app(["/bin/sh", filepath], directory)
                 Controller.clear_input_queue()
                 Display.reinitialize()
             elif(ControllerInput.B == selected.get_input()):
