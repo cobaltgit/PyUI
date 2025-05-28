@@ -145,7 +145,7 @@ class MiyooDevice(DeviceCommon):
         return MiyooTrimCommon.run_game(rom_info)
 
     def run_app(self, args, dir = None):
-        MiyooTrimCommon.run_game(self, args, dir)
+        MiyooTrimCommon.run_app(self, args, dir)
 
     #TODO untested
     def map_analog_axis(self,sdl_input, value, threshold=16000):

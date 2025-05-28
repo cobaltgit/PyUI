@@ -120,7 +120,7 @@ class TrimUIDevice(DeviceCommon):
         return MiyooTrimCommon.run_game(rom_info)
 
     def run_app(self, args, dir = None):
-        MiyooTrimCommon.run_game(self, args, dir)
+        MiyooTrimCommon.run_app(self, args, dir)
 
     def map_digital_input(self, sdl_input):
         mapping = self.sdl_button_to_input.get(sdl_input, ControllerInput.UNKNOWN)
