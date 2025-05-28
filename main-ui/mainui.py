@@ -6,6 +6,7 @@ import sys
 import threading
 from devices.device import Device
 from devices.trimui.trim_ui_brick import TrimUIBrick
+from devices.trimui.trim_ui_smart_pro import TrimUISmartPro
 from menus.games.utils.favorites_manager import FavoritesManager
 from menus.games.utils.recents_manager import RecentsManager
 import sdl2
@@ -40,6 +41,8 @@ def initialize_device(device):
         Device.init(MiyooFlip())
     elif "TRIMUI_BRICK" == device:
         Device.init(TrimUIBrick())
+    elif "TRIMUI_SMART_PRO" == device:
+        Device.init(TrimUISmartPro())
     else:
         raise RuntimeError(f"{device} is not a supported device")
 
