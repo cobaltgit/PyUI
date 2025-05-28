@@ -26,36 +26,6 @@ class AbstractDevice(ABC):
     @abstractmethod
     def should_scale_screen(self):
         pass
-
-    @property
-    @abstractmethod
-    def font_size_small(self):
-        pass    
-
-    @property
-    @abstractmethod
-    def font_size_medium(self):
-        pass   
-
-    @property
-    @abstractmethod
-    def font_size_large(self):
-        pass
-
-    @property
-    @abstractmethod
-    def large_grid_x_offset(self):
-        pass
-
-    @property
-    @abstractmethod
-    def large_grid_y_offset(self):
-        pass
-    
-    @property
-    @abstractmethod
-    def large_grid_spacing_multiplier(self):
-        pass
     
     @property
     @abstractmethod
@@ -218,10 +188,6 @@ class AbstractDevice(ABC):
     @property
     @abstractmethod
     def reboot_cmd(self):
-        pass
-
-    @abstractmethod
-    def get_rom_utils(self):
         pass
 
     @abstractmethod

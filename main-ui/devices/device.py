@@ -1,4 +1,4 @@
-from devices.device_common import AbstractDevice
+from devices.abstract_device import AbstractDevice
 
 
 class Device:
@@ -32,30 +32,6 @@ class Device:
     @staticmethod
     def should_scale_screen():
         return Device._impl.should_scale_screen()
-
-    @staticmethod
-    def font_size_small():
-        return Device._impl.font_size_small
-
-    @staticmethod
-    def font_size_medium():
-        return Device._impl.font_size_medium
-
-    @staticmethod
-    def font_size_large():
-        return Device._impl.font_size_large
-
-    @staticmethod
-    def large_grid_x_offset():
-        return Device._impl.large_grid_x_offset
-
-    @staticmethod
-    def large_grid_y_offset():
-        return Device._impl.large_grid_y_offset
-
-    @staticmethod
-    def large_grid_spacing_multiplier():
-        return Device._impl.large_grid_spacing_multiplier
 
     @staticmethod
     def lumination():
@@ -229,10 +205,6 @@ class Device:
     @staticmethod
     def reboot_cmd():
         return Device._impl.reboot_cmd
-
-    @staticmethod
-    def get_rom_utils():
-        return Device._impl.get_rom_utils()
 
     @staticmethod
     def perform_startup_tasks():
