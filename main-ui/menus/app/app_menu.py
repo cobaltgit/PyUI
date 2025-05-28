@@ -1,6 +1,7 @@
 
 
 import os
+from shutil import which
 from controller.controller import Controller
 from controller.controller_inputs import ControllerInput
 from devices.device import Device
@@ -69,7 +70,8 @@ class AppMenu:
                 filepath = selected.get_selection().get_value().get_launch()
                 directory = selected.get_selection().get_value().get_folder()
                 Display.deinit_display()
-                Device.run_app(["bash", filepath], directory)
+                shell = "bash" if which("bash") is not None else "sh"
+                Device.run_app([shell, filepath], directory)
                 Controller.clear_input_queue()
                 Display.reinitialize()
             elif(ControllerInput.B == selected.get_input()):
