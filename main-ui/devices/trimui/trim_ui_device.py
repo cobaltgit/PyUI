@@ -117,7 +117,7 @@ class TrimUIDevice(DeviceCommon):
 
 
     def run_game(self, rom_info):
-        return MiyooTrimCommon.run_game(rom_info)
+        return MiyooTrimCommon.run_game(self, rom_info)
 
     def run_app(self, args, dir = None):
         MiyooTrimCommon.run_app(self, args, dir)

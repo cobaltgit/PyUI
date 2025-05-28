@@ -4,34 +4,19 @@ import socket
 import subprocess
 import threading
 import time
-from apps.miyoo.miyoo_app_finder import MiyooAppFinder
 from controller.controller_inputs import ControllerInput
 from controller.key_watcher import KeyWatcher
-from devices.bluetooth.bluetooth_scanner import BluetoothScanner
-from devices.charge.charge_status import ChargeStatus
-from devices.abstract_device import AbstractDevice
 import os
-from devices.device_common import DeviceCommon
 from devices.miyoo.flip.miyoo_flip_poller import MiyooFlipPoller
 from devices.miyoo.miyoo_device import MiyooDevice
 from devices.miyoo.miyoo_games_file_parser import MiyooGamesFileParser
 from devices.miyoo.system_config import SystemConfig
-from devices.miyoo.trim_ui_joystick import TrimUIJoystick
-from devices.miyoo_trim_common import MiyooTrimCommon
 from devices.utils.process_runner import ProcessRunner
-from devices.wifi.wifi_connection_quality_info import WiFiConnectionQualityInfo
-from devices.wifi.wifi_status import WifiStatus
-from display.font_purpose import FontPurpose
-from games.utils.game_entry import GameEntry
-from games.utils.rom_utils import RomUtils
-from menus.games.utils.recents_manager import RecentsManager
-from menus.games.utils.rom_info import RomInfo
 import sdl2
 from utils import throttle
 from utils.config_copier import ConfigCopier
 from utils.logger import PyUiLogger
 from utils.py_ui_config import PyUiConfig
-import psutil
 
 class MiyooFlip(MiyooDevice):
     OUTPUT_MIXER = 2
@@ -58,8 +43,8 @@ class MiyooFlip(MiyooDevice):
             sdl2.SDL_CONTROLLER_BUTTON_BACK: ControllerInput.SELECT,
         }
         
-        #os.environ["SDL_VIDEODRIVER"] = "KMSDRM"
-        #os.environ["SDL_RENDER_DRIVER"] = "kmsdrm"
+        os.environ["SDL_VIDEODRIVER"] = "KMSDRM"
+        os.environ["SDL_RENDER_DRIVER"] = "kmsdrm"
         
         script_dir = Path(__file__).resolve().parent
         source = script_dir / 'system.json'
@@ -98,7 +83,36 @@ class MiyooFlip(MiyooDevice):
             4: "SDL_CONTROLLER_AXIS_TRIGGERLEFT",
             5: "SDL_CONTROLLER_AXIS_TRIGGERRIGHT"
         }
+
+        self.init_bluetooth()
         
+
+    def init_bluetooth(self):
+        try:
+            subprocess.Popen(["insmod","/lib/modules/rtk_btusb.ko"],
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL)
+        except Exception as e:
+            PyUiLogger.get_logger().error(f"Error running insmod {e}")
+
+        if(not self.is_btmanager_runing()):
+            try:
+                subprocess.Popen(["/usr/miyoo/bin/btmanager"],
+                                stdout=subprocess.DEVNULL,
+                                stderr=subprocess.DEVNULL)
+            except Exception as e:
+                PyUiLogger.get_logger().error(f"Error running insmod {e}")
+
+    def is_btmanager_runing(self):
+        try:
+            # Run 'ps' to check for bluetoothd process
+            result = self.get_running_processes()
+            # Check if bluetoothd is in the process list
+            return 'btmanager' in result.stdout
+        except Exception as e:
+            PyUiLogger.get_logger().error(f"Error checking bluetoothd status: {e}")
+            return False
+
 
     def init_gpio(self):
         try:

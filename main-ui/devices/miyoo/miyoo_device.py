@@ -142,7 +142,7 @@ class MiyooDevice(DeviceCommon):
         self._set_volume(proper_volume)
 
     def run_game(self, rom_info: RomInfo) -> subprocess.Popen:
-        return MiyooTrimCommon.run_game(rom_info)
+        return MiyooTrimCommon.run_game(self,rom_info)
 
     def run_app(self, args, dir = None):
         MiyooTrimCommon.run_app(self, args, dir)
