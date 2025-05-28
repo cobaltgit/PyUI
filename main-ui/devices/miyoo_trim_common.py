@@ -143,7 +143,7 @@ class MiyooTrimCommon():
         device.get_ip_addr_text.force_refresh()
 
     @staticmethod
-    def is_bluetooth_enabled():
+    def is_bluetooth_enabled() -> bool:
         return "bluetoothd" in map(lambda p: p.name, psutil.process_iter())
 
     @staticmethod
