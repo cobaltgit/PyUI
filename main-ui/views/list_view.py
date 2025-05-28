@@ -60,7 +60,6 @@ class ListView(View):
         self.adjust_selected_top_bottom_for_overflow()
 
         self._render()
-        print(f"self.include_index_text = {self.include_index_text}")
         if(self.include_index_text):
             Display.add_index_text(self.selected+1, len(self.options), force_include_index = True)
         Display.present()

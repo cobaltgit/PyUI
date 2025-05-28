@@ -14,6 +14,7 @@ import sdl2.ext
 import sdl2.sdlttf
 from themes.theme import Theme
 from utils.logger import PyUiLogger
+from ctypes import c_double
 
 @dataclass
 class CachedImageTexture:
@@ -522,9 +523,18 @@ class Display:
             scaled_canvas = cls.scale_texture_to_fit(cls.render_canvas, Device.output_screen_width, Device.output_screen_height)
             sdl2.SDL_RenderCopy(cls.renderer.sdlrenderer, scaled_canvas, None, None)
             sdl2.SDL_DestroyTexture(scaled_canvas)
-        else:
+        elif(0 == Device.screen_rotation()):
             sdl2.SDL_RenderCopy(cls.renderer.sdlrenderer, cls.render_canvas, None, None)
-
+        else:
+            sdl2.SDL_RenderCopyEx(
+                cls.renderer.sdlrenderer,     # Renderer
+                cls.render_canvas,            # Texture (canvas)
+                None,                         # Source rect (None = full texture)
+                None,                         # Destination rect (None = full screen)
+                c_double(Device.screen_rotation()),                        # Angle in degrees
+                None,                         # Center point (None = center of dest rect)
+                sdl2.SDL_FLIP_NONE            # Flip (you can also use SDL_FLIP_HORIZONTAL or _VERTICAL if needed)
+            )
         sdl2.SDL_SetRenderTarget(cls.renderer.renderer, cls.render_canvas)
         cls.renderer.present()
 

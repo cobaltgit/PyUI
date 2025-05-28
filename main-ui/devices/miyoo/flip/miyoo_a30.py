@@ -33,12 +33,12 @@ from utils.logger import PyUiLogger
 from utils.py_ui_config import PyUiConfig
 import psutil
 
-class MiyooFlip(MiyooDevice):
+class MiyooA30(MiyooDevice):
     OUTPUT_MIXER = 2
     SOUND_DISABLED = 0
 
     def __init__(self):
-        PyUiLogger.get_logger().info("Initializing Miyoo Flip")        
+        PyUiLogger.get_logger().info("Initializing Miyoo A30")        
         
         self.sdl_button_to_input = {
             sdl2.SDL_CONTROLLER_BUTTON_A: ControllerInput.B,
@@ -57,10 +57,7 @@ class MiyooFlip(MiyooDevice):
             sdl2.SDL_CONTROLLER_BUTTON_START: ControllerInput.START,
             sdl2.SDL_CONTROLLER_BUTTON_BACK: ControllerInput.SELECT,
         }
-        
-        #os.environ["SDL_VIDEODRIVER"] = "KMSDRM"
-        #os.environ["SDL_RENDER_DRIVER"] = "kmsdrm"
-        
+                
         script_dir = Path(__file__).resolve().parent
         source = script_dir / 'system.json'
         ConfigCopier.ensure_config("/userdata/system.json", source)
@@ -151,7 +148,10 @@ class MiyooFlip(MiyooDevice):
     @property
     def screen_height(self):
         return 480
-    
+        
+    @property
+    def screen_rotation(self):
+        return 270
     
     @property
     def output_screen_width(self):

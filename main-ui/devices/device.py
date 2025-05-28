@@ -20,6 +20,10 @@ class Device:
     @staticmethod
     def screen_height():
         return Device._impl.screen_height
+    
+    @staticmethod
+    def screen_rotation():
+        return Device._impl.screen_rotation
 
     @staticmethod
     def output_screen_width():

@@ -15,6 +15,11 @@ class AbstractDevice(ABC):
     def screen_height(self):
         pass
 
+    @property
+    @abstractmethod
+    def screen_rotation(self):
+        pass
+
     @abstractmethod
     def output_screen_width(self):
         pass

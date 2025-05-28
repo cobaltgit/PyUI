@@ -37,6 +37,10 @@ class DeviceCommon(AbstractDevice):
     def input_timeout_default(self):
         return 1/12 # 12 fps
     
+    @property
+    def screen_rotation(self):
+        return 0
+
     def map_backlight_from_10_to_full_255(self,lumination_level):
         if lumination_level == 10:
             return 255
