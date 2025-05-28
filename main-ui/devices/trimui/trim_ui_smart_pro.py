@@ -109,16 +109,6 @@ class TrimUISmartPro(TrimUIDevice):
             return 1.5
         else:
             return 1
-        
-    def is_bluetooth_enabled(self):
-        try:
-            # Run 'ps' to check for bluetoothd process
-            result = self.get_running_processes()
-            # Check if bluetoothd is in the process list
-            return 'bluetoothd' in result.stdout
-        except Exception as e:
-            PyUiLogger.get_logger().error(f"Error checking bluetoothd status: {e}")
-            return False
     
     
     def disable_bluetooth(self):
@@ -127,7 +117,7 @@ class TrimUISmartPro(TrimUIDevice):
         ProcessRunner.run(["killall","-9","bluetoothd"])
 
     def enable_bluetooth(self):
-        if(not self.is_bluetooth_enabled()):
+        if(not MiyooTrimCommon.is_bluetooth_enabled()):
             subprocess.Popen(['./bluetoothd',"-f","/etc/bluetooth/main.conf"],
                             cwd='/usr/libexec/bluetooth/',
                             stdout=subprocess.DEVNULL,
