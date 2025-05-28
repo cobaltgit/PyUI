@@ -3,7 +3,7 @@ import subprocess
 
 from games.utils.game_entry import GameEntry
 
-class DeviceCommon(ABC):
+class AbstractDevice(ABC):
  
     @property
     @abstractmethod

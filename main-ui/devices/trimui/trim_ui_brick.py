@@ -12,7 +12,7 @@ from apps.miyoo.miyoo_app_finder import MiyooAppFinder
 from controller.controller_inputs import ControllerInput
 from controller.key_watcher import KeyWatcher
 from devices.charge.charge_status import ChargeStatus
-from devices.device_common import DeviceCommon
+from devices.device_common import AbstractDevice
 import os
 from devices.miyoo.miyoo_games_file_parser import MiyooGamesFileParser
 from devices.miyoo.system_config import SystemConfig
@@ -30,7 +30,7 @@ import psutil
 
 from utils.py_ui_config import PyUiConfig
 
-class TrimUIBrick(DeviceCommon):
+class TrimUIBrick(AbstractDevice):
     
     def __init__(self):
         self.path = self

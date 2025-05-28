@@ -9,7 +9,7 @@ from controller.controller_inputs import ControllerInput
 from controller.key_watcher import KeyWatcher
 from devices.bluetooth.bluetooth_scanner import BluetoothScanner
 from devices.charge.charge_status import ChargeStatus
-from devices.device_common import DeviceCommon
+from devices.device_common import AbstractDevice
 import os
 from devices.miyoo.flip.miyoo_flip_poller import MiyooFlipPoller
 from devices.miyoo.miyoo_games_file_parser import MiyooGamesFileParser
@@ -30,7 +30,7 @@ from utils.logger import PyUiLogger
 from utils.py_ui_config import PyUiConfig
 import psutil
 
-class MiyooFlip(DeviceCommon):
+class MiyooFlip(AbstractDevice):
     OUTPUT_MIXER = 2
     SOUND_DISABLED = 0
 

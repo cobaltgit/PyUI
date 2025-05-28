@@ -1,11 +1,11 @@
-from devices.device_common import DeviceCommon
+from devices.device_common import AbstractDevice
 
 
 class Device:
-    _impl: DeviceCommon = None
+    _impl: AbstractDevice = None
 
     @staticmethod
-    def init(impl: DeviceCommon):
+    def init(impl: AbstractDevice):
         Device._impl = impl
 
     @staticmethod
