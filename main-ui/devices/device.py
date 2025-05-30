@@ -187,6 +187,14 @@ class Device:
         return Device._impl.raise_saturation()
 
     @staticmethod
+    def lower_hue():
+        return Device._impl.lower_hue()
+
+    @staticmethod
+    def raise_hue():
+        return Device._impl.raise_hue()
+
+    @staticmethod
     def change_volume(amount):
         return Device._impl.change_volume(amount)
 

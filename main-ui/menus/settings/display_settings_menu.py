@@ -34,6 +34,11 @@ class DisplaySettingsMenu(settings_menu.SettingsMenu):
         elif(ControllerInput.DPAD_RIGHT == input or ControllerInput.R1 == input):
             Device.raise_lumination()
 
+    def hue_adjust(self, input: ControllerInput):
+        if(ControllerInput.DPAD_LEFT == input or ControllerInput.L1 == input):
+            Device.lower_hue()
+        elif(ControllerInput.DPAD_RIGHT == input or ControllerInput.R1 == input):
+            Device.raise_hue()
 
 
     def build_options_list(self):
@@ -50,7 +55,6 @@ class DisplaySettingsMenu(settings_menu.SettingsMenu):
                         value=self.lumination_adjust
                     )
             )
-
         option_list.append(
                 GridOrListEntry(
                         primary_text="Brightness",
@@ -83,6 +87,17 @@ class DisplaySettingsMenu(settings_menu.SettingsMenu):
                         icon=None,
                         value=self.saturation_adjust
                     )
-            )          
+            )
+        option_list.append(
+                GridOrListEntry(
+                        primary_text="Hue",
+                        value_text="<    " + str(Device.get_hue()) + "    >",
+                        image_path=None,
+                        image_path_selected=None,
+                        description=None,
+                        icon=None,
+                        value=self.hue_adjust
+                    )
+            )         
         
         return option_list

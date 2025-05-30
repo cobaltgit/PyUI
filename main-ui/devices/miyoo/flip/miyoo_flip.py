@@ -203,3 +203,7 @@ class MiyooFlip(MiyooDevice):
         ProcessRunner.run(["modetest", "-M", "rockchip", "-a", "-w", 
                                      "179:brightness:"+str(self.system_config.brightness * 5)])
 
+    def _set_hue_to_config(self):
+        ProcessRunner.run(["modetest", "-M", "rockchip", "-a", "-w", 
+                                     "179:hue:"+str(self.system_config.hue * 5)])
+

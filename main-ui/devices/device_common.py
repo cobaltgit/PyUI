@@ -121,6 +121,20 @@ class DeviceCommon(AbstractDevice):
             self.system_config.save_config()
             self._set_saturation_to_config()
 
+    def lower_hue(self):
+        self.system_config.reload_config()
+        if(self.system_config.hue > 0):
+            self.system_config.set_hue(self.system_config.hue - 1)
+            self.system_config.save_config()
+            self._set_hue_to_config()
+
+    def raise_hue(self):
+        self.system_config.reload_config()
+        if(self.system_config.hue < 20):
+            self.system_config.set_hue(self.system_config.hue + 1)
+            self.system_config.save_config()
+            self._set_hue_to_config()
+
 
     @property
     def lumination(self):
@@ -137,6 +151,10 @@ class DeviceCommon(AbstractDevice):
     @property
     def saturation(self):
         return self.system_config.get_saturation()
+        
+    @property
+    def saturation(self):
+        return self.system_config.get_hue()
 
     def change_volume(self, amount):
         self._set_volume(self.get_volume() + amount)

@@ -58,10 +58,6 @@ class SystemConfig:
         return self.config.get("bgmvol")
 
     @property
-    def color_temperature(self) -> int:
-        return self.config.get("colortemperature")
-
-    @property
     def brightness(self):
         return self.config.get("lumination")
 
@@ -102,6 +98,10 @@ class SystemConfig:
 
     def get_hibernate(self):
         return self.config.get("hibernate")
+
+    @property
+    def hue(self) -> int:
+        return self.config.get("hue")
 
     def get_hue(self):
         return self.config.get("hue")
