@@ -275,15 +275,15 @@ class TrimUIDevice(DeviceCommon):
 
     def _set_contrast_to_config(self):
         with open("/sys/devices/virtual/disp/disp/attr/enhance_contrast", "w") as f:
-            f.write(str(self.system_config.contrast * 10))
+            f.write(str(self.system_config.contrast * 5))
 
     def _set_saturation_to_config(self):
         with open("/sys/devices/virtual/disp/disp/attr/enhance_saturation", "w") as f:
-            f.write(str(self.system_config.saturation * 10))
+            f.write(str(self.system_config.saturation * 5))
 
     def _set_brightness_to_config(self):
         with open("/sys/devices/virtual/disp/disp/attr/enhance_bright", "w") as f:
-            f.write(str(self.system_config.brightness * 10))
+            f.write(str(self.system_config.brightness * 5))
 
     def _set_hue_to_config(self):
         with open("/sys/devices/virtual/disp/disp/attr/color_temperature", "w") as f:
