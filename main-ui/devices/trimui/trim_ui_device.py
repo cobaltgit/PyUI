@@ -243,7 +243,7 @@ class TrimUIDevice(DeviceCommon):
     
     def enable_bluetooth(self):
         if(not MiyooTrimCommon.is_bluetooth_enabled()):
-            subprocess.Popen(['./bluetoothd',"-f","/etc/bluetooth/main.conf"],
+            subprocess.Popen(['bluetoothd',"-f","/etc/bluetooth/main.conf"],
                             stdout=subprocess.DEVNULL,
                             stderr=subprocess.DEVNULL)
     
