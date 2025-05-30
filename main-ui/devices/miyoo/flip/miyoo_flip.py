@@ -1,4 +1,5 @@
 from pathlib import Path
+import psutil
 import re
 import socket
 import subprocess
@@ -105,15 +106,7 @@ class MiyooFlip(MiyooDevice):
                 PyUiLogger.get_logger().error(f"Error running insmod {e}")
 
     def is_btmanager_runing(self):
-        try:
-            # Run 'ps' to check for bluetoothd process
-            result = self.get_running_processes()
-            # Check if bluetoothd is in the process list
-            return 'btmanager' in result.stdout
-        except Exception as e:
-            PyUiLogger.get_logger().error(f"Error checking bluetoothd status: {e}")
-            return False
-
+        return "btmanager" in map(lambda p: p.name, psutil.process_iter())
 
     def init_gpio(self):
         try:

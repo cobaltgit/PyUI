@@ -241,18 +241,22 @@ class TrimUIDevice(DeviceCommon):
     def is_bluetooth_enabled(self):
         return False
     
+    def enable_bluetooth(self):
+        if(not MiyooTrimCommon.is_bluetooth_enabled()):
+            subprocess.Popen(['./bluetoothd',"-f","/etc/bluetooth/main.conf"],
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL)
     
     def disable_bluetooth(self):
-        pass
-
-    def enable_bluetooth(self):
-        pass
+        ProcessRunner.run(["killall","-15","bluetoothd"])
+        time.sleep(0.1)  
+        ProcessRunner.run(["killall","-9","bluetoothd"])
 
     def perform_startup_tasks(self):
         pass
 
     def get_bluetooth_scanner(self):
-        return None
+        return BluetoothScanner()
 
     def get_favorites_path(self):
         return "/mnt/SDCARD/Saves/pyui-favorites.json"
