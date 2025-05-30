@@ -237,9 +237,6 @@ class TrimUIDevice(DeviceCommon):
     
     def parse_recents(self) -> list[GameEntry]:
         return self.miyoo_games_file_parser.parse_recents()
-
-    def is_bluetooth_enabled(self):
-        return "bluetoothd" in map(lambda p: p.name, psutil.process_iter())
     
     def enable_bluetooth(self):
         if(not MiyooTrimCommon.is_bluetooth_enabled()):
