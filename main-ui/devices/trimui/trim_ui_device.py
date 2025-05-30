@@ -280,3 +280,7 @@ class TrimUIDevice(DeviceCommon):
     def _set_brightness_to_config(self):
         with open("/sys/devices/virtual/disp/disp/attr/enhance_bright", "w") as f:
             f.write(str(self.system_config.brightness * 10))
+
+    def _set_color_temperature_to_config(self):
+        with open("/sys/devices/virtual/disp/disp/attr/color_temperature", "w") as f:
+            f.write(str((self.system_config.color_temperature * 5) - 50))
