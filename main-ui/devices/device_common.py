@@ -153,7 +153,7 @@ class DeviceCommon(AbstractDevice):
         return self.system_config.get_saturation()
         
     @property
-    def saturation(self):
+    def hue(self):
         return self.system_config.get_hue()
 
     def change_volume(self, amount):
