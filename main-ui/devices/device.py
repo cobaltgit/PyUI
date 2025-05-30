@@ -187,6 +187,10 @@ class Device:
         return Device._impl.raise_saturation()
 
     @staticmethod
+    def get_hue():
+        return Device._impl.hue
+
+    @staticmethod
     def lower_hue():
         return Device._impl.lower_hue()
 
@@ -234,7 +238,7 @@ class Device:
     def launch_stock_os_menu():
         return Device._impl.launch_stock_os_menu()
     
-    @staticmethod  
+    @staticmethod
     def supports_analog_calibration():
         return Device._impl.supports_analog_calibration()
     
