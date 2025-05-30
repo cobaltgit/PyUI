@@ -106,6 +106,9 @@ class SystemConfig:
     def get_hue(self):
         return self.config.get("hue")
 
+    def set_hue(self, value: int) -> None:
+        self.config["hue"] = value
+
     @property
     def saturation(self):
         return self.config.get("saturation")
