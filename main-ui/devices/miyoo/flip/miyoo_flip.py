@@ -55,6 +55,7 @@ class MiyooFlip(MiyooDevice):
         self._set_contrast_to_config()
         self._set_saturation_to_config()
         self._set_brightness_to_config()
+        self._set_hue_to_config()
         self.ensure_wpa_supplicant_conf()
         self.init_gpio()
         threading.Thread(target=self.monitor_wifi, daemon=True).start()
